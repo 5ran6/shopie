@@ -102,6 +102,7 @@ class ShareLocationWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color.fromARGB(255, 119, 119, 119),
+                        fontFamily: 'SFNS',
                         fontWeight: FontWeight.w400,
                         fontSize: 15,
                       ),

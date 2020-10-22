@@ -200,7 +200,7 @@ class TrackingWidget extends StatelessWidget {
                                     color: Color.fromARGB(0, 0, 0, 0),
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
-                                      BorderRadius.all(Radius.circular(0)),
+                                          BorderRadius.all(Radius.circular(0)),
                                     ),
                                     textColor: Color.fromARGB(255, 0, 0, 0),
                                     padding: EdgeInsets.all(0),

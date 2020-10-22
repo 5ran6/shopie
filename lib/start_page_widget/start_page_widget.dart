@@ -42,6 +42,7 @@ class StartPageWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color.fromARGB(255, 255, 255, 255),
+                        fontFamily: 'SFNS',
                         fontWeight: FontWeight.w400,
                         fontSize: 24,
                         letterSpacing: 0.48,
@@ -65,6 +66,7 @@ class StartPageWidget extends StatelessWidget {
                             style: TextStyle(
                               color: Color.fromARGB(255, 255, 255, 255),
                               fontWeight: FontWeight.w400,
+                              fontFamily: 'SFNS',
                               fontSize: 20,
                               letterSpacing: 0.4,
                             ),
@@ -147,6 +149,7 @@ class StartPageWidget extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color.fromARGB(255, 66, 9, 99),
+                    fontFamily: 'SFNS',
                     fontWeight: FontWeight.w400,
                     fontSize: 20,
                   ),
