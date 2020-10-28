@@ -12,17 +12,32 @@ import 'package:shopie/values/values.dart';
 
 
 class PayForOrderWidget extends StatelessWidget {
-  
-  void onGroup4Pressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewCardWidget()));
-  
-  void onAddNewPressed(BuildContext context) {
-  
-  }
-  
+  void onGroup4Pressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => AddNewCardWidget()));
+
+  void onAddNewPressed(BuildContext context) {}
+
+  void onIconAwesomeArrowLPressed(BuildContext context) =>
+      Navigator.pop(context);
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Payment Method",
+          style: TextStyle(
+            color: Colors.purple[900],
+            fontFamily: 'SFNS',
+          ),
+        ),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.grey,
+        leading: BackButton(
+          color: Colors.yellow,
+          onPressed: () => this.onIconAwesomeArrowLPressed(context),
+        ),
+      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(

@@ -9,15 +9,14 @@
 import 'package:flutter/material.dart';
 import 'package:shopie/share_location_widget/share_location_widget.dart';
 import 'package:shopie/values/values.dart';
-
+import 'package:shopie/welcome_widget/welcome_widget.dart';
 
 class StartPageWidget extends StatelessWidget {
-  
-  void onGroup1Pressed(BuildContext context) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ShareLocationWidget()));
-  
+  void onGroup1Pressed(BuildContext context) => Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => WelcomeWidget()));
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),

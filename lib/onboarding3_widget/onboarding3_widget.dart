@@ -79,6 +79,7 @@ class Onboarding3Widget extends StatelessWidget {
                     child: Image.asset(
                       "assets/images/path-45.png",
                       fit: BoxFit.none,
+                      color: Colors.white12.withRed(1),
                     ),
                   ),
                   Positioned(

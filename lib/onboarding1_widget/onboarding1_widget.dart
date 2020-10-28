@@ -13,16 +13,14 @@ import 'package:shopie/values/values.dart';
 
 
 class Onboarding1Widget extends StatelessWidget {
-  
   void onButtonTextPressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => Onboarding2Widget()));
-  
+
   void onButtonTextTwoPressed(BuildContext context) {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartPageWidget()));
   }
-  
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),
@@ -86,6 +84,7 @@ class Onboarding1Widget extends StatelessWidget {
                     child: Image.asset(
                       "assets/images/path-45-2.png",
                       fit: BoxFit.none,
+                      color: Colors.white12.withRed(1),
                     ),
                   ),
                 ],

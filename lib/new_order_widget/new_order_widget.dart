@@ -10,31 +10,36 @@ import 'package:flutter/material.dart';
 import 'package:shopie/new_order2_widget/new_order2_widget.dart';
 import 'package:shopie/values/values.dart';
 
-
 class NewOrderWidget extends StatelessWidget {
-  
-  void onIconAwesomeArrowLPressed(BuildContext context) {
-  
-  }
-  
-  void onInformationPressed(BuildContext context) {
-  
-  }
-  
-  void onDetailsPressed(BuildContext context) {
-  
-  }
-  
-  void onLayer1Pressed(BuildContext context) {
-  
-  }
-  
-  void onGroup4Pressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => NewOrder2Widget()));
-  
+  void onIconAwesomeArrowLPressed(BuildContext context) {}
+
+  void onInformationPressed(BuildContext context) {}
+
+  void onDetailsPressed(BuildContext context) {}
+
+  void onLayer1Pressed(BuildContext context) {}
+
+  void onGroup4Pressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => NewOrder2Widget()));
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "New Order",
+          style: TextStyle(
+            color: Colors.purple[900],
+            fontFamily: 'SFNS',
+          ),
+        ),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.grey,
+        leading: BackButton(
+          color: Colors.yellow,
+          onPressed: () => this.onIconAwesomeArrowLPressed(context),
+        ),
+      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
@@ -47,67 +52,13 @@ class NewOrderWidget extends StatelessWidget {
               left: 0,
               top: 0,
               right: 0,
-              bottom: 68,
+              bottom: 0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    height: 57,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            height: 57,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryElement,
-                              boxShadow: [
-                                Shadows.primaryShadow,
-                              ],
-                            ),
-                            child: Container(),
-                          ),
-                        ),
-                        Positioned(
-                          left: 22,
-                          top: 25,
-                          child: FlatButton(
-                            onPressed: () => this.onIconAwesomeArrowLPressed(context),
-                            color: Color.fromARGB(0, 0, 0, 0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(0)),
-                            ),
-                            textColor: Color.fromARGB(255, 0, 0, 0),
-                            padding: EdgeInsets.all(0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset("assets/images/icon-awesome-arrow-left-3.png",),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
                     height: 504,
-                    margin: EdgeInsets.only(left: 16, top: 47, right: 15),
+                    margin: EdgeInsets.only(left: 16, top: 20, right: 15),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -116,20 +67,20 @@ class NewOrderWidget extends StatelessWidget {
                           top: 0,
                           right: 0,
                           child: Container(
-                            height: 504,
+                            height: 450,
                             decoration: BoxDecoration(
                               color: AppColors.primaryBackground,
                               boxShadow: [
                                 Shadows.secondaryShadow,
                               ],
-                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16)),
                             ),
-                            child: Container(),
                           ),
                         ),
                         Positioned(
                           left: 20,
-                          top: 55,
+                          top: 35,
                           right: 19,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -138,7 +89,8 @@ class NewOrderWidget extends StatelessWidget {
                                 height: 40,
                                 margin: EdgeInsets.only(left: 9, right: 10),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -146,18 +98,28 @@ class NewOrderWidget extends StatelessWidget {
                                         width: 143,
                                         height: 40,
                                         child: FlatButton(
-                                          onPressed: () => this.onInformationPressed(context),
+                                          onPressed: () =>
+                                              this
+                                                  .onInformationPressed(
+                                                  context),
                                           color: AppColors.primaryElement,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(Radius.circular(9)),
+                                            side: BorderSide(
+                                                color: Colors.yellowAccent,
+                                                width: 1,
+                                                style: BorderStyle.solid),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(9)),
                                           ),
-                                          textColor: Color.fromARGB(255, 66, 9, 99),
+                                          textColor:
+                                          Color.fromARGB(255, 66, 9, 99),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "Information",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
-                                              color: Color.fromARGB(255, 66, 9, 99),
+                                              color: Color.fromARGB(
+                                                  255, 66, 9, 99),
                                               fontWeight: FontWeight.w400,
                                               fontSize: 16,
                                             ),
@@ -172,18 +134,23 @@ class NewOrderWidget extends StatelessWidget {
                                         width: 143,
                                         height: 40,
                                         child: FlatButton(
-                                          onPressed: () => this.onDetailsPressed(context),
-                                          color: Color.fromARGB(255, 238, 238, 238),
+                                          onPressed: () =>
+                                              this.onDetailsPressed(context),
+                                          color: Color.fromARGB(
+                                              255, 238, 238, 238),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
                                           ),
-                                          textColor: Color.fromARGB(255, 66, 9, 99),
+                                          textColor:
+                                          Color.fromARGB(255, 66, 9, 99),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "Details",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
-                                              color: Color.fromARGB(255, 66, 9, 99),
+                                              color: Color.fromARGB(
+                                                  255, 66, 9, 99),
                                               fontWeight: FontWeight.w400,
                                               fontSize: 16,
                                             ),
@@ -213,17 +180,19 @@ class NewOrderWidget extends StatelessWidget {
                               Align(
                                 alignment: Alignment.topCenter,
                                 child: Container(
-                                  width: 305,
+                                  width: 355,
                                   height: 40,
                                   margin: EdgeInsets.only(top: 10),
                                   decoration: BoxDecoration(
                                     color: AppColors.primaryElement,
-                                    border: Border.fromBorderSide(Borders.secondaryBorder),
+                                    border: Border.fromBorderSide(
+                                        Borders.secondaryBorder),
                                   ),
                                   child: TextField(
                                     decoration: InputDecoration(
                                       hintText: "Full name",
-                                      contentPadding: EdgeInsets.only(left: 15, top: 11, right: 6),
+                                      contentPadding: EdgeInsets.only(
+                                          left: 15, top: 0, right: 6),
                                       border: InputBorder.none,
                                     ),
                                     style: TextStyle(
@@ -232,9 +201,11 @@ class NewOrderWidget extends StatelessWidget {
                                       fontSize: 12,
                                     ),
                                     maxLines: 1,
-                                    keyboardType: TextInputType.emailAddress,
+                                    keyboardType: TextInputType.text,
                                     textInputAction: TextInputAction.next,
                                     autocorrect: false,
+                                    textCapitalization:
+                                    TextCapitalization.words,
                                   ),
                                 ),
                               ),
@@ -257,17 +228,19 @@ class NewOrderWidget extends StatelessWidget {
                               Align(
                                 alignment: Alignment.topCenter,
                                 child: Container(
-                                  width: 305,
+                                  width: 355,
                                   height: 40,
                                   margin: EdgeInsets.only(top: 8),
                                   decoration: BoxDecoration(
                                     color: AppColors.primaryElement,
-                                    border: Border.fromBorderSide(Borders.secondaryBorder),
+                                    border: Border.fromBorderSide(
+                                        Borders.secondaryBorder),
                                   ),
                                   child: TextField(
                                     decoration: InputDecoration(
                                       hintText: "Enter phone Number",
-                                      contentPadding: EdgeInsets.only(left: 15, top: 11, right: 6),
+                                      contentPadding: EdgeInsets.only(
+                                          left: 15, top: 0, right: 6),
                                       border: InputBorder.none,
                                     ),
                                     style: TextStyle(
@@ -301,17 +274,19 @@ class NewOrderWidget extends StatelessWidget {
                               Align(
                                 alignment: Alignment.topCenter,
                                 child: Container(
-                                  width: 305,
+                                  width: 355,
                                   height: 40,
                                   margin: EdgeInsets.only(top: 8),
                                   decoration: BoxDecoration(
                                     color: AppColors.primaryElement,
-                                    border: Border.fromBorderSide(Borders.secondaryBorder),
+                                    border: Border.fromBorderSide(
+                                        Borders.secondaryBorder),
                                   ),
                                   child: TextField(
                                     decoration: InputDecoration(
                                       hintText: "Enter Address",
-                                      contentPadding: EdgeInsets.only(left: 15, top: 11),
+                                      contentPadding:
+                                      EdgeInsets.only(left: 15, top: 0),
                                       border: InputBorder.none,
                                     ),
                                     style: TextStyle(
@@ -344,29 +319,33 @@ class NewOrderWidget extends StatelessWidget {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Container(
-                                  width: 152,
+                                  width: 355,
                                   height: 40,
                                   margin: EdgeInsets.only(top: 8),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.stretch,
                                     children: [
                                       Align(
                                         alignment: Alignment.topLeft,
                                         child: Container(
-                                          width: 88,
+                                          width: 260,
                                           height: 40,
                                           decoration: BoxDecoration(
                                             color: AppColors.primaryElement,
-                                            border: Border.fromBorderSide(Borders.secondaryBorder),
+                                            border: Border.fromBorderSide(
+                                                Borders.secondaryBorder),
                                           ),
                                           child: TextField(
                                             decoration: InputDecoration(
                                               hintText: "Enter Volume",
-                                              contentPadding: EdgeInsets.only(left: 15, top: 11, right: 6),
+                                              contentPadding: EdgeInsets.only(
+                                                  left: 15, top: 0, right: 6),
                                               border: InputBorder.none,
                                             ),
                                             style: TextStyle(
-                                              color: Color.fromARGB(255, 0, 0, 0),
+                                              color: Color.fromARGB(
+                                                  255, 0, 0, 0),
                                               fontWeight: FontWeight.w400,
                                               fontSize: 12,
                                             ),
@@ -398,8 +377,10 @@ class NewOrderWidget extends StatelessWidget {
                                                   "Kg",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255),
-                                                    fontWeight: FontWeight.w400,
+                                                    color: Color.fromARGB(
+                                                        255, 255, 255, 255),
+                                                    fontWeight:
+                                                    FontWeight.w400,
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -416,34 +397,9 @@ class NewOrderWidget extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          left: 31,
-                          top: 320,
-                          child: Text(
-                            "",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: AppColors.accentText,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 31,
-                          top: 241,
-                          child: Text(
-                            "",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: AppColors.accentText,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 165,
+                          top: 150,
                           right: 35,
+                          width: 10,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -454,30 +410,17 @@ class NewOrderWidget extends StatelessWidget {
                                   height: 18,
                                   margin: EdgeInsets.only(right: 1),
                                   child: FlatButton(
-                                    onPressed: () => this.onLayer1Pressed(context),
+                                    onPressed: () =>
+                                        this.onLayer1Pressed(context),
                                     color: Color.fromARGB(0, 0, 0, 0),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(0)),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(0)),
                                     ),
                                     textColor: Color.fromARGB(255, 0, 0, 0),
                                     padding: EdgeInsets.all(0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset("assets/images/layer-1-5.png",),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: Color.fromARGB(255, 0, 0, 0),
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
+                                    child: Image.asset(
+                                      "assets/images/layer-1-5.png",
                                     ),
                                   ),
                                 ),
@@ -503,42 +446,33 @@ class NewOrderWidget extends StatelessWidget {
                   Spacer(),
                   Align(
                     alignment: Alignment.topCenter,
-                    child: Container(
-                      width: 324,
-                      height: 45,
-                      child: FlatButton(
-                        onPressed: () => this.onGroup4Pressed(context),
-                        color: AppColors.secondaryElement,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: Radii.k7pxRadius,
-                        ),
-                        textColor: Color.fromARGB(255, 255, 255, 255),
-                        padding: EdgeInsets.all(0),
-                        child: Text(
-                          "Continue",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 324,
+                        height: 45,
+                        child: FlatButton(
+                          onPressed: () => this.onGroup4Pressed(context),
+                          color: AppColors.secondaryElement,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: Radii.k7pxRadius,
+                          ),
+                          textColor: Color.fromARGB(255, 255, 255, 255),
+                          padding: EdgeInsets.all(0),
+                          child: Text(
+                            "Continue",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ],
-              ),
-            ),
-            Positioned(
-              top: 18,
-              child: Text(
-                "New Order",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.secondaryText,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                ),
               ),
             ),
           ],

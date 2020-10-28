@@ -10,43 +10,42 @@ import 'package:flutter/material.dart';
 import 'package:shopie/review_order_widget/review_order_widget.dart';
 import 'package:shopie/values/values.dart';
 
-
 class NewOrder2Widget extends StatelessWidget {
-  
-  void onGroup4Pressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewOrderWidget()));
-  
-  void onIconAwesomeArrowLPressed(BuildContext context) {
-  
-  }
-  
-  void onViewTwoPressed(BuildContext context) {
-  
-  }
-  
-  void onViewPressed(BuildContext context) {
-  
-  }
-  
-  void onStandardDeliveryPressed(BuildContext context) {
-  
-  }
-  
-  void onViewThreePressed(BuildContext context) {
-  
-  }
-  
-  void onViewFourPressed(BuildContext context) {
-  
-  }
-  
-  void onCustomDeliveryPressed(BuildContext context) {
-  
-  }
-  
+  void onGroup4Pressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => ReviewOrderWidget()));
+
+  void onIconAwesomeArrowLPressed(BuildContext context) {}
+
+  void onViewTwoPressed(BuildContext context) {}
+
+  void onViewPressed(BuildContext context) {}
+
+  void onStandardDeliveryPressed(BuildContext context) {}
+
+  void onViewThreePressed(BuildContext context) {}
+
+  void onViewFourPressed(BuildContext context) {}
+
+  void onCustomDeliveryPressed(BuildContext context) {}
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "New Order",
+          style: TextStyle(
+            color: Colors.purple[900],
+            fontFamily: 'SFNS',
+          ),
+        ),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.grey,
+        leading: BackButton(
+          color: Colors.yellow,
+          onPressed: () => this.onIconAwesomeArrowLPressed(context),
+        ),
+      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
@@ -58,67 +57,13 @@ class NewOrder2Widget extends StatelessWidget {
               left: 0,
               top: 0,
               right: 0,
-              bottom: 68,
+              bottom: 0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    height: 57,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            height: 57,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryElement,
-                              boxShadow: [
-                                Shadows.primaryShadow,
-                              ],
-                            ),
-                            child: Container(),
-                          ),
-                        ),
-                        Positioned(
-                          left: 22,
-                          top: 25,
-                          child: FlatButton(
-                            onPressed: () => this.onIconAwesomeArrowLPressed(context),
-                            color: Color.fromARGB(0, 0, 0, 0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(0)),
-                            ),
-                            textColor: Color.fromARGB(255, 0, 0, 0),
-                            padding: EdgeInsets.all(0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset("assets/images/icon-awesome-arrow-left.png",),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
                     height: 504,
-                    margin: EdgeInsets.only(left: 16, top: 47, right: 15),
+                    margin: EdgeInsets.only(left: 16, top: 20, right: 15),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -127,15 +72,15 @@ class NewOrder2Widget extends StatelessWidget {
                           top: 0,
                           right: 0,
                           child: Container(
-                            height: 504,
+                            height: 450,
                             decoration: BoxDecoration(
                               color: AppColors.primaryBackground,
                               boxShadow: [
                                 Shadows.secondaryShadow,
                               ],
-                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16)),
                             ),
-                            child: Container(),
                           ),
                         ),
                         Positioned(
@@ -149,7 +94,8 @@ class NewOrder2Widget extends StatelessWidget {
                                 height: 40,
                                 margin: EdgeInsets.only(left: 11),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -157,18 +103,23 @@ class NewOrder2Widget extends StatelessWidget {
                                         width: 143,
                                         height: 40,
                                         child: FlatButton(
-                                          onPressed: () => this.onViewTwoPressed(context),
-                                          color: Color.fromARGB(255, 238, 238, 238),
+                                          onPressed: () =>
+                                              this.onViewTwoPressed(context),
+                                          color: Color.fromARGB(
+                                              255, 238, 238, 238),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(Radius.circular(9)),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(9)),
                                           ),
-                                          textColor: Color.fromARGB(255, 66, 9, 99),
+                                          textColor:
+                                          Color.fromARGB(255, 66, 9, 99),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "Information",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
-                                              color: Color.fromARGB(255, 66, 9, 99),
+                                              color: Color.fromARGB(
+                                                  255, 66, 9, 99),
                                               fontWeight: FontWeight.w400,
                                               fontSize: 16,
                                             ),
@@ -183,23 +134,28 @@ class NewOrder2Widget extends StatelessWidget {
                                         width: 143,
                                         height: 40,
                                         child: FlatButton(
-                                          onPressed: () => this.onViewPressed(context),
+                                          onPressed: () =>
+                                              this.onViewPressed(context),
                                           color: AppColors.primaryElement,
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
-                                              color: Color.fromARGB(255, 255, 211, 26),
+                                              color: Color.fromARGB(
+                                                  255, 255, 211, 26),
                                               width: 3,
                                               style: BorderStyle.solid,
                                             ),
-                                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
                                           ),
-                                          textColor: Color.fromARGB(255, 66, 9, 99),
+                                          textColor:
+                                          Color.fromARGB(255, 66, 9, 99),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "Details",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
-                                              color: Color.fromARGB(255, 66, 9, 99),
+                                              color: Color.fromARGB(
+                                                  255, 66, 9, 99),
                                               fontWeight: FontWeight.w400,
                                               fontSize: 16,
                                             ),
@@ -213,11 +169,12 @@ class NewOrder2Widget extends StatelessWidget {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Container(
-                                  width: 153,
+                                  width: 200,
                                   height: 19,
                                   margin: EdgeInsets.only(left: 1, top: 33),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.stretch,
                                     children: [
                                       Align(
                                         alignment: Alignment.topLeft,
@@ -236,7 +193,7 @@ class NewOrder2Widget extends StatelessWidget {
                                         child: Container(
                                           margin: EdgeInsets.only(left: 6),
                                           child: Text(
-                                            "Delivery Methods",
+                                            "Payment Methods",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: AppColors.primaryText,
@@ -253,9 +210,11 @@ class NewOrder2Widget extends StatelessWidget {
                               ),
                               Container(
                                 height: 31,
-                                margin: EdgeInsets.only(left: 1, top: 11, right: 17),
+                                margin: EdgeInsets.only(
+                                    left: 1, top: 11, right: 17),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -263,20 +222,25 @@ class NewOrder2Widget extends StatelessWidget {
                                         width: 135,
                                         height: 31,
                                         child: FlatButton(
-                                          onPressed: () => this.onStandardDeliveryPressed(context),
+                                          onPressed: () =>
+                                              this
+                                                  .onStandardDeliveryPressed(
+                                                  context),
                                           color: AppColors.primaryElement,
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
-                                              color: Color.fromARGB(255, 255, 211, 26),
+                                              color: Color.fromARGB(
+                                                  255, 255, 211, 26),
                                               width: 2,
                                               style: BorderStyle.solid,
                                             ),
                                             borderRadius: Radii.k7pxRadius,
                                           ),
-                                          textColor: Color.fromARGB(255, 16, 16, 16),
+                                          textColor:
+                                          Color.fromARGB(255, 16, 16, 16),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
-                                            "Standard Delivery",
+                                            "Card Payment",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: AppColors.primaryText,
@@ -294,20 +258,25 @@ class NewOrder2Widget extends StatelessWidget {
                                         width: 135,
                                         height: 31,
                                         child: FlatButton(
-                                          onPressed: () => this.onCustomDeliveryPressed(context),
+                                          onPressed: () =>
+                                              this
+                                                  .onCustomDeliveryPressed(
+                                                  context),
                                           color: AppColors.primaryElement,
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
-                                              color: Color.fromARGB(255, 50, 50, 50),
+                                              color: Color.fromARGB(
+                                                  255, 50, 50, 50),
                                               width: 2,
                                               style: BorderStyle.solid,
                                             ),
                                             borderRadius: Radii.k7pxRadius,
                                           ),
-                                          textColor: Color.fromARGB(255, 16, 16, 16),
+                                          textColor:
+                                          Color.fromARGB(255, 16, 16, 16),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
-                                            "Custom Delivery",
+                                            "Pay on Delivery",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: AppColors.primaryText,
@@ -326,7 +295,7 @@ class NewOrder2Widget extends StatelessWidget {
                                 child: Container(
                                   margin: EdgeInsets.only(top: 11),
                                   child: Text(
-                                    "* Order will be delivered the same day\n* Order will only be delivered within city area",
+                                    "* Card payments will be processed online in-app \n* Payment on delivery will be given to the delivery agent at arrival",
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: AppColors.accentText,
@@ -343,7 +312,8 @@ class NewOrder2Widget extends StatelessWidget {
                                   height: 19,
                                   margin: EdgeInsets.only(top: 25),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.stretch,
                                     children: [
                                       Align(
                                         alignment: Alignment.topLeft,
@@ -401,120 +371,29 @@ class NewOrder2Widget extends StatelessWidget {
                   Spacer(),
                   Align(
                     alignment: Alignment.topCenter,
-                    child: Container(
-                      width: 324,
-                      height: 45,
-                      child: FlatButton(
-                        onPressed: () => this.onGroup4Pressed(context),
-                        color: AppColors.secondaryElement,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: Radii.k7pxRadius,
-                        ),
-                        textColor: Color.fromARGB(255, 255, 255, 255),
-                        padding: EdgeInsets.all(0),
-                        child: Text(
-                          "Continue",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 324,
+                        height: 45,
+                        child: FlatButton(
+                          onPressed: () => this.onGroup4Pressed(context),
+                          color: AppColors.secondaryElement,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: Radii.k7pxRadius,
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              left: 35,
-              top: 18,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Text(
-                      "New Order",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AppColors.secondaryText,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Container(
-                      width: 186,
-                      height: 31,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              width: 91,
-                              height: 31,
-                              child: FlatButton(
-                                onPressed: () => this.onViewThreePressed(context),
-                                color: AppColors.primaryElement,
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                    color: Color.fromARGB(255, 255, 211, 26),
-                                    width: 2,
-                                    style: BorderStyle.solid,
-                                  ),
-                                  borderRadius: Radii.k7pxRadius,
-                                ),
-                                textColor: Color.fromARGB(255, 16, 16, 16),
-                                padding: EdgeInsets.all(0),
-                                child: Text(
-                                  "8am to 12pm",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: AppColors.primaryText,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
+                          textColor: Color.fromARGB(255, 255, 255, 255),
+                          padding: EdgeInsets.all(0),
+                          child: Text(
+                            "Continue",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              width: 88,
-                              height: 31,
-                              margin: EdgeInsets.only(left: 7),
-                              child: FlatButton(
-                                onPressed: () => this.onViewFourPressed(context),
-                                color: AppColors.primaryElement,
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                    color: Color.fromARGB(255, 50, 50, 50),
-                                    width: 2,
-                                    style: BorderStyle.solid,
-                                  ),
-                                  borderRadius: Radii.k7pxRadius,
-                                ),
-                                textColor: Color.fromARGB(255, 16, 16, 16),
-                                padding: EdgeInsets.all(0),
-                                child: Text(
-                                  "12pm to 6pm",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: AppColors.primaryText,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -522,6 +401,36 @@ class NewOrder2Widget extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget ETA(BuildContext context, String hour) {
+    return Container(
+      width: 91,
+      height: 31,
+      child: FlatButton(
+        onPressed: () => this.onViewThreePressed(context),
+        color: AppColors.primaryElement,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Color.fromARGB(255, 255, 211, 26),
+            width: 2,
+            style: BorderStyle.solid,
+          ),
+          borderRadius: Radii.k7pxRadius,
+        ),
+        textColor: Color.fromARGB(255, 16, 16, 16),
+        padding: EdgeInsets.all(0),
+        child: Text(
+          "$hour",
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            color: AppColors.primaryText,
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+          ),
         ),
       ),
     );

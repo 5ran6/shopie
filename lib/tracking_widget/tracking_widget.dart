@@ -9,6 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopie/new_order_widget/new_order_widget.dart';
 import 'package:shopie/values/values.dart';
+import 'package:toast/toast.dart';
 
 class TrackingWidget extends StatelessWidget {
   void onIconAwesomeSearchPressed(BuildContext context) {}
@@ -288,7 +289,13 @@ class TrackingWidget extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  Toast.show("Clicked", context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NewOrderWidget()));
+                },
                 child: Image.asset(
                   "assets/images/group-34.png",
                   height: 130,

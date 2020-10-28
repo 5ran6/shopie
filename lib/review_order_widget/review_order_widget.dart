@@ -29,6 +29,21 @@ class ReviewOrderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
   
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "New Order",
+          style: TextStyle(
+            color: Colors.purple[900],
+            fontFamily: 'SFNS',
+          ),
+        ),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.grey,
+        leading: BackButton(
+          color: Colors.yellow,
+          onPressed: () => this.onIconAwesomeArrowLPressed(context),
+        ),
+      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
@@ -41,67 +56,13 @@ class ReviewOrderWidget extends StatelessWidget {
               left: 0,
               top: 0,
               right: 0,
-              bottom: 68,
+              bottom: 0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    height: 57,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            height: 57,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryElement,
-                              boxShadow: [
-                                Shadows.primaryShadow,
-                              ],
-                            ),
-                            child: Container(),
-                          ),
-                        ),
-                        Positioned(
-                          left: 22,
-                          top: 25,
-                          child: FlatButton(
-                            onPressed: () => this.onIconAwesomeArrowLPressed(context),
-                            color: Color.fromARGB(0, 0, 0, 0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(0)),
-                            ),
-                            textColor: Color.fromARGB(255, 0, 0, 0),
-                            padding: EdgeInsets.all(0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset("assets/images/icon-awesome-arrow-left-2.png",),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
                     height: 504,
-                    margin: EdgeInsets.only(left: 16, top: 47, right: 15),
+                    margin: EdgeInsets.only(left: 16, top: 20, right: 15),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -110,13 +71,14 @@ class ReviewOrderWidget extends StatelessWidget {
                           top: 0,
                           right: 0,
                           child: Container(
-                            height: 504,
+                            height: 454,
                             decoration: BoxDecoration(
                               color: AppColors.primaryBackground,
                               boxShadow: [
                                 Shadows.secondaryShadow,
                               ],
-                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16)),
                             ),
                             child: Container(),
                           ),
@@ -221,9 +183,10 @@ class ReviewOrderWidget extends StatelessWidget {
                                       alignment: Alignment.topLeft,
                                       child: Container(
                                         width: 91,
-                                        height: 106,
+                                        height: 110,
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          crossAxisAlignment: CrossAxisAlignment
+                                              .stretch,
                                           children: [
                                             Align(
                                               alignment: Alignment.topLeft,
@@ -256,12 +219,14 @@ class ReviewOrderWidget extends StatelessWidget {
                                             Align(
                                               alignment: Alignment.topLeft,
                                               child: Container(
-                                                margin: EdgeInsets.only(top: 28),
+                                                margin: EdgeInsets.only(
+                                                    top: 18),
                                                 child: Text(
                                                   "Volume (kg)",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: AppColors.primaryText,
+                                                    color: AppColors
+                                                        .primaryText,
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 16,
                                                     letterSpacing: 0.32,
@@ -332,7 +297,7 @@ class ReviewOrderWidget extends StatelessWidget {
                                       child: Container(
                                         margin: EdgeInsets.only(left: 6),
                                         child: Text(
-                                          "Delivery Method",
+                                          "Payment Method",
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             color: AppColors.primaryText,
@@ -456,7 +421,7 @@ class ReviewOrderWidget extends StatelessWidget {
                           top: 186,
                           right: 74,
                           child: Text(
-                            "Price(#)",
+                            "Price(₦)",
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               color: Color.fromARGB(255, 178, 178, 178),
@@ -472,42 +437,33 @@ class ReviewOrderWidget extends StatelessWidget {
                   Spacer(),
                   Align(
                     alignment: Alignment.topCenter,
-                    child: Container(
-                      width: 324,
-                      height: 45,
-                      child: FlatButton(
-                        onPressed: () => this.onGroup4Pressed(context),
-                        color: AppColors.secondaryElement,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: Radii.k7pxRadius,
-                        ),
-                        textColor: Color.fromARGB(255, 255, 255, 255),
-                        padding: EdgeInsets.all(0),
-                        child: Text(
-                          "Continue",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 324,
+                        height: 45,
+                        child: FlatButton(
+                          onPressed: () => this.onGroup4Pressed(context),
+                          color: AppColors.secondaryElement,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: Radii.k7pxRadius,
+                          ),
+                          textColor: Color.fromARGB(255, 255, 255, 255),
+                          padding: EdgeInsets.all(0),
+                          child: Text(
+                            "Continue",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ],
-              ),
-            ),
-            Positioned(
-              top: 18,
-              child: Text(
-                "New Order",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.secondaryText,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                ),
               ),
             ),
           ],

@@ -9,11 +9,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart' as http;
-import 'package:shopie/share_location_widget/share_location_widget.dart';
 import 'package:shopie/sign_up_widget/sign_up_widget.dart';
+import 'package:shopie/tracking_widget/tracking_widget.dart';
 import 'package:shopie/values/values.dart';
 import 'package:toast/toast.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constants.dart';
 
 class LoginWidget extends StatefulWidget {
@@ -46,14 +46,18 @@ class _LoginWidgetState extends State<LoginWidget> {
 
       if (response.body == 'success') {
         print('success: ' + response.body);
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => ShareLocationWidget()));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('user', username.trim());
+
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => TrackingWidget()));
       }
       if (response.body == 'denied') {
         print('failed: ' + response.body);
         setState(() {
           _isLoading = false;
         });
+
         showToast('User not found',
             context: context,
             animation: StyledToastAnimation.slideFromTop,
@@ -90,7 +94,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         }
       } on FormatException catch (exception) {
         print('Exception: ' + exception.toString());
-        print('Error' + response.body);
+        print('Error ' + response.body);
         var error = 'Oops! Something went wrong.';
         setState(() {
           _isLoading = false;
@@ -159,208 +163,205 @@ class _LoginWidgetState extends State<LoginWidget> {
       ),
       body: _isLoading
           ? Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white,
-        ),
-      )
-          : SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 249, 249, 249),
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
               ),
+            )
+          : SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      width: 147,
-                      height: 123,
-                      margin: EdgeInsets.only(top: 72),
-                      child: Image.asset(
-                        "assets/images/undraw-welcome-3gvl.png",
-                        fit: BoxFit.none,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      width: 223,
-                      height: 57,
-                      margin: EdgeInsets.only(top: 7),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Positioned(
-                            top: 0,
-                            child: Text(
-                              "Welcome Back!!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: AppColors.primaryText,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 32,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 36,
-                            child: Text(
-                              "You have been missed!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 119, 119, 119),
-                                fontFamily: 'SFNS',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   Container(
-                    height: 45,
-                    margin: EdgeInsets.only(left: 16, top: 34, right: 15),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryElement,
-                      border:
-                      Border.fromBorderSide(Borders.secondaryBorder),
+                      color: Color.fromARGB(255, 249, 249, 249),
                     ),
-                    child: TextField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        hintText: "Enter email or phone number",
-                        contentPadding: EdgeInsets.only(left: 15),
-                        border: InputBorder.none,
-                      ),
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                      ),
-                      maxLines: 1,
-                      autocorrect: false,
-                    ),
-                  ),
-                  Container(
-                    height: 45,
-                    margin: EdgeInsets.only(left: 16, top: 22, right: 15),
-                    child: Stack(
-                      alignment: Alignment.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
+                        Align(
+                          alignment: Alignment.topCenter,
                           child: Container(
-                            height: 45,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryElement,
-                              border: Border.fromBorderSide(
-                                  Borders.secondaryBorder),
-                            ),
-                            child: TextField(
-                              controller: _passwordController,
-                              decoration: InputDecoration(
-                                hintText: "Password",
-                                contentPadding: EdgeInsets.only(left: 15),
-                                border: InputBorder.none,
-                              ),
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                fontWeight: FontWeight.w400,
-                                fontSize: 15,
-                              ),
-                              maxLines: 1,
-                              autocorrect: false,
+                            width: 147,
+                            height: 123,
+                            margin: EdgeInsets.only(top: 72),
+                            child: Image.asset(
+                              "assets/images/undraw-welcome-3gvl.png",
+                              fit: BoxFit.none,
                             ),
                           ),
                         ),
-                        Positioned(
-                          top: 3,
-                          right: 0,
-                          child: FlatButton(
-                            onPressed: () =>
-                                this.onIconFeatherEyeOffPressed(context),
-                            color: Color.fromARGB(0, 0, 0, 0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(0)),
-                            ),
-                            textColor: Color.fromARGB(255, 0, 0, 0),
-                            padding: EdgeInsets.all(0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            width: 223,
+                            height: 57,
+                            margin: EdgeInsets.only(top: 7),
+                            child: Stack(
+                              alignment: Alignment.center,
                               children: [
-                                Image.asset(
-                                  "assets/images/icon-feather-eye-off.png",
+                                Positioned(
+                                  top: 0,
+                                  child: Text(
+                                    "Welcome Back!!",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.primaryText,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 32,
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
+                                Positioned(
+                                  top: 36,
+                                  child: Text(
+                                    "You have been missed!",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 119, 119, 119),
+                                      fontFamily: 'SFNS',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 18,
-                    margin: EdgeInsets.only(left: 26, top: 9, right: 12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Forgot password",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 59, 72, 255),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
+                        Container(
+                          height: 45,
+                          margin: EdgeInsets.only(left: 16, top: 34, right: 15),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryElement,
+                            border:
+                                Border.fromBorderSide(Borders.secondaryBorder),
+                          ),
+                          child: TextField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              hintText: "Enter email",
+                              contentPadding: EdgeInsets.only(left: 15),
+                              border: InputBorder.none,
                             ),
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                            ),
+                            maxLines: 1,
+                            autocorrect: false,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
                           ),
                         ),
-                        Spacer(),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Container(
-                            width: 102,
-                            height: 18,
-                            child: FlatButton(
-                              onPressed: () =>
-                                  this.onRegisterNowPressed(context),
-                              color: Color.fromARGB(0, 0, 0, 0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(0)),
+                        Container(
+                          height: 45,
+                          margin: EdgeInsets.only(left: 16, top: 22, right: 15),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Positioned(
+                                left: 0,
+                                top: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryElement,
+                                    border: Border.fromBorderSide(
+                                        Borders.secondaryBorder),
+                                  ),
+                                  child: TextField(
+                                    controller: _passwordController,
+                                    decoration: InputDecoration(
+                                      hintText: "Password",
+                                      contentPadding: EdgeInsets.only(left: 15),
+                                      border: InputBorder.none,
+                                    ),
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15,
+                                    ),
+                                    maxLines: 1,
+                                    obscureText: true,
+                                    autocorrect: false,
+                                  ),
+                                ),
                               ),
-                              textColor: Color.fromARGB(255, 59, 72, 255),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 18,
+                          margin: EdgeInsets.only(left: 26, top: 9, right: 12),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "Forgot password",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 59, 72, 255),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  width: 102,
+                                  height: 18,
+                                  child: FlatButton(
+                                    onPressed: () =>
+                                        this.onRegisterNowPressed(context),
+                                    color: Color.fromARGB(0, 0, 0, 0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(0)),
+                                    ),
+                                    textColor: Color.fromARGB(255, 59, 72, 255),
+                                    padding: EdgeInsets.all(0),
+                                    child: Text(
+                                      "Register now?",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 59, 72, 255),
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            width: 324,
+                            height: 45,
+                            margin: EdgeInsets.only(top: 26),
+                            child: FlatButton(
+                              onPressed: () => this.onGroup4Pressed(context),
+                              color: AppColors.secondaryElement,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: Radii.k7pxRadius,
+                              ),
+                              textColor: Color.fromARGB(255, 255, 255, 255),
                               padding: EdgeInsets.all(0),
                               child: Text(
-                                "Register now?",
-                                textAlign: TextAlign.left,
+                                "Continue",
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 59, 72, 255),
+                                  color: Color.fromARGB(255, 255, 255, 255),
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 16,
+                                  fontSize: 20,
                                 ),
                               ),
                             ),
@@ -369,38 +370,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                       ],
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      width: 324,
-                      height: 45,
-                      margin: EdgeInsets.only(top: 26),
-                      child: FlatButton(
-                        onPressed: () => this.onGroup4Pressed(context),
-                        color: AppColors.secondaryElement,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: Radii.k7pxRadius,
-                        ),
-                        textColor: Color.fromARGB(255, 255, 255, 255),
-                        padding: EdgeInsets.all(0),
-                        child: Text(
-                          "Continue",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }
