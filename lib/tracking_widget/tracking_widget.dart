@@ -290,7 +290,7 @@ class TrackingWidget extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: FlatButton(
                 onPressed: () {
-                  Toast.show("Clicked", context);
+                //  Toast.show("Clicked", context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(

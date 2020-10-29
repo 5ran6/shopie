@@ -47,11 +47,12 @@ class NewOrder2Widget extends StatelessWidget {
         ),
       ),
       body: Container(
-        constraints: BoxConstraints.expand(),
+        //   constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 249, 249, 249),
         ),
         child: Stack(
+          alignment: Alignment.topCenter,
           children: [
             Positioned(
               left: 0,
@@ -62,8 +63,8 @@ class NewOrder2Widget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    height: 504,
-                    margin: EdgeInsets.only(left: 16, top: 20, right: 15),
+                    height: 480,
+                    margin: EdgeInsets.only(left: 16, top: 10, right: 15),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -79,14 +80,14 @@ class NewOrder2Widget extends StatelessWidget {
                                 Shadows.secondaryShadow,
                               ],
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
+                              BorderRadius.all(Radius.circular(16)),
                             ),
                           ),
                         ),
                         Positioned(
-                          left: 18,
-                          top: 54,
-                          right: 29,
+                          left: 20,
+                          top: 35,
+                          right: 19,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -95,12 +96,12 @@ class NewOrder2Widget extends StatelessWidget {
                                 margin: EdgeInsets.only(left: 11),
                                 child: Row(
                                   crossAxisAlignment:
-                                  CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Container(
-                                        width: 143,
+                                        width: 120,
                                         height: 40,
                                         child: FlatButton(
                                           onPressed: () =>
@@ -112,7 +113,7 @@ class NewOrder2Widget extends StatelessWidget {
                                                 Radius.circular(9)),
                                           ),
                                           textColor:
-                                          Color.fromARGB(255, 66, 9, 99),
+                                              Color.fromARGB(255, 66, 9, 99),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "Information",
@@ -131,7 +132,7 @@ class NewOrder2Widget extends StatelessWidget {
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Container(
-                                        width: 143,
+                                        width: 120,
                                         height: 40,
                                         child: FlatButton(
                                           onPressed: () =>
@@ -369,35 +370,35 @@ class NewOrder2Widget extends StatelessWidget {
                     ),
                   ),
                   Spacer(),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 324,
-                        height: 45,
-                        child: FlatButton(
-                          onPressed: () => this.onGroup4Pressed(context),
-                          color: AppColors.secondaryElement,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: Radii.k7pxRadius,
-                          ),
-                          textColor: Color.fromARGB(255, 255, 255, 255),
-                          padding: EdgeInsets.all(0),
-                          child: Text(
-                            "Continue",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 324,
+                  height: 45,
+                  child: FlatButton(
+                    onPressed: () => this.onGroup4Pressed(context),
+                    color: AppColors.secondaryElement,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: Radii.k7pxRadius,
+                    ),
+                    textColor: Color.fromARGB(255, 255, 255, 255),
+                    padding: EdgeInsets.all(0),
+                    child: Text(
+                      "Continue",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20,
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ],

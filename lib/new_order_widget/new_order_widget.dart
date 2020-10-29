@@ -22,6 +22,15 @@ class NewOrderWidget extends StatelessWidget {
   void onGroup4Pressed(BuildContext context) => Navigator.push(
       context, MaterialPageRoute(builder: (context) => NewOrder2Widget()));
 
+  List categoryList = [];
+  TextEditingController _nameController = new TextEditingController();
+  TextEditingController _phoneController = new TextEditingController();
+  TextEditingController _addressController = new TextEditingController();
+  TextEditingController _volumeController = new TextEditingController();
+
+  String total = "0", payable = "0";
+  String productCategory;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +50,7 @@ class NewOrderWidget extends StatelessWidget {
         ),
       ),
       body: Container(
-        constraints: BoxConstraints.expand(),
+//        constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 249, 249, 249),
         ),
@@ -53,275 +62,44 @@ class NewOrderWidget extends StatelessWidget {
               top: 0,
               right: 0,
               bottom: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    height: 504,
-                    margin: EdgeInsets.only(left: 16, top: 20, right: 15),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            height: 450,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryBackground,
-                              boxShadow: [
-                                Shadows.secondaryShadow,
-                              ],
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      //this is the container before the "card view" container
+                      height: 480,
+                      margin: EdgeInsets.only(left: 16, top: 10, right: 15),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Positioned(
+                            left: 0,
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              //the "card view" container
+                              height: 450,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryBackground,
+                                boxShadow: [
+                                  Shadows.secondaryShadow,
+                                ],
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(16)),
+                              ),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          left: 20,
-                          top: 35,
-                          right: 19,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Container(
-                                height: 40,
-                                margin: EdgeInsets.only(left: 9, right: 10),
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.stretch,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Container(
-                                        width: 143,
-                                        height: 40,
-                                        child: FlatButton(
-                                          onPressed: () =>
-                                              this
-                                                  .onInformationPressed(
-                                                  context),
-                                          color: AppColors.primaryElement,
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(
-                                                color: Colors.yellowAccent,
-                                                width: 1,
-                                                style: BorderStyle.solid),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(9)),
-                                          ),
-                                          textColor:
-                                          Color.fromARGB(255, 66, 9, 99),
-                                          padding: EdgeInsets.all(0),
-                                          child: Text(
-                                            "Information",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 66, 9, 99),
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Container(
-                                        width: 143,
-                                        height: 40,
-                                        child: FlatButton(
-                                          onPressed: () =>
-                                              this.onDetailsPressed(context),
-                                          color: Color.fromARGB(
-                                              255, 238, 238, 238),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10)),
-                                          ),
-                                          textColor:
-                                          Color.fromARGB(255, 66, 9, 99),
-                                          padding: EdgeInsets.all(0),
-                                          child: Text(
-                                            "Details",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 66, 9, 99),
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 31),
-                                  child: Text(
-                                    "Receiver Name",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: AppColors.primaryText,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                      letterSpacing: 0.32,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topCenter,
-                                child: Container(
-                                  width: 355,
+                          Positioned(
+                            left: 20,
+                            top: 35,
+                            right: 19,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Container(
                                   height: 40,
-                                  margin: EdgeInsets.only(top: 10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryElement,
-                                    border: Border.fromBorderSide(
-                                        Borders.secondaryBorder),
-                                  ),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: "Full name",
-                                      contentPadding: EdgeInsets.only(
-                                          left: 15, top: 0, right: 6),
-                                      border: InputBorder.none,
-                                    ),
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                    ),
-                                    maxLines: 1,
-                                    keyboardType: TextInputType.text,
-                                    textInputAction: TextInputAction.next,
-                                    autocorrect: false,
-                                    textCapitalization:
-                                    TextCapitalization.words,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 13),
-                                  child: Text(
-                                    "Phone number",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: AppColors.primaryText,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                      letterSpacing: 0.32,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topCenter,
-                                child: Container(
-                                  width: 355,
-                                  height: 40,
-                                  margin: EdgeInsets.only(top: 8),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryElement,
-                                    border: Border.fromBorderSide(
-                                        Borders.secondaryBorder),
-                                  ),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: "Enter phone Number",
-                                      contentPadding: EdgeInsets.only(
-                                          left: 15, top: 0, right: 6),
-                                      border: InputBorder.none,
-                                    ),
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                    ),
-                                    maxLines: 1,
-                                    keyboardType: TextInputType.phone,
-                                    textInputAction: TextInputAction.next,
-                                    autocorrect: false,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 14),
-                                  child: Text(
-                                    "Address",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: AppColors.primaryText,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                      letterSpacing: 0.32,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topCenter,
-                                child: Container(
-                                  width: 355,
-                                  height: 40,
-                                  margin: EdgeInsets.only(top: 8),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryElement,
-                                    border: Border.fromBorderSide(
-                                        Borders.secondaryBorder),
-                                  ),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: "Enter Address",
-                                      contentPadding:
-                                      EdgeInsets.only(left: 15, top: 0),
-                                      border: InputBorder.none,
-                                    ),
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                    ),
-                                    maxLines: 1,
-                                    textInputAction: TextInputAction.next,
-                                    autocorrect: false,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 14),
-                                  child: Text(
-                                    "Volume",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: AppColors.primaryText,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                      letterSpacing: 0.32,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  width: 355,
-                                  height: 40,
-                                  margin: EdgeInsets.only(top: 8),
+                                  margin: EdgeInsets.only(left: 9, right: 10),
                                   child: Row(
                                     crossAxisAlignment:
                                     CrossAxisAlignment.stretch,
@@ -329,150 +107,348 @@ class NewOrderWidget extends StatelessWidget {
                                       Align(
                                         alignment: Alignment.topLeft,
                                         child: Container(
-                                          width: 260,
+                                          width: 120,
                                           height: 40,
-                                          decoration: BoxDecoration(
+                                          child: FlatButton(
+                                            onPressed: () =>
+                                                this
+                                                    .onInformationPressed(
+                                                    context),
                                             color: AppColors.primaryElement,
-                                            border: Border.fromBorderSide(
-                                                Borders.secondaryBorder),
-                                          ),
-                                          child: TextField(
-                                            decoration: InputDecoration(
-                                              hintText: "Enter Volume",
-                                              contentPadding: EdgeInsets.only(
-                                                  left: 15, top: 0, right: 6),
-                                              border: InputBorder.none,
+                                            shape: RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                  color: Colors.yellowAccent,
+                                                  width: 3,
+                                                  style: BorderStyle.solid),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(9)),
                                             ),
-                                            style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 0, 0, 0),
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 12,
+                                            textColor:
+                                            Color.fromARGB(255, 66, 9, 99),
+                                            padding: EdgeInsets.all(0),
+                                            child: Text(
+                                              "Information",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 66, 9, 99),
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16,
+                                              ),
                                             ),
-                                            maxLines: 1,
-                                            autocorrect: false,
                                           ),
                                         ),
                                       ),
+                                      Spacer(),
                                       Align(
                                         alignment: Alignment.topLeft,
                                         child: Container(
-                                          width: 44,
-                                          height: 39,
-                                          margin: EdgeInsets.only(left: 20),
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                left: 0,
-                                                top: 0,
-                                                child: Image.asset(
-                                                  "assets/images/color-outline-blue.png",
-                                                  fit: BoxFit.none,
-                                                ),
+                                          width: 120,
+                                          height: 40,
+                                          child: FlatButton(
+                                            onPressed: () =>
+                                                this.onDetailsPressed(context),
+                                            color: Color.fromARGB(
+                                                255, 238, 238, 238),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                            ),
+                                            textColor:
+                                            Color.fromARGB(255, 66, 9, 99),
+                                            padding: EdgeInsets.all(0),
+                                            child: Text(
+                                              "Details",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 66, 9, 99),
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16,
                                               ),
-                                              Positioned(
-                                                left: 13,
-                                                top: 7,
-                                                child: Text(
-                                                  "Kg",
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 255, 255, 255),
-                                                    fontWeight:
-                                                    FontWeight.w400,
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Positioned(
-                          top: 150,
-                          right: 35,
-                          width: 10,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Container(
-                                  width: 15,
-                                  height: 18,
-                                  margin: EdgeInsets.only(right: 1),
-                                  child: FlatButton(
-                                    onPressed: () =>
-                                        this.onLayer1Pressed(context),
-                                    color: Color.fromARGB(0, 0, 0, 0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(0)),
-                                    ),
-                                    textColor: Color.fromARGB(255, 0, 0, 0),
-                                    padding: EdgeInsets.all(0),
-                                    child: Image.asset(
-                                      "assets/images/layer-1-5.png",
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 31),
+                                    child: Text(
+                                      "Receiver Name",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: AppColors.primaryText,
+                                        fontWeight: FontWeight.w400,
+                                        letterSpacing: 0.32,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Container(
-                                  width: 13,
-                                  height: 19,
-                                  margin: EdgeInsets.only(top: 139),
-                                  child: Image.asset(
-                                    "assets/images/layer-1-4.png",
-                                    fit: BoxFit.none,
+                                Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Container(
+                                    width: 355,
+                                    height: 40,
+                                    margin: EdgeInsets.only(top: 10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryElement,
+                                      border: Border.fromBorderSide(
+                                          Borders.secondaryBorder),
+                                    ),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        hintText: "Full name",
+                                        contentPadding: EdgeInsets.only(
+                                            left: 15, top: 0, right: 6),
+                                        border: InputBorder.none,
+                                      ),
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      maxLines: 1,
+                                      keyboardType: TextInputType.text,
+                                      textInputAction: TextInputAction.next,
+                                      autocorrect: false,
+                                      textCapitalization:
+                                      TextCapitalization.words,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 324,
-                        height: 45,
-                        child: FlatButton(
-                          onPressed: () => this.onGroup4Pressed(context),
-                          color: AppColors.secondaryElement,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: Radii.k7pxRadius,
-                          ),
-                          textColor: Color.fromARGB(255, 255, 255, 255),
-                          padding: EdgeInsets.all(0),
-                          child: Text(
-                            "Continue",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 13),
+                                    child: Text(
+                                      "Phone number",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: AppColors.primaryText,
+                                        fontWeight: FontWeight.w400,
+                                        letterSpacing: 0.32,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Container(
+                                    width: 355,
+                                    height: 40,
+                                    margin: EdgeInsets.only(top: 8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryElement,
+                                      border: Border.fromBorderSide(
+                                          Borders.secondaryBorder),
+                                    ),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        hintText: "Enter phone Number",
+                                        contentPadding: EdgeInsets.only(
+                                            left: 15, top: 0, right: 6),
+                                        border: InputBorder.none,
+                                      ),
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      maxLines: 1,
+                                      keyboardType: TextInputType.phone,
+                                      textInputAction: TextInputAction.next,
+                                      autocorrect: false,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 14),
+                                    child: Text(
+                                      "Address",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: AppColors.primaryText,
+                                        fontWeight: FontWeight.w400,
+                                        letterSpacing: 0.32,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Container(
+                                        width: 280,
+                                        height: 40,
+                                        margin: EdgeInsets.only(top: 8),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primaryElement,
+                                          border: Border.fromBorderSide(
+                                              Borders.secondaryBorder),
+                                        ),
+                                        child: TextField(
+                                          decoration: InputDecoration(
+                                            hintText: "Enter Address",
+                                            contentPadding:
+                                            EdgeInsets.only(left: 15),
+                                            border: InputBorder.none,
+                                          ),
+                                          style: TextStyle(
+                                            color: Color.fromARGB(255, 0, 0, 0),
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          maxLines: 1,
+                                          textInputAction: TextInputAction.next,
+                                          autocorrect: false,
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          width: 44,
+                                          height: 40,
+                                          margin: EdgeInsets.only(top: 8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[100],
+//                                          color: AppColors.primaryBackground,
+                                            // boxShadow: [
+                                            //   Shadows.secondaryShadow,
+                                            // ],
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
+                                          ),
+                                          child: IconButton(
+                                            tooltip:
+                                            "Use google maps to select your location",
+                                            icon: Icon(Icons.location_on),
+                                            onPressed: null,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 14),
+                                    child: Text(
+                                      "Volume",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: AppColors.primaryText,
+                                        fontWeight: FontWeight.w400,
+                                        letterSpacing: 0.32,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    width: 355,
+                                    height: 40,
+                                    margin: EdgeInsets.only(top: 8),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Container(
+                                            width: 290,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: AppColors.primaryElement,
+                                              border: Border.fromBorderSide(
+                                                  Borders.secondaryBorder),
+                                            ),
+                                            child: DropdownButtonFormField(
+                                              decoration: InputDecoration(
+                                                prefixIcon: Icon(
+                                                    Icons.fireplace_outlined),
+                                                labelText:
+                                                'Select the volume of gas',
+                                                filled: true,
+                                                fillColor: Colors.white,
+                                                errorStyle: TextStyle(
+                                                    color: Colors.yellow),
+                                              ),
+//                                            value: categoryList[0]['value'],
+                                              value: 0,
+                                              items: categoryList.map((map) {
+                                                return DropdownMenuItem(
+                                                  child: Text(map['name']),
+                                                  value: map['value'],
+                                                );
+                                              }).toList(),
+                                              onChanged: (dynamic value) {
+                                                _volumeController.text = value;
+                                                productCategory = value;
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
+                    Center(
+                        child: Text(
+                          "Total: ₦ $total",
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        )),
+                    Center(
+                        child: Text(
+                          "Amount Payable: ₦ $payable",
+                          style: TextStyle(fontSize: 18, color: Colors.green),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 324,
+                  height: 45,
+                  child: FlatButton(
+                    onPressed: () => this.onGroup4Pressed(context),
+                    color: AppColors.secondaryElement,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: Radii.k7pxRadius,
+                    ),
+                    textColor: Color.fromARGB(255, 255, 255, 255),
+                    padding: EdgeInsets.all(0),
+                    child: Text(
+                      "Continue",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20,
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ],

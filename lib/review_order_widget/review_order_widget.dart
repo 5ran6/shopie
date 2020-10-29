@@ -10,24 +10,19 @@ import 'package:flutter/material.dart';
 import 'package:shopie/pay_for_order_widget/pay_for_order_widget.dart';
 import 'package:shopie/values/values.dart';
 
-
 class ReviewOrderWidget extends StatelessWidget {
-  
-  void onGroup4Pressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => PayForOrderWidget()));
-  
-  void onIconAwesomeArrowLPressed(BuildContext context) => Navigator.pop(context);
-  
-  void onViewPressed(BuildContext context) {
-  
-  }
-  
-  void onAmTo12pmPressed(BuildContext context) {
-  
-  }
-  
+  void onGroup4Pressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => PayForOrderWidget()));
+
+  void onIconAwesomeArrowLPressed(BuildContext context) =>
+      Navigator.pop(context);
+
+  void onViewPressed(BuildContext context) {}
+
+  void onAmTo12pmPressed(BuildContext context) {}
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -107,7 +102,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                 height: 18,
                                 margin: EdgeInsets.only(top: 28, right: 2),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -143,7 +139,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                 height: 18,
                                 margin: EdgeInsets.only(top: 2, right: 72),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -177,7 +174,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                 height: 106,
                                 margin: EdgeInsets.only(top: 28, right: 34),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -185,8 +183,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                         width: 91,
                                         height: 110,
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .stretch,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
                                           children: [
                                             Align(
                                               alignment: Alignment.topLeft,
@@ -209,7 +207,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                                   "High level",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: AppColors.secondaryText,
+                                                    color:
+                                                    AppColors.secondaryText,
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 16,
                                                   ),
@@ -219,14 +218,14 @@ class ReviewOrderWidget extends StatelessWidget {
                                             Align(
                                               alignment: Alignment.topLeft,
                                               child: Container(
-                                                margin: EdgeInsets.only(
-                                                    top: 18),
+                                                margin:
+                                                EdgeInsets.only(top: 18),
                                                 child: Text(
                                                   "Volume (kg)",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: AppColors
-                                                        .primaryText,
+                                                    color:
+                                                    AppColors.primaryText,
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 16,
                                                     letterSpacing: 0.32,
@@ -242,7 +241,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                                   "6",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: AppColors.secondaryText,
+                                                    color:
+                                                    AppColors.secondaryText,
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 16,
                                                   ),
@@ -264,7 +264,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                           color: AppColors.primaryBackground,
                                           border: Border.all(
                                             width: 1,
-                                            color: Color.fromARGB(255, 87, 239, 117),
+                                            color: Color.fromARGB(
+                                                255, 87, 239, 117),
                                           ),
                                           borderRadius: Radii.k7pxRadius,
                                         ),
@@ -278,7 +279,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                 height: 20,
                                 margin: EdgeInsets.only(top: 28),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -314,7 +316,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                       child: Container(
                                         width: 16,
                                         height: 16,
-                                        margin: EdgeInsets.only(top: 4, right: 6),
+                                        margin:
+                                        EdgeInsets.only(top: 4, right: 6),
                                         child: Image.asset(
                                           "assets/images/layer-1-6.png",
                                           fit: BoxFit.none,
@@ -344,7 +347,8 @@ class ReviewOrderWidget extends StatelessWidget {
                                 height: 32,
                                 margin: EdgeInsets.only(top: 9, right: 39),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -353,12 +357,14 @@ class ReviewOrderWidget extends StatelessWidget {
                                         height: 31,
                                         margin: EdgeInsets.only(top: 1),
                                         child: FlatButton(
-                                          onPressed: () => this.onViewPressed(context),
+                                          onPressed: () =>
+                                              this.onViewPressed(context),
                                           color: AppColors.secondaryElement,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: Radii.k7pxRadius,
                                           ),
-                                          textColor: Color.fromARGB(255, 16, 16, 16),
+                                          textColor:
+                                          Color.fromARGB(255, 16, 16, 16),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "Standard Delivery",
@@ -379,12 +385,14 @@ class ReviewOrderWidget extends StatelessWidget {
                                         width: 91,
                                         height: 31,
                                         child: FlatButton(
-                                          onPressed: () => this.onAmTo12pmPressed(context),
+                                          onPressed: () =>
+                                              this.onAmTo12pmPressed(context),
                                           color: AppColors.secondaryElement,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: Radii.k7pxRadius,
                                           ),
-                                          textColor: Color.fromARGB(255, 16, 16, 16),
+                                          textColor:
+                                          Color.fromARGB(255, 16, 16, 16),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "8am to 12pm",

@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:shopie/add_new_card_widget/add_new_card_widget.dart';
 import 'package:shopie/values/values.dart';
 
-
 class PayForOrderWidget extends StatelessWidget {
   void onGroup4Pressed(BuildContext context) => Navigator.push(
       context, MaterialPageRoute(builder: (context) => AddNewCardWidget()));
@@ -143,7 +142,8 @@ class PayForOrderWidget extends StatelessWidget {
                               onPressed: () => this.onAddNewPressed(context),
                               color: Color.fromARGB(0, 0, 0, 0),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(0)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(0)),
                               ),
                               textColor: Color.fromARGB(255, 59, 72, 255),
                               padding: EdgeInsets.all(0),
@@ -179,7 +179,8 @@ class PayForOrderWidget extends StatelessWidget {
                               boxShadow: [
                                 Shadows.secondaryShadow,
                               ],
-                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(16)),
                             ),
                             child: Container(),
                           ),
@@ -215,7 +216,8 @@ class PayForOrderWidget extends StatelessWidget {
                                       width: 1.5,
                                       color: Color.fromARGB(255, 66, 9, 99),
                                     ),
-                                    borderRadius: BorderRadius.all(Radius.circular(10.5)),
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(10.5)),
                                   ),
                                   child: Container(),
                                 ),
@@ -247,7 +249,8 @@ class PayForOrderWidget extends StatelessWidget {
                               boxShadow: [
                                 Shadows.secondaryShadow,
                               ],
-                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(16)),
                             ),
                             child: Container(),
                           ),
@@ -283,7 +286,8 @@ class PayForOrderWidget extends StatelessWidget {
                                       width: 1.5,
                                       color: Color.fromARGB(255, 66, 9, 99),
                                     ),
-                                    borderRadius: BorderRadius.all(Radius.circular(10.5)),
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(10.5)),
                                   ),
                                   child: Container(),
                                 ),
