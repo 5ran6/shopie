@@ -73,20 +73,20 @@ class NewOrder2Widget extends StatelessWidget {
                           top: 0,
                           right: 0,
                           child: Container(
-                            height: 450,
+                            height: 470,
                             decoration: BoxDecoration(
                               color: AppColors.primaryBackground,
                               boxShadow: [
                                 Shadows.secondaryShadow,
                               ],
                               borderRadius:
-                              BorderRadius.all(Radius.circular(16)),
+                                  BorderRadius.all(Radius.circular(16)),
                             ),
                           ),
                         ),
                         Positioned(
                           left: 20,
-                          top: 35,
+                          top: 15,
                           right: 19,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -96,7 +96,7 @@ class NewOrder2Widget extends StatelessWidget {
                                 margin: EdgeInsets.only(left: 11),
                                 child: Row(
                                   crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -167,6 +167,7 @@ class NewOrder2Widget extends StatelessWidget {
                                   ],
                                 ),
                               ),
+
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Container(
@@ -370,35 +371,35 @@ class NewOrder2Widget extends StatelessWidget {
                     ),
                   ),
                   Spacer(),
-                ],
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: 324,
-                  height: 45,
-                  child: FlatButton(
-                    onPressed: () => this.onGroup4Pressed(context),
-                    color: AppColors.secondaryElement,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: Radii.k7pxRadius,
-                    ),
-                    textColor: Color.fromARGB(255, 255, 255, 255),
-                    padding: EdgeInsets.all(0),
-                    child: Text(
-                      "Continue",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 324,
+                        height: 45,
+                        child: FlatButton(
+                          onPressed: () => this.onGroup4Pressed(context),
+                          color: AppColors.secondaryElement,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: Radii.k7pxRadius,
+                          ),
+                          textColor: Color.fromARGB(255, 255, 255, 255),
+                          padding: EdgeInsets.all(0),
+                          child: Text(
+                            "Continue",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
