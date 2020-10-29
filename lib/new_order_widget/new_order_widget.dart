@@ -6,9 +6,15 @@
 *  Copyright © 2018 Mountedwings Cyber Tech. All rights reserved.
     */
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/new_order2_widget/new_order2_widget.dart';
 import 'package:shopie/values/values.dart';
+
+import '../constants.dart';
 
 class NewOrderWidget extends StatefulWidget {
   @override
@@ -16,17 +22,6 @@ class NewOrderWidget extends StatefulWidget {
 }
 
 class _NewOrderWidgetState extends State<NewOrderWidget> {
-  void onIconAwesomeArrowLPressed(BuildContext context) {}
-
-  void onInformationPressed(BuildContext context) {}
-
-  void onDetailsPressed(BuildContext context) {}
-
-  void onLayer1Pressed(BuildContext context) {}
-
-  void onGroup4Pressed(BuildContext context) => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => NewOrder2Widget()));
-
   List categoryList = [];
 
   TextEditingController _nameController = new TextEditingController();
@@ -51,6 +46,90 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   String phone;
   String address;
   String coupon;
+
+  void onIconAwesomeArrowLPressed(BuildContext context) {}
+
+  void onInformationPressed(BuildContext context) {}
+
+  void onDetailsPressed(BuildContext context) {}
+
+  void onLayer1Pressed(BuildContext context) {}
+
+  void onGroup4Pressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => NewOrder2Widget()));
+
+  @override
+  void initState() {
+    super.initState();
+    getDetails();
+  }
+
+  void getDetails() async {
+    //getCategories
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String email = await sharedPreferences.get("user");
+    Map data = {'user': email};
+
+    var jsonData;
+    var response =
+        await http.post(Constants.domain + "get_user_details.php", body: data);
+    print('Status Code = ' + response.statusCode.toString());
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      jsonData = json.decode(response.body);
+      print('success: ' + response.body);
+      //parse Category List
+      Map<String, dynamic> categoriesFromApi = json.decode(response.body);
+      List cat = categoriesFromApi['categories'];
+      for (final i in cat) {
+        var categoryMap = {'name': i['name'], 'value': i['id'].toString()};
+
+        categoryList.add(categoryMap);
+      }
+      print('Category List: ' + categoryList.toString());
+
+      setState(() {
+        //  clearAllFields();
+        _isLoading = false;
+      });
+    } else {
+      try {
+        // jsonData = json.decode(response.body);
+        print('failed: ' + response.body);
+        if (response.statusCode >= 400) {
+          showToast('$error',
+              context: context,
+              animation: StyledToastAnimation.slideFromTop,
+              reverseAnimation: StyledToastAnimation.slideToTop,
+              position: StyledToastPosition.top,
+              startOffset: Offset(0.0, -3.0),
+              reverseEndOffset: Offset(0.0, -3.0),
+              duration: Duration(seconds: 4),
+              //Animation duration   animDuration * 2 <= duration
+              animDuration: Duration(seconds: 1),
+              curve: Curves.elasticOut,
+              reverseCurve: Curves.fastOutSlowIn);
+          Navigator.pop(context);
+        }
+      } on FormatException catch (exception) {
+        print('Exception: ' + exception.toString());
+        print('Error' + response.body);
+        error = 'Oops! Something went wrong.';
+        Navigator.pop(context);
+        showToast('$error',
+            context: context,
+            animation: StyledToastAnimation.slideFromTop,
+            reverseAnimation: StyledToastAnimation.slideToTop,
+            position: StyledToastPosition.top,
+            startOffset: Offset(0.0, -3.0),
+            reverseEndOffset: Offset(0.0, -3.0),
+            duration: Duration(seconds: 4),
+            //Animation duration   animDuration * 2 <= duration
+            animDuration: Duration(seconds: 1),
+            curve: Curves.elasticOut,
+            reverseCurve: Curves.fastOutSlowIn);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

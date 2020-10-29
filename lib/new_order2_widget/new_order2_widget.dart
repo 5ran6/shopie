@@ -10,7 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:shopie/review_order_widget/review_order_widget.dart';
 import 'package:shopie/values/values.dart';
 
-class NewOrder2Widget extends StatelessWidget {
+class NewOrder2Widget extends StatefulWidget {
+  @override
+  _NewOrder2WidgetState createState() => _NewOrder2WidgetState();
+}
+
+class _NewOrder2WidgetState extends State<NewOrder2Widget> {
   void onGroup4Pressed(BuildContext context) => Navigator.push(
       context, MaterialPageRoute(builder: (context) => ReviewOrderWidget()));
 
@@ -96,7 +101,7 @@ class NewOrder2Widget extends StatelessWidget {
                                 margin: EdgeInsets.only(left: 11),
                                 child: Row(
                                   crossAxisAlignment:
-                                  CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -149,7 +154,7 @@ class NewOrder2Widget extends StatelessWidget {
                                                 Radius.circular(10)),
                                           ),
                                           textColor:
-                                          Color.fromARGB(255, 66, 9, 99),
+                                              Color.fromARGB(255, 66, 9, 99),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "Details",
@@ -167,7 +172,6 @@ class NewOrder2Widget extends StatelessWidget {
                                   ],
                                 ),
                               ),
-
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Container(
@@ -176,7 +180,7 @@ class NewOrder2Widget extends StatelessWidget {
                                   margin: EdgeInsets.only(left: 1, top: 33),
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.stretch,
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       Align(
                                         alignment: Alignment.topLeft,
@@ -216,7 +220,7 @@ class NewOrder2Widget extends StatelessWidget {
                                     left: 1, top: 11, right: 17),
                                 child: Row(
                                   crossAxisAlignment:
-                                  CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -224,9 +228,8 @@ class NewOrder2Widget extends StatelessWidget {
                                         width: 135,
                                         height: 31,
                                         child: FlatButton(
-                                          onPressed: () =>
-                                              this
-                                                  .onStandardDeliveryPressed(
+                                          onPressed: () => this
+                                              .onStandardDeliveryPressed(
                                                   context),
                                           color: AppColors.primaryElement,
                                           shape: RoundedRectangleBorder(
@@ -239,7 +242,7 @@ class NewOrder2Widget extends StatelessWidget {
                                             borderRadius: Radii.k7pxRadius,
                                           ),
                                           textColor:
-                                          Color.fromARGB(255, 16, 16, 16),
+                                              Color.fromARGB(255, 16, 16, 16),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "Card Payment",
@@ -260,10 +263,8 @@ class NewOrder2Widget extends StatelessWidget {
                                         width: 135,
                                         height: 31,
                                         child: FlatButton(
-                                          onPressed: () =>
-                                              this
-                                                  .onCustomDeliveryPressed(
-                                                  context),
+                                          onPressed: () => this
+                                              .onCustomDeliveryPressed(context),
                                           color: AppColors.primaryElement,
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
@@ -275,7 +276,7 @@ class NewOrder2Widget extends StatelessWidget {
                                             borderRadius: Radii.k7pxRadius,
                                           ),
                                           textColor:
-                                          Color.fromARGB(255, 16, 16, 16),
+                                              Color.fromARGB(255, 16, 16, 16),
                                           padding: EdgeInsets.all(0),
                                           child: Text(
                                             "Pay on Delivery",
@@ -315,7 +316,7 @@ class NewOrder2Widget extends StatelessWidget {
                                   margin: EdgeInsets.only(top: 25),
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.stretch,
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       Align(
                                         alignment: Alignment.topLeft,
