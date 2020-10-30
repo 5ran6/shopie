@@ -9,6 +9,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/new_order2_widget/new_order2_widget.dart';
@@ -23,6 +24,7 @@ class NewOrderWidget extends StatefulWidget {
 
 class _NewOrderWidgetState extends State<NewOrderWidget> {
   List categoryList = [];
+  List tempCategoryList = [];
 
   TextEditingController _nameController = new TextEditingController();
 
@@ -31,17 +33,18 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   TextEditingController _addressController = new TextEditingController();
   TextEditingController _couponController = new TextEditingController();
 
-  TextEditingController _volumeController = new TextEditingController();
+  TextEditingController _priceController = new TextEditingController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  bool _isLoading = false;
+  bool _isLoading = true;
 
-  String total = "0", payable = "0";
+  String total = "0",
+      payable = "0";
 
-  String productCategory;
+  String price;
   String full_name;
   String phone;
   String address;
@@ -62,6 +65,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   void initState() {
     super.initState();
     getDetails();
+    getVolumePrice();
   }
 
   void getDetails() async {
@@ -77,6 +81,20 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       jsonData = json.decode(response.body);
       print('success: ' + response.body);
+
+      setState(() {
+        full_name = jsonData['name'];
+        phone = jsonData['phone'];
+        address = jsonData['last_address'];
+
+        _nameController.text = full_name;
+        _phoneController.text = phone;
+        _addressController.text = address;
+      });
+
+//      Toast.show(full_name + " " + phone, context);
+
+/*
       //parse Category List
       Map<String, dynamic> categoriesFromApi = json.decode(response.body);
       List cat = categoriesFromApi['categories'];
@@ -86,17 +104,13 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
         categoryList.add(categoryMap);
       }
       print('Category List: ' + categoryList.toString());
-
-      setState(() {
-        //  clearAllFields();
-        _isLoading = false;
-      });
+*/
     } else {
       try {
         // jsonData = json.decode(response.body);
         print('failed: ' + response.body);
         if (response.statusCode >= 400) {
-          showToast('$error',
+          showToast('Something went wrong',
               context: context,
               animation: StyledToastAnimation.slideFromTop,
               reverseAnimation: StyledToastAnimation.slideToTop,
@@ -113,7 +127,78 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
       } on FormatException catch (exception) {
         print('Exception: ' + exception.toString());
         print('Error' + response.body);
-        error = 'Oops! Something went wrong.';
+        Navigator.pop(context);
+        showToast('Oops! Something went wrong!',
+            context: context,
+            animation: StyledToastAnimation.slideFromTop,
+            reverseAnimation: StyledToastAnimation.slideToTop,
+            position: StyledToastPosition.top,
+            startOffset: Offset(0.0, -3.0),
+            reverseEndOffset: Offset(0.0, -3.0),
+            duration: Duration(seconds: 4),
+            //Animation duration   animDuration * 2 <= duration
+            animDuration: Duration(seconds: 1),
+            curve: Curves.elasticOut,
+            reverseCurve: Curves.fastOutSlowIn);
+      }
+    }
+  }
+
+  void getVolumePrice() async {
+    var jsonData;
+    var response =
+        await http.post(Constants.domain + "user_gas_get_prices.php");
+    print('Status Code = ' + response.statusCode.toString());
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      jsonData = json.decode(response.body);
+      print('success: ' + response.body);
+
+      //parse Category List
+//      Map<String, dynamic> categoriesFromApi = json.decode(response.body);
+
+      List cat = json.decode(response.body);
+      var ca = {'name': "Select a volume of Gas", "value": ""};
+      tempCategoryList.add(ca);
+
+      for (final i in cat) {
+        var categoryMap = {
+          'name': i['volume'].toString() +
+              " Kg \t - " +
+              "₦" +
+              i['payment_amount'].toString(),
+          'value': i['payment_amount'].toString()
+        };
+        tempCategoryList.add(categoryMap);
+      }
+      print('Category List: ' + tempCategoryList.toString());
+
+      setState(() {
+        _isLoading = false;
+        categoryList = tempCategoryList;
+      });
+    } else {
+      try {
+        // jsonData = json.decode(response.body);
+        print('failed: ' + response.body);
+        if (response.statusCode >= 400) {
+          showToast('Couldn\'t get prices at this time. Refresh this page',
+              context: context,
+              animation: StyledToastAnimation.slideFromTop,
+              reverseAnimation: StyledToastAnimation.slideToTop,
+              position: StyledToastPosition.top,
+              startOffset: Offset(0.0, -3.0),
+              reverseEndOffset: Offset(0.0, -3.0),
+              duration: Duration(seconds: 5),
+              //Animation duration   animDuration * 2 <= duration
+              animDuration: Duration(seconds: 1),
+              curve: Curves.elasticOut,
+              reverseCurve: Curves.fastOutSlowIn);
+          Navigator.pop(context);
+        }
+      } on FormatException catch (exception) {
+        print('Exception: ' + exception.toString());
+        print('Error' + response.body);
+        var error = 'Oops! Something went wrong.';
         Navigator.pop(context);
         showToast('$error',
             context: context,
@@ -428,11 +513,11 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                             Align(
                                               alignment: Alignment.topLeft,
                                               child: Container(
-                                                width: 280,
+                                                width: 225,
                                                 height: 40,
                                                 decoration: BoxDecoration(
                                                   color:
-                                                      AppColors.primaryElement,
+                                                  AppColors.primaryElement,
                                                   border: Border.fromBorderSide(
                                                       Borders.secondaryBorder),
                                                 ),
@@ -531,39 +616,57 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                     ),
                                                     child:
                                                         DropdownButtonFormField(
-                                                      decoration:
+                                                          decoration:
                                                           InputDecoration(
-                                                        prefixIcon: Icon(Icons
-                                                            .fireplace_outlined),
-                                                        labelText:
-                                                            'Select the volume of gas',
-                                                        filled: true,
-                                                        fillColor: Colors.white,
-                                                        errorStyle: TextStyle(
-                                                            color:
+                                                            prefixIcon: Icon(
+                                                                Icons
+                                                                    .fireplace_outlined),
+                                                            filled: true,
+                                                            fillColor: Colors
+                                                                .white,
+                                                            errorStyle: TextStyle(
+                                                                color:
                                                                 Colors.yellow),
-                                                      ),
-//                                            value: categoryList[0]['value'],
-                                                      validator: (value) =>
-                                                          value == null
-                                                              ? 'Select a volume of gas'
-                                                              : null,
+                                                          ),
+                                                          value: categoryList[0]
+                                                          ['value'],
+                                                          // validator: (value) =>
+                                                          //     value == null ||
+                                                          //             value == ""
+                                                          //         ? ''
+                                                          //         : null,
 
-                                                      value: 0,
-                                                      items: categoryList
-                                                          .map((map) {
-                                                        return DropdownMenuItem(
-                                                          child:
+                                                          // validator: (value) =>
+                                                          //       _validateVolume(
+                                                          //           price),
+                                                          // onSaved: (value) => value ==
+                                                          //             null ||
+                                                          //         value == ""
+                                                          //     ? _showSnackBar(
+                                                          //         'Select a volume of gas')
+                                                          //     : null,
+
+//                                                      value: 0,
+                                                          items: categoryList
+                                                              .map((map) {
+                                                            return DropdownMenuItem(
+                                                              child:
                                                               Text(map['name']),
-                                                          value: map['value'],
-                                                        );
-                                                      }).toList(),
-                                                      onChanged:
-                                                          (dynamic value) {
-                                                        _volumeController.text =
-                                                            value;
-                                                        productCategory = value;
-                                                      },
+                                                              value: map['value'],
+                                                            );
+                                                          }).toList(),
+                                                          onChanged:
+                                                              (dynamic value) {
+                                                            setState(() {
+                                                              // Toast.show(
+                                                              //     value +
+                                                              //         " is value",
+                                                              //     context);
+                                                              _priceController
+                                                                  .text = value;
+                                                              price = value;
+                                                            });
+                                                          },
                                                     ),
                                                   ),
                                                 ),
@@ -696,6 +799,18 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
     return 'Please enter a Valid Address';
   }
 
+  String _validateVolume(String value) {
+    if (value != null || value != "") {
+      return null;
+    }
+
+    final snackBar = new SnackBar(
+      content: new Text("Select a valid gas volume"),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+    return ".";
+  }
+
   String _validatePhone(String value) {
     if (value.length > 10 && value.length < 16) {
       return null;
@@ -719,8 +834,12 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
     if (form.validate()) {
       // Text forms has validated.
       // Every of the data in the form are valid at this point
-      form.save();
-      onGroup4Pressed(context);
+      if (price.isNotEmpty && price != null) {
+        form.save();
+        onGroup4Pressed(context);
+      } else {
+        setState(() => _showSnackBar('Please, select a volume of gas'));
+      }
     } else {
       setState(() => _showSnackBar('Please, fill all fields Chief'));
     }
