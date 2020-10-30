@@ -41,10 +41,9 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
 
   bool _isLoading = true;
 
-  String total = "0",
-      payable = "0";
+  String total = "0", payable = "0";
 
-  String price;
+  String price = "";
   String full_name;
   String phone;
   String address;
