@@ -6,10 +6,17 @@
 *  Copyright © 2018 Mountedwings Cyber Tech. All rights reserved.
     */
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/review_order_widget/review_order_widget.dart';
+import 'package:shopie/tracking_widget/tracking_widget.dart';
 import 'package:shopie/values/values.dart';
+
+import '../constants.dart';
 
 class NewOrder2Widget extends StatefulWidget {
   @override
@@ -17,22 +24,33 @@ class NewOrder2Widget extends StatefulWidget {
 }
 
 class _NewOrder2WidgetState extends State<NewOrder2Widget> {
-  String payment_method = "Card Payment";
+  String paymentMethod = "Card Payment";
 
   Color highlight = Color.fromARGB(255, 255, 211, 26);
-  Color no_highlight = Color.fromARGB(255, 50, 50, 50);
+  Color noHighlight = Color.fromARGB(255, 50, 50, 50);
   bool _isLoading = true;
 
   bool carded = true;
   bool _isTimeSelected = false;
-  String selected_time = "";
+  String selectedTime = "";
 
-  int time_index = 0;
+  int timeIndex = 0;
 
-  List relevant_times = [];
+  List relevantTimes = [];
 
-  void onGroup4Pressed(BuildContext context) => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => ReviewOrderWidget()));
+  void onGroup4Pressed(BuildContext context) {
+    if (paymentMethod == "Card Payment")
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => ReviewOrderWidget()));
+    else {
+      //make payment
+      //TODO
+      setState(() {
+        _isLoading = true;
+      });
+      //makeOrder();
+    }
+  }
 
   void onIconAwesomeArrowLPressed(BuildContext context) {}
 
@@ -43,7 +61,7 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
   void onStandardDeliveryPressed(BuildContext context) {
     //add boarder decoration
     setState(() {
-      payment_method = "Card Payment";
+      paymentMethod = "Card Payment";
       carded = true;
 //      print (payment_method);
     });
@@ -51,10 +69,10 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
 
   void onTimeSelectedPressed(BuildContext context, String option) {
     //add boarder decoration
-    _isTimeSelected = true;
     setState(() {
-      selected_time = option;
-      print(selected_time);
+      _isTimeSelected = true;
+      selectedTime = option;
+      print(selectedTime);
     });
   }
 
@@ -62,10 +80,98 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
 
   void onViewFourPressed(BuildContext context) {}
 
+  void makeOrder(
+      String name,
+      String phone,
+      String volume,
+      String address,
+      String receive_time,
+      String amount,
+      String paid_amount,
+      String coupon_code,
+      String payment_method) async {
+    //getCategories
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String email = await sharedPreferences.get("user");
+    Map data = {
+      'user': email,
+      'name': name,
+      'volume': volume,
+      'address': address,
+      'receive_time': receive_time,
+      'amount': amount,
+      'paid_amount': paid_amount,
+      'coupon_code': coupon_code,
+      'payment_method': payment_method
+    };
+
+    var jsonData;
+    var response =
+        await http.post(Constants.domain + "submit_gas_order.php", body: data);
+    print('Status Code = ' + response.statusCode.toString());
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      jsonData = json.decode(response.body);
+      print('success: ' + response.body);
+
+      showToast('Order Placed',
+          context: context,
+          animation: StyledToastAnimation.slideFromTop,
+          reverseAnimation: StyledToastAnimation.slideToTop,
+          position: StyledToastPosition.top,
+          startOffset: Offset(0.0, -3.0),
+          reverseEndOffset: Offset(0.0, -3.0),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 4),
+          //Animation duration   animDuration * 2 <= duration
+          animDuration: Duration(seconds: 1),
+          curve: Curves.elasticOut,
+          reverseCurve: Curves.fastOutSlowIn);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => TrackingWidget()));
+    } else {
+      try {
+        // jsonData = json.decode(response.body);
+        print('failed: ' + response.body);
+        if (response.statusCode >= 400) {
+          showToast('Something went wrong',
+              context: context,
+              animation: StyledToastAnimation.slideFromTop,
+              reverseAnimation: StyledToastAnimation.slideToTop,
+              position: StyledToastPosition.top,
+              startOffset: Offset(0.0, -3.0),
+              reverseEndOffset: Offset(0.0, -3.0),
+              duration: Duration(seconds: 4),
+              //Animation duration   animDuration * 2 <= duration
+              animDuration: Duration(seconds: 1),
+              curve: Curves.elasticOut,
+              reverseCurve: Curves.fastOutSlowIn);
+          Navigator.pop(context);
+        }
+      } on FormatException catch (exception) {
+        print('Exception: ' + exception.toString());
+        print('Error' + response.body);
+        Navigator.pop(context);
+        showToast('Oops! Something went wrong!',
+            context: context,
+            animation: StyledToastAnimation.slideFromTop,
+            reverseAnimation: StyledToastAnimation.slideToTop,
+            position: StyledToastPosition.top,
+            startOffset: Offset(0.0, -3.0),
+            reverseEndOffset: Offset(0.0, -3.0),
+            duration: Duration(seconds: 4),
+            //Animation duration   animDuration * 2 <= duration
+            animDuration: Duration(seconds: 1),
+            curve: Curves.elasticOut,
+            reverseCurve: Curves.fastOutSlowIn);
+      }
+    }
+  }
+
   void onCustomDeliveryPressed(BuildContext context) {
     //add boarder decoration
     setState(() {
-      payment_method = "Pay on Delivery";
+      paymentMethod = "Pay on Delivery";
       carded = false;
       //    print (payment_method);
     });
@@ -92,9 +198,10 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
     //approximate starting index having to know it is 7 hours ahead 7<=x<=16
 
     if (hour >= 7 && hour <= 16) {
-      int starting_index = hour - 7;
-      for (int i = starting_index; i < times.length; i++) {
-        relevant_times.add(times[i]);
+      int startingIndex = hour - 7;
+
+      for (int i = startingIndex; i < times.length; i++) {
+        relevantTimes.add(times[i]);
       }
 
       setState(() {
@@ -102,20 +209,16 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
         _isLoading = false;
       });
     } else {
-      Navigator.pop(context);
-      showToast("Sorry chief, we only deliver gas within 8am to 6pm.",
-          context: context,
-          animation: StyledToastAnimation.slideFromTop,
-          reverseAnimation: StyledToastAnimation.slideToTop,
-          position: StyledToastPosition.top,
-          startOffset: Offset(0.0, -3.0),
-          reverseEndOffset: Offset(0.0, -3.0),
-          duration: Duration(seconds: 8),
-          //Animation duration   animDuration * 2 <= duration
-          backgroundColor: Colors.red,
-          animDuration: Duration(seconds: 1),
-          curve: Curves.elasticOut,
-          reverseCurve: Curves.fastOutSlowIn);
+      int startingIndex = 0;
+
+      for (int i = startingIndex; i < times.length; i++) {
+        relevantTimes.add(times[i]);
+      }
+
+      setState(() {
+        //set relevant array
+        _isLoading = false;
+      });
     }
   }
 
@@ -345,7 +448,7 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
                                                   side: BorderSide(
                                                     color: carded
                                                         ? highlight
-                                                        : no_highlight,
+                                                        : noHighlight,
                                                     width: 2,
                                                     style: BorderStyle.solid,
                                                   ),
@@ -382,7 +485,7 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
                                                 shape: RoundedRectangleBorder(
                                                   side: BorderSide(
                                                     color: carded
-                                                        ? no_highlight
+                                                        ? noHighlight
                                                         : highlight,
                                                     width: 2,
                                                     style: BorderStyle.solid,
@@ -468,47 +571,61 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
                                         ),
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: relevant_times
-                                          .map<Widget>(
-                                            (option) => FlatButton(
-                                              onPressed: () => this
-                                                  .onTimeSelectedPressed(
-                                                      context, option),
-                                              color: AppColors.primaryElement,
-                                              shape: RoundedRectangleBorder(
-                                                side: BorderSide(
-                                                  color: _isTimeSelected
-                                                      ? highlight
-                                                      : no_highlight,
-                                                  width: 2,
-                                                  style: BorderStyle.solid,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SizedBox(
+                                        height: 40.0,
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: relevantTimes.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Padding(
+                                                padding:
+                                                const EdgeInsets.all(4.0),
+                                                child: new FlatButton(
+                                                  onPressed: () =>
+                                                      this
+                                                          .onTimeSelectedPressed(
+                                                          context,
+                                                          relevantTimes[index]),
+                                                  color:
+                                                  AppColors.primaryElement,
+                                                  shape: RoundedRectangleBorder(
+                                                    side: BorderSide(
+                                                      color: _isTimeSelected
+                                                          ? highlight
+                                                          : noHighlight,
+                                                      width: 2,
+                                                      style: BorderStyle.solid,
+                                                    ),
+                                                    borderRadius:
+                                                    Radii.k7pxRadius,
+                                                  ),
+                                                  textColor: Color.fromARGB(
+                                                      255, 16, 16, 16),
+                                                  padding: EdgeInsets.all(0),
+                                                  child: Text(
+                                                    relevantTimes[index],
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color:
+                                                      AppColors.primaryText,
+                                                      fontWeight:
+                                                      FontWeight.w400,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
                                                 ),
-                                                borderRadius: Radii.k7pxRadius,
-                                              ),
-                                              textColor: Color.fromARGB(
-                                                  255, 16, 16, 16),
-                                              padding: EdgeInsets.all(0),
-                                              child: Text(
-                                                option,
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: AppColors.primaryText,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
+                                              );
+                                            }),
+                                      ),
                                     ),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Container(
                                         margin:
-                                            EdgeInsets.only(left: 9, top: 48),
+                                        EdgeInsets.only(left: 9, top: 28),
                                         child: Text(
                                           "* Estimated time of arrival (ETA)",
                                           textAlign: TextAlign.left,
@@ -562,35 +679,5 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
               ),
             ),
           );
-  }
-
-  Widget ETA(BuildContext context, String hour) {
-    return Container(
-      width: 91,
-      height: 31,
-      child: FlatButton(
-        onPressed: () => this.onViewThreePressed(context),
-        color: AppColors.primaryElement,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: Color.fromARGB(255, 255, 211, 26),
-            width: 2,
-            style: BorderStyle.solid,
-          ),
-          borderRadius: Radii.k7pxRadius,
-        ),
-        textColor: Color.fromARGB(255, 16, 16, 16),
-        padding: EdgeInsets.all(0),
-        child: Text(
-          "$hour",
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            color: AppColors.primaryText,
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-          ),
-        ),
-      ),
-    );
   }
 }
