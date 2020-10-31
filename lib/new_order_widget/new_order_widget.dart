@@ -40,7 +40,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isLoading = true;
-
+  bool _isSelected = false;
   String total = "0", payable = "0";
 
   String price = "";
@@ -48,6 +48,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   String phone;
   String address;
   String coupon;
+  dynamic discount = 0;
 
   void onIconAwesomeArrowLPressed(BuildContext context) {}
 
@@ -629,23 +630,6 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                           ),
                                                           value: categoryList[0]
                                                           ['value'],
-                                                          // validator: (value) =>
-                                                          //     value == null ||
-                                                          //             value == ""
-                                                          //         ? ''
-                                                          //         : null,
-
-                                                          // validator: (value) =>
-                                                          //       _validateVolume(
-                                                          //           price),
-                                                          // onSaved: (value) => value ==
-                                                          //             null ||
-                                                          //         value == ""
-                                                          //     ? _showSnackBar(
-                                                          //         'Select a volume of gas')
-                                                          //     : null,
-
-//                                                      value: 0,
                                                           items: categoryList
                                                               .map((map) {
                                                             return DropdownMenuItem(
@@ -664,6 +648,11 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                               _priceController
                                                                   .text = value;
                                                               price = value;
+                                                              total = value;
+//                                                          payable = value - discount;
+                                                              payable = value;
+                                                              _isSelected =
+                                                              true;
                                                             });
                                                           },
                                                     ),
@@ -732,18 +721,23 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                               ],
                             ),
                           ),
-                          Center(
+                          _isSelected
+                              ? Center(
                               child: Text(
-                            "Total: ₦ $total",
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          )),
-                          Center(
+                                "Total: ₦ $total",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ))
+                              : Container(),
+                          _isSelected
+                              ? Center(
                               child: Text(
-                            "Amount Payable: ₦ $payable",
-                            style: TextStyle(fontSize: 18, color: Colors.green),
-                          )),
+                                "Amount Payable: ₦ $payable",
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.green),
+                              ))
+                              : Container(),
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: Padding(
