@@ -10,7 +10,33 @@ import 'package:flutter/material.dart';
 import 'package:shopie/add_new_card_widget/add_new_card_widget.dart';
 import 'package:shopie/values/values.dart';
 
-class PayForOrderWidget extends StatelessWidget {
+class PayForOrderWidget extends StatefulWidget {
+  String name;
+  String phone;
+  String volume;
+  String address;
+  String selectedTime;
+  String amount;
+  String paid_amount;
+  String coupon_code;
+  String paymentMethod;
+
+  PayForOrderWidget(
+      @required this.name,
+      @required this.phone,
+      @required this.volume,
+      @required this.address,
+      @required this.selectedTime,
+      @required this.amount,
+      @required this.paid_amount,
+      @required this.coupon_code,
+      @required this.paymentMethod);
+
+  @override
+  _PayForOrderWidgetState createState() => _PayForOrderWidgetState();
+}
+
+class _PayForOrderWidgetState extends State<PayForOrderWidget> {
   void onGroup4Pressed(BuildContext context) => Navigator.push(
       context, MaterialPageRoute(builder: (context) => AddNewCardWidget()));
 

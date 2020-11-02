@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shopie/model/order.dart';
 import 'package:shopie/new_order2_widget/new_order2_widget.dart';
 import 'package:shopie/values/values.dart';
 
@@ -41,25 +42,43 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
 
   bool _isLoading = true;
   bool _isSelected = false;
-  String total = "0", payable = "0";
+  String total = "0", payable = "0", volume = "0";
 
   String price = "";
   String full_name;
   String phone;
   String address;
-  String coupon;
+  String coupon = "";
   dynamic discount = 0;
 
-  void onIconAwesomeArrowLPressed(BuildContext context) {}
+  void onIconAwesomeArrowLPressed(BuildContext context) {
+    Navigator.pop(context);
+  }
 
   void onInformationPressed(BuildContext context) {}
 
-  void onDetailsPressed(BuildContext context) {}
+  void onDetailsPressed(BuildContext context) {
+    showToast('Click Continue button below',
+        context: context,
+        animation: StyledToastAnimation.slideFromTop,
+        reverseAnimation: StyledToastAnimation.slideToTop,
+        position: StyledToastPosition.top,
+        startOffset: Offset(0.0, -3.0),
+        reverseEndOffset: Offset(0.0, -3.0),
+        duration: Duration(seconds: 4),
+        //Animation duration   animDuration * 2 <= duration
+        animDuration: Duration(seconds: 1),
+        curve: Curves.elasticOut,
+        reverseCurve: Curves.fastOutSlowIn);
+  }
 
   void onLayer1Pressed(BuildContext context) {}
 
   void onGroup4Pressed(BuildContext context) => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => NewOrder2Widget()));
+      context,
+      MaterialPageRoute(
+          builder: (context) => NewOrder2Widget(_nameController.text, phone,
+              volume, address, total, payable, coupon)));
 
   @override
   void initState() {
@@ -157,7 +176,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
 //      Map<String, dynamic> categoriesFromApi = json.decode(response.body);
 
       List cat = json.decode(response.body);
-      var ca = {'name': "Select a volume of Gas", "value": ""};
+      var ca = {'name': "Select volume (Kg) of Gas", "value": ""};
       tempCategoryList.add(ca);
 
       for (final i in cat) {
@@ -650,6 +669,27 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                               price = value;
                                                               total = value;
 //                                                          payable = value - discount;
+
+                                                              int trendIndex = categoryList
+                                                                  .indexWhere((
+                                                                  f) =>
+                                                              f['value'] ==
+                                                                  value);
+                                                              print(
+                                                                  trendIndex); // Output you will get is something
+                                                              volume =
+                                                              categoryList[
+                                                              trendIndex]
+                                                              ['name'];
+
+                                                              volume = volume
+                                                                  .substring(0,
+                                                                  volume
+                                                                      .indexOf(
+                                                                      'K'));
+                                                              print(
+                                                                  volume +
+                                                                      " volume");
                                                               payable = value;
                                                               _isSelected =
                                                               true;
@@ -829,6 +869,17 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
       // Every of the data in the form are valid at this point
       if (price.isNotEmpty && price != null) {
         form.save();
+        Order(
+            _nameController.text,
+            phone,
+            volume,
+            address,
+            "",
+            total,
+            payable,
+            coupon,
+            "");
+
         onGroup4Pressed(context);
       } else {
         setState(() => _showSnackBar('Please, select a volume of gas'));

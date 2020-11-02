@@ -11,8 +11,12 @@ import 'package:shopie/order_successful_widget/order_successful_widget.dart';
 import 'package:shopie/values/values.dart';
 
 class AddNewCardWidget extends StatelessWidget {
-  void onContinuePressed(BuildContext context) => Navigator.push(context,
-      MaterialPageRoute(builder: (context) => OrderSuccessfulWidget()));
+  String OrderId = "";
+
+  void onContinuePressed(BuildContext context) => Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => OrderSuccessfulWidget(this.OrderId)));
 
   void onIconAwesomeArrowLPressed(BuildContext context) =>
       Navigator.pop(context);
@@ -64,7 +68,7 @@ class AddNewCardWidget extends StatelessWidget {
                             color: Color.fromARGB(0, 0, 0, 0),
                             shape: RoundedRectangleBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(0)),
+                              BorderRadius.all(Radius.circular(0)),
                             ),
                             textColor: Color.fromARGB(255, 0, 0, 0),
                             padding: EdgeInsets.all(0),
@@ -111,13 +115,13 @@ class AddNewCardWidget extends StatelessWidget {
                                 Shadows.secondaryShadow,
                               ],
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
+                              BorderRadius.all(Radius.circular(16)),
                             ),
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "Enter card Number",
                                 contentPadding:
-                                    EdgeInsets.only(left: 15, top: 15),
+                                EdgeInsets.only(left: 15, top: 15),
                                 border: InputBorder.none,
                               ),
                               style: TextStyle(
@@ -164,13 +168,13 @@ class AddNewCardWidget extends StatelessWidget {
                                 Shadows.secondaryShadow,
                               ],
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
+                              BorderRadius.all(Radius.circular(16)),
                             ),
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "Expiry Date",
                                 contentPadding:
-                                    EdgeInsets.only(left: 15, top: 15),
+                                EdgeInsets.only(left: 15, top: 15),
                                 border: InputBorder.none,
                               ),
                               style: TextStyle(
@@ -196,13 +200,13 @@ class AddNewCardWidget extends StatelessWidget {
                                 Shadows.secondaryShadow,
                               ],
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
+                              BorderRadius.all(Radius.circular(16)),
                             ),
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "CVV",
                                 contentPadding:
-                                    EdgeInsets.only(left: 15, top: 15),
+                                EdgeInsets.only(left: 15, top: 15),
                                 border: InputBorder.none,
                               ),
                               style: TextStyle(

@@ -6,26 +6,36 @@
 *  Copyright © 2018 Mountedwings Cyber Tech. All rights reserved.
     */
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/review_order_widget/review_order_widget.dart';
-import 'package:shopie/tracking_widget/tracking_widget.dart';
 import 'package:shopie/values/values.dart';
 
-import '../constants.dart';
 
 class NewOrder2Widget extends StatefulWidget {
+  String name;
+  String phone;
+  String volume;
+  String address;
+
+  String amount;
+  String paid_amount;
+  String coupon_code;
+
+  NewOrder2Widget(
+      @required this.name,
+      @required this.phone,
+      @required this.volume,
+      @required this.address,
+      @required this.amount,
+      @required this.paid_amount,
+      @required this.coupon_code);
+
   @override
   _NewOrder2WidgetState createState() => _NewOrder2WidgetState();
 }
 
 class _NewOrder2WidgetState extends State<NewOrder2Widget> {
   String paymentMethod = "Card Payment";
-
   Color highlight = Color.fromARGB(255, 255, 211, 26);
   Color noHighlight = Color.fromARGB(255, 50, 50, 50);
   bool _isLoading = true;
@@ -38,23 +48,64 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
 
   List relevantTimes = [];
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void _showSnackBar(message) {
+    final snackBar = new SnackBar(
+      content: new Text(message),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
   void onGroup4Pressed(BuildContext context) {
-    if (paymentMethod == "Card Payment")
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => ReviewOrderWidget()));
-    else {
-      //make payment
-      //TODO
-      setState(() {
-        _isLoading = true;
-      });
-      //makeOrder();
+    if (selectedTime.isNotEmpty) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ReviewOrderWidget(
+
+                      widget.name,
+                      widget.phone,
+                      widget.volume,
+                      widget.address,
+                      selectedTime,
+                      widget.amount,
+                      widget.paid_amount,
+                      widget.coupon_code,
+                      paymentMethod == "Card Payment" ? "Online" : "Offline")));
+
+      // if (paymentMethod == "Card Payment")
+      //   Navigator.push(context,
+      //       MaterialPageRoute(builder: (context) => ReviewOrderWidget()));
+      // else {
+      //   setState(() {
+      //     _isLoading = true;
+      //   });
+      //   makeOrder(
+      //       widget.name,
+      //       widget.phone,
+      //       widget.volume,
+      //       widget.address,
+      //       selectedTime,
+      //       widget.amount,
+      //       widget.paid_amount,
+      //       widget.coupon_code,
+      //       "Offline");
+      // }
+    } else {
+      //snackBar
+      _showSnackBar("Please select a delivery time");
     }
   }
 
-  void onIconAwesomeArrowLPressed(BuildContext context) {}
+  void onIconAwesomeArrowLPressed(BuildContext context) {
+    Navigator.pop(context);
+  }
 
-  void onViewTwoPressed(BuildContext context) {}
+  void onViewTwoPressed(BuildContext context) {
+    Navigator.pop(context);
+  }
 
   void onViewPressed(BuildContext context) {}
 
@@ -80,93 +131,6 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
 
   void onViewFourPressed(BuildContext context) {}
 
-  void makeOrder(
-      String name,
-      String phone,
-      String volume,
-      String address,
-      String receive_time,
-      String amount,
-      String paid_amount,
-      String coupon_code,
-      String payment_method) async {
-    //getCategories
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String email = await sharedPreferences.get("user");
-    Map data = {
-      'user': email,
-      'name': name,
-      'volume': volume,
-      'address': address,
-      'receive_time': receive_time,
-      'amount': amount,
-      'paid_amount': paid_amount,
-      'coupon_code': coupon_code,
-      'payment_method': payment_method
-    };
-
-    var jsonData;
-    var response =
-        await http.post(Constants.domain + "submit_gas_order.php", body: data);
-    print('Status Code = ' + response.statusCode.toString());
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      jsonData = json.decode(response.body);
-      print('success: ' + response.body);
-
-      showToast('Order Placed',
-          context: context,
-          animation: StyledToastAnimation.slideFromTop,
-          reverseAnimation: StyledToastAnimation.slideToTop,
-          position: StyledToastPosition.top,
-          startOffset: Offset(0.0, -3.0),
-          reverseEndOffset: Offset(0.0, -3.0),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 4),
-          //Animation duration   animDuration * 2 <= duration
-          animDuration: Duration(seconds: 1),
-          curve: Curves.elasticOut,
-          reverseCurve: Curves.fastOutSlowIn);
-
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => TrackingWidget()));
-    } else {
-      try {
-        // jsonData = json.decode(response.body);
-        print('failed: ' + response.body);
-        if (response.statusCode >= 400) {
-          showToast('Something went wrong',
-              context: context,
-              animation: StyledToastAnimation.slideFromTop,
-              reverseAnimation: StyledToastAnimation.slideToTop,
-              position: StyledToastPosition.top,
-              startOffset: Offset(0.0, -3.0),
-              reverseEndOffset: Offset(0.0, -3.0),
-              duration: Duration(seconds: 4),
-              //Animation duration   animDuration * 2 <= duration
-              animDuration: Duration(seconds: 1),
-              curve: Curves.elasticOut,
-              reverseCurve: Curves.fastOutSlowIn);
-          Navigator.pop(context);
-        }
-      } on FormatException catch (exception) {
-        print('Exception: ' + exception.toString());
-        print('Error' + response.body);
-        Navigator.pop(context);
-        showToast('Oops! Something went wrong!',
-            context: context,
-            animation: StyledToastAnimation.slideFromTop,
-            reverseAnimation: StyledToastAnimation.slideToTop,
-            position: StyledToastPosition.top,
-            startOffset: Offset(0.0, -3.0),
-            reverseEndOffset: Offset(0.0, -3.0),
-            duration: Duration(seconds: 4),
-            //Animation duration   animDuration * 2 <= duration
-            animDuration: Duration(seconds: 1),
-            curve: Curves.elasticOut,
-            reverseCurve: Curves.fastOutSlowIn);
-      }
-    }
-  }
 
   void onCustomDeliveryPressed(BuildContext context) {
     //add boarder decoration
@@ -190,6 +154,9 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
       "4pm - 5pm",
       "5pm - 6pm"
     ];
+
+    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    // email = await sharedPreferences.get("user");
 
     //get current time
     DateTime now = DateTime.now();
@@ -242,397 +209,139 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
             ),
           )
         : Scaffold(
-            appBar: AppBar(
-              title: Text(
-                "New Order",
-                style: TextStyle(
-                  color: Colors.purple[900],
-                  fontFamily: 'SFNS',
-                ),
-              ),
-              backgroundColor: Colors.white,
-              shadowColor: Colors.grey,
-              leading: BackButton(
-                color: Colors.yellow,
-                onPressed: () => this.onIconAwesomeArrowLPressed(context),
-              ),
-            ),
-            body: Container(
-              //   constraints: BoxConstraints.expand(),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 249, 249, 249),
-              ),
-              child: Stack(
-                alignment: Alignment.topCenter,
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text(
+          "New Order",
+          style: TextStyle(
+            color: Colors.purple[900],
+            fontFamily: 'SFNS',
+          ),
+        ),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.grey,
+        leading: BackButton(
+          color: Colors.yellow,
+          onPressed: () => this.onIconAwesomeArrowLPressed(context),
+        ),
+      ),
+      body: Container(
+        //   constraints: BoxConstraints.expand(),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 249, 249, 249),
+        ),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Positioned(
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Positioned(
-                    left: 0,
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                  Container(
+                    height: 480,
+                    margin: EdgeInsets.only(left: 16, top: 10, right: 15),
+                    child: Stack(
+                      alignment: Alignment.center,
                       children: [
-                        Container(
-                          height: 480,
-                          margin: EdgeInsets.only(left: 16, top: 10, right: 15),
-                          child: Stack(
-                            alignment: Alignment.center,
+                        Positioned(
+                          left: 0,
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            height: 470,
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryBackground,
+                              boxShadow: [
+                                Shadows.secondaryShadow,
+                              ],
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(16)),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left: 20,
+                          top: 15,
+                          right: 19,
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.stretch,
                             children: [
-                              Positioned(
-                                left: 0,
-                                top: 0,
-                                right: 0,
-                                child: Container(
-                                  height: 470,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryBackground,
-                                    boxShadow: [
-                                      Shadows.secondaryShadow,
-                                    ],
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16)),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 20,
-                                top: 15,
-                                right: 19,
-                                child: Column(
+                              Container(
+                                height: 40,
+                                margin: EdgeInsets.only(left: 11),
+                                child: Row(
                                   crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  CrossAxisAlignment.stretch,
                                   children: [
-                                    Container(
-                                      height: 40,
-                                      margin: EdgeInsets.only(left: 11),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 120,
-                                              height: 40,
-                                              child: FlatButton(
-                                                onPressed: () => this
-                                                    .onViewTwoPressed(context),
-                                                color: Color.fromARGB(
-                                                    255, 238, 238, 238),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(9)),
-                                                ),
-                                                textColor: Color.fromARGB(
-                                                    255, 66, 9, 99),
-                                                padding: EdgeInsets.all(0),
-                                                child: Text(
-                                                  "Information",
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 66, 9, 99),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 120,
-                                              height: 40,
-                                              child: FlatButton(
-                                                onPressed: () =>
-                                                    this.onViewPressed(context),
-                                                color: AppColors.primaryElement,
-                                                shape: RoundedRectangleBorder(
-                                                  side: BorderSide(
-                                                    color: Color.fromARGB(
-                                                        255, 255, 211, 26),
-                                                    width: 3,
-                                                    style: BorderStyle.solid,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(10)),
-                                                ),
-                                                textColor: Color.fromARGB(
-                                                    255, 66, 9, 99),
-                                                padding: EdgeInsets.all(0),
-                                                child: Text(
-                                                  "Details",
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 66, 9, 99),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Container(
-                                        width: 200,
-                                        height: 19,
-                                        margin:
-                                            EdgeInsets.only(left: 1, top: 33),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Container(
-                                                width: 15,
-                                                height: 15,
-                                                margin: EdgeInsets.only(top: 4),
-                                                child: Image.asset(
-                                                  "assets/images/layer-1-8.png",
-                                                  fit: BoxFit.none,
-                                                ),
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Container(
-                                                margin:
-                                                    EdgeInsets.only(left: 6),
-                                                child: Text(
-                                                  "Payment Methods",
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color:
-                                                        AppColors.primaryText,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 16,
-                                                    letterSpacing: 0.32,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 31,
-                                      margin: EdgeInsets.only(
-                                          left: 1, top: 11, right: 17),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 135,
-                                              height: 31,
-                                              child: FlatButton(
-                                                onPressed: () => this
-                                                    .onStandardDeliveryPressed(
-                                                        context),
-                                                color: AppColors.primaryElement,
-                                                shape: RoundedRectangleBorder(
-                                                  side: BorderSide(
-                                                    color: carded
-                                                        ? highlight
-                                                        : noHighlight,
-                                                    width: 2,
-                                                    style: BorderStyle.solid,
-                                                  ),
-                                                  borderRadius:
-                                                      Radii.k7pxRadius,
-                                                ),
-                                                textColor: Color.fromARGB(
-                                                    255, 16, 16, 16),
-                                                padding: EdgeInsets.all(0),
-                                                child: Text(
-                                                  "Card Payment",
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color:
-                                                        AppColors.primaryText,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                        width: 120,
+                                        height: 40,
+                                        child: FlatButton(
+                                          onPressed: () => this
+                                              .onViewTwoPressed(context),
+                                          color: Color.fromARGB(
+                                              255, 238, 238, 238),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.all(
+                                                Radius.circular(9)),
                                           ),
-                                          Spacer(),
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 135,
-                                              height: 31,
-                                              child: FlatButton(
-                                                onPressed: () => this
-                                                    .onCustomDeliveryPressed(
-                                                        context),
-                                                color: AppColors.primaryElement,
-                                                shape: RoundedRectangleBorder(
-                                                  side: BorderSide(
-                                                    color: carded
-                                                        ? noHighlight
-                                                        : highlight,
-                                                    width: 2,
-                                                    style: BorderStyle.solid,
-                                                  ),
-                                                  borderRadius:
-                                                      Radii.k7pxRadius,
-                                                ),
-                                                textColor: Color.fromARGB(
-                                                    255, 16, 16, 16),
-                                                padding: EdgeInsets.all(0),
-                                                child: Text(
-                                                  "Pay on Delivery",
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color:
-                                                        AppColors.primaryText,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              ),
+                                          textColor: Color.fromARGB(
+                                              255, 66, 9, 99),
+                                          padding: EdgeInsets.all(0),
+                                          child: Text(
+                                            "Information",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 66, 9, 99),
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 16,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Container(
-                                        margin: EdgeInsets.only(top: 11),
-                                        child: Text(
-                                          "* Card payments will be processed online in-app \n* Payment on delivery will be given to the delivery agent at arrival",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: AppColors.accentText,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
                                           ),
                                         ),
                                       ),
                                     ),
+                                    Spacer(),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Container(
-                                        width: 131,
-                                        height: 19,
-                                        margin: EdgeInsets.only(top: 25),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Container(
-                                                width: 16,
-                                                height: 16,
-                                                margin: EdgeInsets.only(top: 3),
-                                                child: Image.asset(
-                                                  "assets/images/layer-1-6.png",
-                                                  fit: BoxFit.none,
-                                                ),
-                                              ),
+                                        width: 120,
+                                        height: 40,
+                                        child: FlatButton(
+                                          onPressed: () =>
+                                              this.onViewPressed(context),
+                                          color: AppColors.primaryElement,
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              color: Color.fromARGB(
+                                                  255, 255, 211, 26),
+                                              width: 3,
+                                              style: BorderStyle.solid,
                                             ),
-                                            Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Container(
-                                                margin:
-                                                    EdgeInsets.only(left: 6),
-                                                child: Text(
-                                                  "Receiving Time",
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color:
-                                                        AppColors.primaryText,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 15,
-                                                    letterSpacing: 0.3,
-                                                  ),
-                                                ),
-                                              ),
+                                            borderRadius:
+                                            BorderRadius.all(
+                                                Radius.circular(10)),
+                                          ),
+                                          textColor: Color.fromARGB(
+                                              255, 66, 9, 99),
+                                          padding: EdgeInsets.all(0),
+                                          child: Text(
+                                            "Details",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 66, 9, 99),
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 16,
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SizedBox(
-                                        height: 40.0,
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: relevantTimes.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return Padding(
-                                                padding:
-                                                const EdgeInsets.all(4.0),
-                                                child: new FlatButton(
-                                                  onPressed: () =>
-                                                      this
-                                                          .onTimeSelectedPressed(
-                                                          context,
-                                                          relevantTimes[index]),
-                                                  color:
-                                                  AppColors.primaryElement,
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(
-                                                      color: _isTimeSelected
-                                                          ? highlight
-                                                          : noHighlight,
-                                                      width: 2,
-                                                      style: BorderStyle.solid,
-                                                    ),
-                                                    borderRadius:
-                                                    Radii.k7pxRadius,
-                                                  ),
-                                                  textColor: Color.fromARGB(
-                                                      255, 16, 16, 16),
-                                                  padding: EdgeInsets.all(0),
-                                                  child: Text(
-                                                    relevantTimes[index],
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      color:
-                                                      AppColors.primaryText,
-                                                      fontWeight:
-                                                      FontWeight.w400,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Container(
-                                        margin:
-                                        EdgeInsets.only(left: 9, top: 28),
-                                        child: Text(
-                                          "* Estimated time of arrival (ETA)",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: AppColors.accentText,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
                                           ),
                                         ),
                                       ),
@@ -640,44 +349,303 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        Spacer(),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: 324,
-                              height: 45,
-                              child: FlatButton(
-                                onPressed: () => this.onGroup4Pressed(context),
-                                color: AppColors.secondaryElement,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: Radii.k7pxRadius,
-                                ),
-                                textColor: Color.fromARGB(255, 255, 255, 255),
-                                padding: EdgeInsets.all(0),
-                                child: Text(
-                                  "Continue",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 20,
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  width: 200,
+                                  height: 19,
+                                  margin:
+                                  EdgeInsets.only(left: 1, top: 33),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.stretch,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Container(
+                                          width: 15,
+                                          height: 15,
+                                          margin: EdgeInsets.only(top: 4),
+                                          child: Image.asset(
+                                            "assets/images/layer-1-8.png",
+                                            fit: BoxFit.none,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Container(
+                                          margin:
+                                          EdgeInsets.only(left: 6),
+                                          child: Text(
+                                            "Payment Methods",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color:
+                                              AppColors.primaryText,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 16,
+                                              letterSpacing: 0.32,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ),
+                              Container(
+                                height: 31,
+                                margin: EdgeInsets.only(
+                                    left: 1, top: 11, right: 17),
+                                child: Row(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Container(
+                                        width: 135,
+                                        height: 31,
+                                        child: FlatButton(
+                                          onPressed: () => this
+                                              .onStandardDeliveryPressed(
+                                              context),
+                                          color: AppColors.primaryElement,
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              color: carded
+                                                  ? highlight
+                                                  : noHighlight,
+                                              width: 2,
+                                              style: BorderStyle.solid,
+                                            ),
+                                            borderRadius:
+                                            Radii.k7pxRadius,
+                                          ),
+                                          textColor: Color.fromARGB(
+                                              255, 16, 16, 16),
+                                          padding: EdgeInsets.all(0),
+                                          child: Text(
+                                            "Card Payment",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color:
+                                              AppColors.primaryText,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Container(
+                                        width: 135,
+                                        height: 31,
+                                        child: FlatButton(
+                                          onPressed: () => this
+                                              .onCustomDeliveryPressed(
+                                              context),
+                                          color: AppColors.primaryElement,
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              color: carded
+                                                  ? noHighlight
+                                                  : highlight,
+                                              width: 2,
+                                              style: BorderStyle.solid,
+                                            ),
+                                            borderRadius:
+                                            Radii.k7pxRadius,
+                                          ),
+                                          textColor: Color.fromARGB(
+                                              255, 16, 16, 16),
+                                          padding: EdgeInsets.all(0),
+                                          child: Text(
+                                            "Pay on Delivery",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color:
+                                              AppColors.primaryText,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topCenter,
+                                child: Container(
+                                  margin: EdgeInsets.only(top: 11),
+                                  child: Text(
+                                    "* Card payments will be processed online in-app \n* Payment on delivery will be given to the delivery agent at arrival",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: AppColors.accentText,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  width: 131,
+                                  height: 19,
+                                  margin: EdgeInsets.only(top: 25),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.stretch,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Container(
+                                          width: 16,
+                                          height: 16,
+                                          margin: EdgeInsets.only(top: 3),
+                                          child: Image.asset(
+                                            "assets/images/layer-1-6.png",
+                                            fit: BoxFit.none,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Container(
+                                          margin:
+                                          EdgeInsets.only(left: 6),
+                                          child: Text(
+                                            "Receiving Time",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color:
+                                              AppColors.primaryText,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 15,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 40.0,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: relevantTimes.length,
+                                      itemBuilder: (BuildContext context,
+                                          int index) {
+                                        return Padding(
+                                          padding:
+                                          const EdgeInsets.all(4.0),
+                                          child: new FlatButton(
+                                            onPressed: () =>
+                                                this
+                                                    .onTimeSelectedPressed(
+                                                    context,
+                                                    relevantTimes[index]),
+                                            color:
+                                            AppColors.primaryElement,
+                                            shape: RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                color: _isTimeSelected
+                                                    ? highlight
+                                                    : noHighlight,
+                                                width: 2,
+                                                style: BorderStyle.solid,
+                                              ),
+                                              borderRadius:
+                                              Radii.k7pxRadius,
+                                            ),
+                                            textColor: Color.fromARGB(
+                                                255, 16, 16, 16),
+                                            padding: EdgeInsets.all(0),
+                                            child: Text(
+                                              relevantTimes[index],
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color:
+                                                AppColors.primaryText,
+                                                fontWeight:
+                                                FontWeight.w400,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  margin:
+                                  EdgeInsets.only(left: 9, top: 28),
+                                  child: Text(
+                                    "* Estimated time of arrival (ETA)",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: AppColors.accentText,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
+                  Spacer(),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 324,
+                        height: 45,
+                        child: FlatButton(
+                          onPressed: () => this.onGroup4Pressed(context),
+                          color: AppColors.secondaryElement,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: Radii.k7pxRadius,
+                          ),
+                          textColor: Color.fromARGB(255, 255, 255, 255),
+                          padding: EdgeInsets.all(0),
+                          child: Text(
+                            "Continue",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
+          ],
+        ),
+      ),
           );
   }
 }

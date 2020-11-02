@@ -8,20 +8,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:shopie/tracking1_widget/tracking1_widget.dart';
+import 'package:shopie/tracking_widget/tracking_widget.dart';
 import 'package:shopie/values/values.dart';
 
-
 class OrderSuccessfulWidget extends StatelessWidget {
-  
-  void onIconAwesomeArrowLPressed(BuildContext context) {
-  
-  }
-  
-  void onGroup4Pressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => Tracking1Widget()));
-  
+  String orderId;
+
+  OrderSuccessfulWidget(this.orderId);
+
+  void onIconAwesomeArrowLPressed(BuildContext context) {}
+
+  void onGroup4Pressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => TrackingWidget()));
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),
@@ -39,60 +40,6 @@ class OrderSuccessfulWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    height: 57,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            height: 57,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryElement,
-                              boxShadow: [
-                                Shadows.primaryShadow,
-                              ],
-                            ),
-                            child: Container(),
-                          ),
-                        ),
-                        Positioned(
-                          left: 22,
-                          top: 25,
-                          child: FlatButton(
-                            onPressed: () => this.onIconAwesomeArrowLPressed(context),
-                            color: Color.fromARGB(0, 0, 0, 0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(0)),
-                            ),
-                            textColor: Color.fromARGB(255, 0, 0, 0),
-                            padding: EdgeInsets.all(0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset("assets/images/icon-awesome-arrow-left-3.png",),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   Align(
                     alignment: Alignment.topCenter,
                     child: Container(
@@ -116,13 +63,15 @@ class OrderSuccessfulWidget extends StatelessWidget {
                                     blurRadius: 15,
                                   ),
                                 ],
-                                borderRadius: BorderRadius.all(Radius.circular(34)),
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(34)),
                               ),
                               child: Container(),
                             ),
                           ),
                           Positioned(
                             top: 21,
+                            width: 200,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -167,10 +116,11 @@ class OrderSuccessfulWidget extends StatelessWidget {
                                   child: Container(
                                     margin: EdgeInsets.only(top: 5),
                                     child: Text(
-                                      "Receipt number 34344",
+                                      "Receipt number $orderId",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: Color.fromARGB(255, 119, 119, 119),
+                                        color:
+                                        Color.fromARGB(255, 119, 119, 119),
                                         fontWeight: FontWeight.w400,
                                         fontSize: 15,
                                       ),
@@ -224,18 +174,6 @@ class OrderSuccessfulWidget extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-            ),
-            Positioned(
-              top: 18,
-              child: Text(
-                "New Order",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.secondaryText,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                ),
               ),
             ),
           ],
