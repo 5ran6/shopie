@@ -18,7 +18,7 @@ class OrderSuccessfulWidget extends StatelessWidget {
 
   void onIconAwesomeArrowLPressed(BuildContext context) {}
 
-  void onGroup4Pressed(BuildContext context) => Navigator.push(
+  void onGroup4Pressed(BuildContext context) => Navigator.pushReplacement(
       context, MaterialPageRoute(builder: (context) => TrackingWidget()));
 
   @override

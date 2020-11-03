@@ -9,7 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopie/review_order_widget/review_order_widget.dart';
 import 'package:shopie/values/values.dart';
-
+import 'package:toast/toast.dart';
 
 class NewOrder2Widget extends StatefulWidget {
   String name;
@@ -62,18 +62,16 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  ReviewOrderWidget(
-
-                      widget.name,
-                      widget.phone,
-                      widget.volume,
-                      widget.address,
-                      selectedTime,
-                      widget.amount,
-                      widget.paid_amount,
-                      widget.coupon_code,
-                      paymentMethod == "Card Payment" ? "Online" : "Offline")));
+              builder: (context) => ReviewOrderWidget(
+                  widget.name,
+                  widget.phone,
+                  widget.volume,
+                  widget.address,
+                  selectedTime,
+                  widget.amount,
+                  widget.paid_amount,
+                  widget.coupon_code,
+                  paymentMethod == "Card Payment" ? "Online" : "Offline")));
 
       // if (paymentMethod == "Card Payment")
       //   Navigator.push(context,
@@ -123,6 +121,7 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
     setState(() {
       _isTimeSelected = true;
       selectedTime = option;
+      Toast.show(selectedTime, context);
       print(selectedTime);
     });
   }
@@ -130,7 +129,6 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
   void onViewThreePressed(BuildContext context) {}
 
   void onViewFourPressed(BuildContext context) {}
-
 
   void onCustomDeliveryPressed(BuildContext context) {
     //add boarder decoration
@@ -284,8 +282,9 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
                                         width: 120,
                                         height: 40,
                                         child: FlatButton(
-                                          onPressed: () => this
-                                              .onViewTwoPressed(context),
+                                          onPressed: () =>
+                                              this
+                                                  .onViewTwoPressed(context),
                                           color: Color.fromARGB(
                                               255, 238, 238, 238),
                                           shape: RoundedRectangleBorder(
@@ -408,9 +407,10 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
                                         width: 135,
                                         height: 31,
                                         child: FlatButton(
-                                          onPressed: () => this
-                                              .onStandardDeliveryPressed(
-                                              context),
+                                          onPressed: () =>
+                                              this
+                                                  .onStandardDeliveryPressed(
+                                                  context),
                                           color: AppColors.primaryElement,
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
@@ -446,9 +446,10 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
                                         width: 135,
                                         height: 31,
                                         child: FlatButton(
-                                          onPressed: () => this
-                                              .onCustomDeliveryPressed(
-                                              context),
+                                          onPressed: () =>
+                                              this
+                                                  .onCustomDeliveryPressed(
+                                                  context),
                                           color: AppColors.primaryElement,
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
@@ -646,6 +647,6 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
           ],
         ),
       ),
-          );
+    );
   }
 }
