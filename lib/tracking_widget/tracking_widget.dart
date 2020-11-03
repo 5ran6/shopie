@@ -626,7 +626,14 @@ class _TrackingWidgetState extends State<TrackingWidget> {
                 top: 3,
                 right: 21,
                 child: Image.asset(
-                  "assets/images/icons8-sync-125px.png",
+//                  "assets/images/icons8-sync-125px.png",
+                  list[index]['status'] == 'Pending'
+                      ? "assets/images/icons8-sync-125px.png"
+                      : (list[index]['status'] == 'On the way'
+                          ? "assets/images/icons8-paper-plane-125px-2.png"
+                          : list[index]['status'] == 'Assigned'
+                              ? "assets/images/handshake.png"
+                              : "assets/images/icons8-checked-125px.png"),
                   fit: BoxFit.none,
                 ),
               ),
