@@ -554,11 +554,16 @@ class _TrackingWidgetState extends State<TrackingWidget> {
                           Align(
                             alignment: Alignment.topLeft,
                             child: Container(
-                              width: 78,
+                              width: 95,
                               height: 25,
                               decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 178, 178, 178),
-                                //TODO
+                                color: list[index]['status'] == 'Pending'
+                                    ? Color.fromARGB(255, 178, 178, 178)
+                                    : (list[index]['status'] == 'On the way'
+                                        ? Color.fromARGB(255, 200, 255, 200)
+                                        : list[index]['status'] == 'Assigned'
+                                            ? Color.fromARGB(255, 224, 234, 26)
+                                            : Color.fromARGB(255, 77, 214, 26)),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5)),
                               ),
