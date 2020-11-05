@@ -7,9 +7,8 @@
     */
 
 import 'package:flutter/material.dart';
-import 'package:shopie/tracking2_widget/tracking2_widget.dart';
+import 'package:shopie/details_tracking_widget/details_tracking_widget.dart';
 import 'package:shopie/values/values.dart';
-
 
 class Tracking1Widget extends StatelessWidget {
   

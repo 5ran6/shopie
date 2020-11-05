@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shopie/details_tracking_widget/details_tracking_widget.dart';
 import 'package:shopie/new_order_widget/new_order_widget.dart';
 import 'package:shopie/values/values.dart';
 import 'package:toast/toast.dart';
@@ -503,6 +504,9 @@ class _TrackingWidgetState extends State<TrackingWidget> {
         onTap: () {
           // Function is executed on tap.
           Toast.show("item $index was clicked", context);
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => Tracking2Widget()));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
