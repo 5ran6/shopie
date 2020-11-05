@@ -505,8 +505,11 @@ class _TrackingWidgetState extends State<TrackingWidget> {
           // Function is executed on tap.
           Toast.show("item $index was clicked", context);
 
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Tracking2Widget()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      Tracking2Widget(list[index]['order_id'])));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

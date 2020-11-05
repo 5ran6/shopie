@@ -36,8 +36,9 @@ class Tracking1Widget extends StatelessWidget {
   
   }
   
-  void onRectangle62Pressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => Tracking2Widget()));
-  
+  void onRectangle62Pressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Tracking2Widget("")));
+
   @override
   Widget build(BuildContext context) {
   
