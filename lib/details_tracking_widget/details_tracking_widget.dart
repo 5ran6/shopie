@@ -636,7 +636,7 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                                     margin: EdgeInsets.only(
                                                         top: 10),
                                                     child: Text(
-                                                      "Volume (kg)",
+                                                      "Volume (price)",
                                                       textAlign: TextAlign.left,
                                                       style: TextStyle(
                                                         color: AppColors
@@ -674,7 +674,7 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                     child: Container(
                                       margin: EdgeInsets.only(left: 7, top: 4),
                                       child: Text(
-                                        volume,
+                                        volume + "Kg (@ ₦ $price)",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: AppColors.secondaryText,
