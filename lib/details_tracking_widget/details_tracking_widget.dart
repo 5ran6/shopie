@@ -317,17 +317,15 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                               Row(children: [
                                                 Align(
                                                   alignment:
-                                                  Alignment.topLeft,
-                                                  child: Container(
-                                                      width: 20,
-                                                      height: 20,
-                                                      child: assigned[
-                                                      'state']
-                                                          ? (onTheWay['state']
-                                                          ? completedTask()
-                                                          : currentTask())
-                                                          : notActive()),
-                                                ),
+                                                            Alignment.topLeft,
+                                                        child: assigned['state']
+                                                            ? (onTheWay['state']
+                                                                ? completedTask()
+                                                                : currentTask())
+                                                            : (pending['state']
+                                                                ? currentTask()
+                                                                : notActive()),
+                                                      ),
                                                 Align(
                                                   alignment:
                                                   Alignment.topLeft,
@@ -396,15 +394,14 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                                 Align(
                                                   alignment:
                                                   Alignment.topLeft,
-                                                  child: Container(
-                                                      width: 20,
-                                                      height: 20,
-                                                      child: onTheWay[
-                                                      'state']
-                                                          ? (delivered['state']
-                                                          ? completedTask()
-                                                          : currentTask())
-                                                          : notActive()),
+                                                  child: onTheWay[
+                                                  'state']
+                                                      ? (delivered['state']
+                                                      ? completedTask()
+                                                      : currentTask())
+                                                      : (onTheWay['state']
+                                                      ? currentTask()
+                                                      : notActive()),
                                                 ),
                                                 Align(
                                                   alignment:
@@ -476,13 +473,10 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                                 Align(
                                                   alignment:
                                                   Alignment.topLeft,
-                                                  child: Container(
-                                                      width: 20,
-                                                      height: 20,
-                                                      child: delivered[
-                                                      'state']
-                                                          ? completedTask()
-                                                          : notActive()),
+                                                  child: delivered[
+                                                  'state']
+                                                      ? completedTask()
+                                                      : notActive(),
                                                 ),
                                                 Align(
                                                   alignment:
@@ -1048,8 +1042,8 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
-        width: 3,
-        height: 3,
+        width: 9,
+        height: 9,
         decoration: BoxDecoration(
           color: Colors.grey,
           boxShadow: [
