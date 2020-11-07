@@ -15,8 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/details_tracking_widget/details_tracking_widget.dart';
 import 'package:shopie/new_order_widget/new_order_widget.dart';
 import 'package:shopie/values/values.dart';
-import 'package:toast/toast.dart';
 
+import '../address_bottom_sheet.dart';
 import '../constants.dart';
 
 class TrackingWidget extends StatefulWidget {
@@ -30,9 +30,34 @@ class _TrackingWidgetState extends State<TrackingWidget> {
   void onGroup34Pressed(BuildContext context) => Navigator.push(
       context, MaterialPageRoute(builder: (context) => NewOrderWidget()));
 
+  // void onGroup34Pressed(BuildContext context) => bottomSheetAddress()
+  //     .settingModalBottomSheet(
+  //     context,
+  //     times,
+  //     'Some string');
+
+  String address_id = '';
+  Map<String, String> address = {};
+  List monthList = [
+    {'name': 'January', 'value': 'January'},
+    {'name': 'February', 'value': 'January'},
+    {'name': 'March', 'value': 'January'},
+    {'name': 'April', 'value': 'January'},
+    {'name': 'May', 'value': 'January'},
+    {'name': 'June', 'value': 'January'},
+    {'name': 'July', 'value': 'January'},
+    {'name': 'August', 'value': 'January'},
+    {'name': 'September', 'value': 'January'},
+    {'name': 'October', 'value': 'January'},
+    {'name': 'November', 'value': 'January'},
+    {'name': 'December', 'value': 'January'}
+  ];
+
   void onIconIonicMdMenuPressed(BuildContext context) {}
 
-  void onLayer1ThreePressed(BuildContext context) {}
+  void onLayer1ThreePressed(BuildContext context) {
+    address = bottomSheetAddress().settingModalBottomSheet(context, monthList);
+  }
 
   void onLayer1TwoPressed(BuildContext context) {}
 
@@ -40,7 +65,7 @@ class _TrackingWidgetState extends State<TrackingWidget> {
 
   void onLayer1Pressed(BuildContext context) {}
 
-  Future getEmployees() async {
+  Future getOrders() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String user = await sharedPreferences.get("user");
     Map data = {'user': user};
@@ -241,17 +266,17 @@ class _TrackingWidgetState extends State<TrackingWidget> {
             children: [
               ordered
                   ? FutureBuilder(
-                      future: getEmployees(),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.data == null) {
-                          return Container(
-                            child: Center(
-                                child: Padding(
+                  future: getOrders(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.data == null) {
+                      return Container(
+                        child: Center(
+                            child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: CircularProgressIndicator(),
                             )),
-                          );
-                        } else {
+                      );
+                    } else {
                           return ListView.builder(
                             //                                 shrinkWrap: fase,
                             itemCount: snapshot.data.length,
@@ -278,7 +303,7 @@ class _TrackingWidgetState extends State<TrackingWidget> {
                                   top: 134,
                                   right: 0,
                                   child: Text(
-                                    "You haven't made any orders",
+                                    "You haven't made any orders ",
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: AppColors.primaryText,
@@ -475,19 +500,30 @@ class _TrackingWidgetState extends State<TrackingWidget> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: FlatButton(
-                  onPressed: () {
+                child: InkWell(
+                  onTap: () {
                     //  Toast.show("Clicked", context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => NewOrderWidget()));
                   },
-                  child: Image.asset(
-                    "assets/images/group-34.png",
-                    height: 130,
-                    width: 130,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Image.asset(
+                      "assets/images/group-34.png",
+                      width: 80.0,
+                      height: 80.0,
+                    ),
                   ),
+
+                  //     CircleAvatar(
+                  //
+                  //   radius: 30,
+                  //   backgroundImage: ExactAssetImage(
+                  //     "assets/images/group-34.png",
+                  //   ),
+                  // ),
                 ),
               ),
             ],
@@ -503,7 +539,7 @@ class _TrackingWidgetState extends State<TrackingWidget> {
       child: InkWell(
         onTap: () {
           // Function is executed on tap.
-          Toast.show("item $index was clicked", context);
+          //  Toast.show("item $index was clicked", context);
 
           Navigator.push(
               context,
@@ -582,7 +618,9 @@ class _TrackingWidgetState extends State<TrackingWidget> {
                                     margin:
                                         EdgeInsets.only(left: 13, right: 14),
                                     child: Text(
-                                      list[index]['status'],
+                                      list[index]['status'] == "None"
+                                          ? "Delivered"
+                                          : list[index]['status'],
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: AppColors.primaryText,

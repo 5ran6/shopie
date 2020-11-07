@@ -16,6 +16,7 @@ import 'package:shopie/model/order.dart';
 import 'package:shopie/new_order2_widget/new_order2_widget.dart';
 import 'package:shopie/values/values.dart';
 
+import '../address_bottom_sheet.dart';
 import '../constants.dart';
 
 class NewOrderWidget extends StatefulWidget {
@@ -24,8 +25,9 @@ class NewOrderWidget extends StatefulWidget {
 }
 
 class _NewOrderWidgetState extends State<NewOrderWidget> {
-  List categoryList = [];
-  List tempCategoryList = [];
+  List gasPriceList = [];
+  List tempGasPriceList = [];
+  List towns = [];
 
   TextEditingController _nameController = new TextEditingController();
 
@@ -45,11 +47,18 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   String total = "0", payable = "0", volume = "0";
 
   String price = "";
-  String full_name;
-  String phone;
-  String address;
+  String full_name = '';
+  String phone = '';
+  String address = '';
+  String address_id = '';
   String coupon = "";
   dynamic discount = 0;
+
+  Map<String, String> fullAddress = {};
+
+  addressGetter(BuildContext context) {
+    fullAddress = bottomSheetAddress().settingModalBottomSheet(context, towns);
+  }
 
   void onIconAwesomeArrowLPressed(BuildContext context) {
     Navigator.pop(context);
@@ -83,6 +92,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   @override
   void initState() {
     super.initState();
+    // getCurrentTowns();
     getDetails();
     getVolumePrice();
   }
@@ -101,15 +111,16 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
       jsonData = json.decode(response.body);
       print('success: ' + response.body);
 
-      setState(() {
-        full_name = jsonData['name'];
-        phone = jsonData['phone'];
-        address = jsonData['last_address'];
+      full_name = jsonData['name'];
+      phone = jsonData['phone'];
+      Map<String, dynamic> last_address = jsonData['last_address'];
 
-        _nameController.text = full_name;
-        _phoneController.text = phone;
-        _addressController.text = address;
-      });
+      address = last_address['address'];
+      address_id = last_address['address_id'].toString();
+
+      _nameController.text = full_name;
+      _phoneController.text = phone;
+      _addressController.text = address;
 
 //      Toast.show(full_name + " " + phone, context);
 
@@ -163,10 +174,70 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
     }
   }
 
+  void getCurrentTowns() async {
+    var jsonData;
+    var response = await http.post(Constants.domain + "get_gas_towns.php");
+    print('Status Code = ' + response.statusCode.toString());
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      jsonData = json.decode(response.body);
+      print('success: ' + response.body);
+
+      //parse Category List
+//      Map<String, dynamic> categoriesFromApi = json.decode(response.body);
+
+      List cat = json.decode(response.body);
+      // var ca = {'name': "Select volume (Kg) of Gas", "value": ""};
+
+      for (final i in cat) {
+        var categoryMap = {'name': i.toString(), 'value': i.toString()};
+        towns.add(categoryMap);
+      }
+      print('Towns List: ' + towns.toString());
+    } else {
+      try {
+        // jsonData = json.decode(response.body);
+        print('failed: ' + response.body);
+        if (response.statusCode >= 400) {
+          showToast(
+              'Couldn\'t get current towns we operate in at this time. Reload this page after a while',
+              context: context,
+              animation: StyledToastAnimation.slideFromTop,
+              reverseAnimation: StyledToastAnimation.slideToTop,
+              position: StyledToastPosition.top,
+              startOffset: Offset(0.0, -3.0),
+              reverseEndOffset: Offset(0.0, -3.0),
+              duration: Duration(seconds: 6),
+              //Animation duration   animDuration * 2 <= duration
+              animDuration: Duration(seconds: 1),
+              curve: Curves.elasticOut,
+              reverseCurve: Curves.fastOutSlowIn);
+          Navigator.pop(context);
+        }
+      } on FormatException catch (exception) {
+        print('Exception: ' + exception.toString());
+        print('Error' + response.body);
+        var error = 'Oops! Something went wrong.';
+        Navigator.pop(context);
+        showToast('$error',
+            context: context,
+            animation: StyledToastAnimation.slideFromTop,
+            reverseAnimation: StyledToastAnimation.slideToTop,
+            position: StyledToastPosition.top,
+            startOffset: Offset(0.0, -3.0),
+            reverseEndOffset: Offset(0.0, -3.0),
+            duration: Duration(seconds: 4),
+            //Animation duration   animDuration * 2 <= duration
+            animDuration: Duration(seconds: 1),
+            curve: Curves.elasticOut,
+            reverseCurve: Curves.fastOutSlowIn);
+      }
+    }
+  }
+
   void getVolumePrice() async {
     var jsonData;
     var response =
-        await http.post(Constants.domain + "user_gas_get_prices.php");
+    await http.post(Constants.domain + "user_gas_get_prices.php");
     print('Status Code = ' + response.statusCode.toString());
     if (response.statusCode == 200 || response.statusCode == 201) {
       jsonData = json.decode(response.body);
@@ -177,7 +248,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
 
       List cat = json.decode(response.body);
       var ca = {'name': "Select volume (Kg) of Gas", "value": ""};
-      tempCategoryList.add(ca);
+      tempGasPriceList.add(ca);
 
       for (final i in cat) {
         var categoryMap = {
@@ -185,15 +256,16 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
               " Kg \t - " +
               "₦" +
               i['payment_amount'].toString(),
-          'value': i['payment_amount'].toString()
+          'value': i['payment_amount'].toString(),
+          'real_amount': i['amount'].toString()
         };
-        tempCategoryList.add(categoryMap);
+        tempGasPriceList.add(categoryMap);
       }
-      print('Category List: ' + tempCategoryList.toString());
+      print('Category List: ' + tempGasPriceList.toString());
 
       setState(() {
         _isLoading = false;
-        categoryList = tempCategoryList;
+        gasPriceList = tempGasPriceList;
       });
     } else {
       try {
@@ -587,10 +659,11 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                   ),
                                                   child: IconButton(
                                                     tooltip:
-                                                        "Use google maps to select your location",
+                                                    "Use google maps to select your location",
                                                     icon:
-                                                        Icon(Icons.location_on),
-                                                    onPressed: null,
+                                                    Icon(Icons.location_on),
+                                                    onPressed:
+                                                    addressGetter(context),
                                                   ),
                                                 ),
                                               ),
@@ -647,9 +720,9 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                                 color:
                                                                 Colors.yellow),
                                                           ),
-                                                          value: categoryList[0]
+                                                          value: gasPriceList[0]
                                                           ['value'],
-                                                          items: categoryList
+                                                          items: gasPriceList
                                                               .map((map) {
                                                             return DropdownMenuItem(
                                                               child:
@@ -667,10 +740,10 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                               _priceController
                                                                   .text = value;
                                                               price = value;
-                                                              total = value;
+
 //                                                          payable = value - discount;
 
-                                                              int trendIndex = categoryList
+                                                              int trendIndex = gasPriceList
                                                                   .indexWhere((
                                                                   f) =>
                                                               f['value'] ==
@@ -678,18 +751,23 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                               print(
                                                                   trendIndex); // Output you will get is something
                                                               volume =
-                                                              categoryList[
+                                                              gasPriceList[
                                                               trendIndex]
                                                               ['name'];
+                                                              total =
+                                                              gasPriceList[
+                                                              trendIndex]
+                                                              ['real_amount'];
 
-                                                              volume = volume
-                                                                  .substring(0,
+                                                              volume =
                                                                   volume
-                                                                      .indexOf(
-                                                                      'K'));
-                                                              print(
-                                                                  volume +
-                                                                      " volume");
+                                                                      .substring(
+                                                                      0,
+                                                                      volume
+                                                                          .indexOf(
+                                                                          'K'));
+                                                              print(volume +
+                                                                  " volume");
                                                               payable = value;
                                                               _isSelected =
                                                               true;
@@ -885,7 +963,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
         setState(() => _showSnackBar('Please, select a volume of gas'));
       }
     } else {
-      setState(() => _showSnackBar('Please, fill all fields Chief'));
+      setState(() => _showSnackBar('Please, fill all fields'));
     }
   }
 }

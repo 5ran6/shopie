@@ -50,8 +50,14 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
   String receivingTime = "";
   String price = "";
   String eta = "";
+  String status = "";
 
   bool _isLoading = true;
+
+  List pending;
+  List assigned;
+  List onTheWay;
+  List delivered;
 
   @override
   void initState() {
@@ -77,25 +83,24 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
         eta = jsonData['receive_time'];
         price = jsonData['amount'].toString();
         paymentMethod = jsonData['payment_method'];
-        //  status = jsonData['status'];
+        status = jsonData['status']['active'];
+
+        // var values = {
+        //   'state': jsonData['status']['pending']['state'] as bool,
+        //   'date': jsonData['status']['pending']['date']
+        // };
+        //
+        // pending.add(values);
+        //
+        pending = jsonData['status']['pending'] as List;
+        // assigned  = jsonData['status']['assigned'];
+        // onTheWay  = jsonData['status']['on_the_way'];
+        // delivered  = jsonData['status']['delivered'];
+
         // address = jsonData['address'];
         this.orderId = orderId;
         _isLoading = false;
       });
-
-//      Toast.show(full_name + " " + phone, context);
-
-/*
-      //parse Category List
-      Map<String, dynamic> categoriesFromApi = json.decode(response.body);
-      List cat = categoriesFromApi['categories'];
-      for (final i in cat) {
-        var categoryMap = {'name': i['name'], 'value': i['id'].toString()};
-
-        categoryList.add(categoryMap);
-      }
-      print('Category List: ' + categoryList.toString());
-*/
     } else {
       try {
         // jsonData = json.decode(response.body);
@@ -177,8 +182,8 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
-                        height: 504,
-                        margin: EdgeInsets.only(left: 16, top: 23, right: 15),
+                        height: 525,
+                        margin: EdgeInsets.only(left: 8, top: 15, right: 7),
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
@@ -218,7 +223,7 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                     ),
                                   ),
                                   Container(
-                                    height: 139,
+                                    height: 160,
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
@@ -228,8 +233,8 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                             Align(
                                               alignment: Alignment.topLeft,
                                               child: Container(
-                                                width: 200,
-                                                height: 132,
+                                                width: 140,
+                                                height: 152,
                                                 margin: EdgeInsets.only(top: 4),
                                                 child: Column(
                                                   crossAxisAlignment:
@@ -321,49 +326,114 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                                       ),
                                                       Align(
                                                         alignment:
-                                                            Alignment.topLeft,
+                                                        Alignment.topLeft,
                                                         child: Container(
                                                           child: Padding(
                                                             padding:
-                                                                const EdgeInsets
-                                                                    .all(4.0),
+                                                            const EdgeInsets
+                                                                .all(4.0),
                                                             child: Column(
                                                               crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                               children: [
                                                                 Text(
-                                                                  "On the way",
+                                                                  "Assigned",
                                                                   textAlign:
-                                                                      TextAlign
-                                                                          .left,
+                                                                  TextAlign
+                                                                      .left,
                                                                   style:
-                                                                      TextStyle(
+                                                                  TextStyle(
                                                                     color: AppColors
                                                                         .primaryText,
                                                                     fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
+                                                                    FontWeight
+                                                                        .w600,
                                                                     fontSize:
-                                                                        14,
+                                                                    14,
                                                                     letterSpacing:
-                                                                        0.28,
+                                                                    0.28,
                                                                   ),
                                                                 ),
                                                                 Text(
                                                                   "06/10/20 | 11:10am ",
                                                                   textAlign:
-                                                                      TextAlign
-                                                                          .left,
+                                                                  TextAlign
+                                                                      .left,
                                                                   style:
-                                                                      TextStyle(
+                                                                  TextStyle(
                                                                     color: AppColors
                                                                         .accentText,
                                                                     fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
+                                                                    FontWeight
+                                                                        .w600,
                                                                     fontSize:
-                                                                        12,
+                                                                    12,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ]),
+                                                    Row(children: [
+                                                      Align(
+                                                          alignment:
+                                                          Alignment.topLeft,
+                                                          child: Container(
+                                                            width: 20,
+                                                            height: 20,
+                                                            child: Image.asset(
+                                                              "assets/images/group-39.png",
+                                                              fit: BoxFit.none,
+                                                            ),
+                                                          )),
+                                                      Align(
+                                                        alignment:
+                                                        Alignment.topLeft,
+                                                        child: Padding(
+                                                          padding:
+                                                          const EdgeInsets
+                                                              .all(4.0),
+                                                          child: Container(
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                              children: [
+                                                                Text(
+                                                                  "On the way",
+                                                                  textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                                  style:
+                                                                  TextStyle(
+                                                                    color: AppColors
+                                                                        .primaryText,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                    fontSize:
+                                                                    14,
+                                                                    letterSpacing:
+                                                                    0.28,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "06/10/20 | 11:10am ",
+                                                                  textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                                  style:
+                                                                  TextStyle(
+                                                                    color: AppColors
+                                                                        .accentText,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                    fontSize:
+                                                                    12,
                                                                   ),
                                                                 )
                                                               ],
@@ -450,7 +520,13 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                             width: 124,
                                             height: 124,
                                             child: Image.asset(
-                                              "assets/images/icons8-paper-plane-125px.png",
+                                              status == 'Pending'
+                                                  ? "assets/images/icons8-sync-125px.png"
+                                                  : (status == 'Assigned'
+                                                  ? "assets/images/handshake.png"
+                                                  : (status == 'On the way'
+                                                  ? "assets/images/icons8-paper-plane-125px-2.png"
+                                                  : "assets/images/icons8-checked-125px.png")),
                                               fit: BoxFit.none,
                                             ),
                                           ),
@@ -654,15 +730,18 @@ class _Tracking2WidgetState extends State<Tracking2Widget> {
                                           ),
                                         ),
                                         Spacer(),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Container(
-                                            width: 55,
-                                            height: 55,
-                                            margin: EdgeInsets.only(top: 3),
-                                            child: Image.asset(
-                                              "assets/images/icons8-qr-code-125px.png",
-                                              fit: BoxFit.none,
+                                        Opacity(
+                                          opacity: 0,
+                                          child: Align(
+                                            alignment: Alignment.topRight,
+                                            child: Container(
+                                              width: 35,
+                                              height: 55,
+                                              margin: EdgeInsets.only(top: 3),
+                                              child: Image.asset(
+                                                "assets/images/icons8-qr-code-125px.png",
+                                                fit: BoxFit.none,
+                                              ),
                                             ),
                                           ),
                                         ),
