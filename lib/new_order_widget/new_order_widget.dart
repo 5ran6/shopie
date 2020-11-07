@@ -92,9 +92,13 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   @override
   void initState() {
     super.initState();
-    // getCurrentTowns();
+    getCurrentTowns();
     getDetails();
     getVolumePrice();
+
+    //  WidgetsBinding.instance.addPostFrameCallback((_) {
+    // Do everything you want here...
+//    });
   }
 
   void getDetails() async {
@@ -135,6 +139,8 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
       }
       print('Category List: ' + categoryList.toString());
 */
+
+
     } else {
       try {
         // jsonData = json.decode(response.body);
@@ -234,7 +240,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
     }
   }
 
-  void getVolumePrice() async {
+  Future getVolumePrice() async {
     var jsonData;
     var response =
     await http.post(Constants.domain + "user_gas_get_prices.php");
@@ -264,8 +270,8 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
       print('Category List: ' + tempGasPriceList.toString());
 
       setState(() {
-        _isLoading = false;
         gasPriceList = tempGasPriceList;
+        _isLoading = false;
       });
     } else {
       try {
