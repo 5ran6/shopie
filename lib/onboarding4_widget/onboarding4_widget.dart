@@ -7,21 +7,30 @@
     */
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/start_page_widget/start_page_widget.dart';
 import 'package:shopie/values/values.dart';
 
-
 class Onboarding4Widget extends StatelessWidget {
-  
-  void onButtonTextTwoPressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => StartPageWidget()));
-  
-  void onButtonTextPressed(BuildContext context) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartPageWidget()));
+  void onButtonTextTwoPressed(BuildContext context) async {
+    //SKIP: send to sharedPref
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('firstTime', false);
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => StartPageWidget()));
   }
-  
+
+  void onButtonTextPressed(BuildContext context) async {
+    //SKIP: send to sharedPref
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('firstTime', false);
+
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => StartPageWidget()));
+  }
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),
@@ -110,7 +119,7 @@ class Onboarding4Widget extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.only(top: 2),
                 child: Text(
-                  "Leave reviews and collect coupons you can\nuse for your next order",
+                  "Leave reviews and collect coupons you can\nuse for your next orders",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color.fromARGB(255, 119, 119, 119),

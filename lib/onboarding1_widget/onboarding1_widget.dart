@@ -7,16 +7,29 @@
     */
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/onboarding2_widget/onboarding2_widget.dart';
 import 'package:shopie/start_page_widget/start_page_widget.dart';
+import 'package:shopie/tracking_widget/tracking_widget.dart';
 import 'package:shopie/values/values.dart';
+import 'package:shopie/welcome_widget/welcome_widget.dart';
 
+class Onboarding1Widget extends StatefulWidget {
+  @override
+  _Onboarding1WidgetState createState() => _Onboarding1WidgetState();
+}
 
-class Onboarding1Widget extends StatelessWidget {
-  void onButtonTextPressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => Onboarding2Widget()));
+class _Onboarding1WidgetState extends State<Onboarding1Widget> {
+  void onButtonTextPressed(BuildContext context) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Onboarding2Widget()));
 
-  void onButtonTextTwoPressed(BuildContext context) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartPageWidget()));
+  void onButtonTextTwoPressed(BuildContext context) async {
+    //SKIP: send to sharedPref
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('firstTime', false);
+
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => StartPageWidget()));
   }
 
   @override
@@ -95,7 +108,7 @@ class Onboarding1Widget extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.only(top: 36),
                 child: Text(
-                  "Choose your location",
+                  "To your location",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.primaryText,
@@ -110,7 +123,7 @@ class Onboarding1Widget extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.only(top: 2),
                 child: Text(
-                  "We deliver to your home or office\nchoose from the delivery vehicles nearby",
+                  "We deliver to your home or office\nwith our delivery vehicles nearby",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color.fromARGB(255, 119, 119, 119),

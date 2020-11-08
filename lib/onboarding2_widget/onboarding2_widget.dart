@@ -7,23 +7,28 @@
     */
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/onboarding3_widget/onboarding3_widget.dart';
 import 'package:shopie/start_page_widget/start_page_widget.dart';
 import 'package:shopie/values/values.dart';
 
 
 class Onboarding2Widget extends StatelessWidget {
-  
-  void onButtonTextTwoPressed(BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (context) => Onboarding3Widget()));
-  
-  void onButtonTextPressed(BuildContext context) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartPageWidget()));
 
+  void onButtonTextTwoPressed(BuildContext context) =>
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => Onboarding3Widget()));
+
+  void onButtonTextPressed(BuildContext context) async {
+    //SKIP: send to sharedPref
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('firstTime', false);
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => StartPageWidget()));
   }
-  
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),

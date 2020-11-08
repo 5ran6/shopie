@@ -140,7 +140,6 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
       print('Category List: ' + categoryList.toString());
 */
 
-
     } else {
       try {
         // jsonData = json.decode(response.body);
@@ -243,7 +242,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   Future getVolumePrice() async {
     var jsonData;
     var response =
-    await http.post(Constants.domain + "user_gas_get_prices.php");
+        await http.post(Constants.domain + "user_gas_get_prices.php");
     print('Status Code = ' + response.statusCode.toString());
     if (response.statusCode == 200 || response.statusCode == 201) {
       jsonData = json.decode(response.body);

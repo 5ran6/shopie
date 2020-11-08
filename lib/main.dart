@@ -7,18 +7,57 @@
     */
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shopie/login_widget/login_widget.dart';
 import 'package:shopie/onboarding1_widget/onboarding1_widget.dart';
+import 'package:shopie/start_page_widget/start_page_widget.dart';
+import 'package:shopie/tracking_widget/tracking_widget.dart';
 
 void main() => runApp(App());
 
+class App extends StatefulWidget {
+  @override
+  _AppState createState() => _AppState();
+}
 
-class App extends StatelessWidget {
-  
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    super.initState();
+    checkLoginState();
+  }
+
+  void checkLoginState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      if (!prefs.getBool('firstTime')) {
+        firstTime = false;
+        if (prefs.getString('user') != null) {
+          loggedIn = true;
+
+          // Navigator.pushReplacement(context,
+          //     MaterialPageRoute(builder: (context) => TrackingWidget()));
+        } else {
+          loggedIn = false;
+          // Navigator.pushReplacement(context,
+          //     MaterialPageRoute(builder: (context) => StartPageWidget()));
+        }
+      }
+      setState(() {});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  bool firstTime = true;
+  bool loggedIn = false;
+
   @override
   Widget build(BuildContext context) {
-  
     return MaterialApp(
-      home: Onboarding1Widget(),
+      home: firstTime
+          ? Onboarding1Widget()
+          : (loggedIn ? TrackingWidget() : StartPageWidget()),
     );
   }
 }

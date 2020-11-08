@@ -22,6 +22,19 @@ class LoginWidget extends StatefulWidget {
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    void checkLoginState() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (!prefs.getString('user').isNotEmpty) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => TrackingWidget()));
+      }
+    }
+  }
+
   final focus1 = FocusNode();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
@@ -74,24 +87,24 @@ class _LoginWidgetState extends State<LoginWidget> {
     } else {
       try {
         print('failed: ' + response.body);
-        if (response.statusCode == 422) {
-          //user not found prompt
-          setState(() {
-            _isLoading = false;
-            showToast('Something went wrong. Try again',
-                context: context,
-                animation: StyledToastAnimation.slideFromTop,
-                reverseAnimation: StyledToastAnimation.slideToTop,
-                position: StyledToastPosition.top,
-                startOffset: Offset(0.0, -3.0),
-                reverseEndOffset: Offset(0.0, -3.0),
-                duration: Duration(seconds: 4),
-                //Animation duration   animDuration * 2 <= duration
-                animDuration: Duration(seconds: 1),
-                curve: Curves.elasticOut,
-                reverseCurve: Curves.fastOutSlowIn);
-          });
-        }
+//        if (response.statusCode == 422 || response.statusCode == 500) {
+        //user not found prompt
+        setState(() {
+          _isLoading = false;
+          showToast('Something went wrong. Try again',
+              context: context,
+              animation: StyledToastAnimation.slideFromTop,
+              reverseAnimation: StyledToastAnimation.slideToTop,
+              position: StyledToastPosition.top,
+              startOffset: Offset(0.0, -3.0),
+              reverseEndOffset: Offset(0.0, -3.0),
+              duration: Duration(seconds: 4),
+              //Animation duration   animDuration * 2 <= duration
+              animDuration: Duration(seconds: 1),
+              curve: Curves.elasticOut,
+              reverseCurve: Curves.fastOutSlowIn);
+        });
+        //   }
       } on FormatException catch (exception) {
         print('Exception: ' + exception.toString());
         print('Error ' + response.body);
@@ -163,205 +176,176 @@ class _LoginWidgetState extends State<LoginWidget> {
       ),
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.white,
-              ),
-            )
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+        ),
+      )
           : SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 249, 249, 249),
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 249, 249, 249),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      width: 147,
+                      height: 123,
+                      margin: EdgeInsets.only(top: 72),
+                      child: Image.asset(
+                        "assets/images/undraw-welcome-3gvl.png",
+                        fit: BoxFit.none,
+                      ),
                     ),
-                    child: Column(
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      width: 223,
+                      height: 57,
+                      margin: EdgeInsets.only(top: 7),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Positioned(
+                            top: 0,
+                            child: Text(
+                              "Welcome Back!!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: AppColors.primaryText,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 32,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 36,
+                            child: Text(
+                              "You have been missed!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 119, 119, 119),
+                                fontFamily: 'SFNS',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 45,
+                    margin: EdgeInsets.only(left: 16, top: 34, right: 15),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryElement,
+                      border:
+                      Border.fromBorderSide(Borders.secondaryBorder),
+                    ),
+                    child: TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: "Enter email",
+                        contentPadding: EdgeInsets.only(left: 15),
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                      ),
+                      maxLines: 1,
+                      autocorrect: false,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                    ),
+                  ),
+                  Container(
+                    height: 45,
+                    margin: EdgeInsets.only(left: 16, top: 22, right: 15),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned(
+                          left: 0,
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            height: 45,
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryElement,
+                              border: Border.fromBorderSide(
+                                  Borders.secondaryBorder),
+                            ),
+                            child: TextField(
+                              controller: _passwordController,
+                              decoration: InputDecoration(
+                                hintText: "Password",
+                                contentPadding: EdgeInsets.only(left: 15),
+                                border: InputBorder.none,
+                              ),
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                              ),
+                              maxLines: 1,
+                              obscureText: true,
+                              autocorrect: false,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 18,
+                    margin: EdgeInsets.only(left: 26, top: 9, right: 12),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            width: 147,
-                            height: 123,
-                            margin: EdgeInsets.only(top: 72),
-                            child: Image.asset(
-                              "assets/images/undraw-welcome-3gvl.png",
-                              fit: BoxFit.none,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            width: 223,
-                            height: 57,
-                            margin: EdgeInsets.only(top: 7),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Positioned(
-                                  top: 0,
-                                  child: Text(
-                                    "Welcome Back!!",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: AppColors.primaryText,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 32,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 36,
-                                  child: Text(
-                                    "You have been missed!",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 119, 119, 119),
-                                      fontFamily: 'SFNS',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 45,
-                          margin: EdgeInsets.only(left: 16, top: 34, right: 15),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryElement,
-                            border:
-                                Border.fromBorderSide(Borders.secondaryBorder),
-                          ),
-                          child: TextField(
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                              hintText: "Enter email",
-                              contentPadding: EdgeInsets.only(left: 15),
-                              border: InputBorder.none,
-                            ),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Forgot password",
+                            textAlign: TextAlign.left,
                             style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
+                              color: Color.fromARGB(255, 59, 72, 255),
                               fontWeight: FontWeight.w400,
-                              fontSize: 15,
+                              fontSize: 16,
                             ),
-                            maxLines: 1,
-                            autocorrect: false,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
                           ),
                         ),
-                        Container(
-                          height: 45,
-                          margin: EdgeInsets.only(left: 16, top: 22, right: 15),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Positioned(
-                                left: 0,
-                                top: 0,
-                                right: 0,
-                                child: Container(
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryElement,
-                                    border: Border.fromBorderSide(
-                                        Borders.secondaryBorder),
-                                  ),
-                                  child: TextField(
-                                    controller: _passwordController,
-                                    decoration: InputDecoration(
-                                      hintText: "Password",
-                                      contentPadding: EdgeInsets.only(left: 15),
-                                      border: InputBorder.none,
-                                    ),
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 15,
-                                    ),
-                                    maxLines: 1,
-                                    obscureText: true,
-                                    autocorrect: false,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 18,
-                          margin: EdgeInsets.only(left: 26, top: 9, right: 12),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "Forgot password",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 59, 72, 255),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  width: 102,
-                                  height: 18,
-                                  child: FlatButton(
-                                    onPressed: () =>
-                                        this.onRegisterNowPressed(context),
-                                    color: Color.fromARGB(0, 0, 0, 0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(0)),
-                                    ),
-                                    textColor: Color.fromARGB(255, 59, 72, 255),
-                                    padding: EdgeInsets.all(0),
-                                    child: Text(
-                                      "Register now?",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: Color.fromARGB(255, 59, 72, 255),
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        Spacer(),
                         Align(
-                          alignment: Alignment.topCenter,
+                          alignment: Alignment.topLeft,
                           child: Container(
-                            width: 324,
-                            height: 45,
-                            margin: EdgeInsets.only(top: 26),
+                            width: 102,
+                            height: 18,
                             child: FlatButton(
-                              onPressed: () => this.onGroup4Pressed(context),
-                              color: AppColors.secondaryElement,
+                              onPressed: () =>
+                                  this.onRegisterNowPressed(context),
+                              color: Color.fromARGB(0, 0, 0, 0),
                               shape: RoundedRectangleBorder(
-                                borderRadius: Radii.k7pxRadius,
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(0)),
                               ),
-                              textColor: Color.fromARGB(255, 255, 255, 255),
+                              textColor: Color.fromARGB(255, 59, 72, 255),
                               padding: EdgeInsets.all(0),
                               child: Text(
-                                "Continue",
-                                textAlign: TextAlign.center,
+                                "Register now?",
+                                textAlign: TextAlign.left,
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  color: Color.fromARGB(255, 59, 72, 255),
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 20,
+                                  fontSize: 16,
                                 ),
                               ),
                             ),
@@ -370,9 +354,38 @@ class _LoginWidgetState extends State<LoginWidget> {
                       ],
                     ),
                   ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      width: 324,
+                      height: 45,
+                      margin: EdgeInsets.only(top: 26),
+                      child: FlatButton(
+                        onPressed: () => this.onGroup4Pressed(context),
+                        color: AppColors.secondaryElement,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: Radii.k7pxRadius,
+                        ),
+                        textColor: Color.fromARGB(255, 255, 255, 255),
+                        padding: EdgeInsets.all(0),
+                        child: Text(
+                          "Continue",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 }
