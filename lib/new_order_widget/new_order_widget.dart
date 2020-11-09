@@ -92,6 +92,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   @override
   void initState() {
     super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
     getCurrentTowns();
     getDetails();
     getVolumePrice();
@@ -613,7 +614,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                 height: 40,
                                                 decoration: BoxDecoration(
                                                   color:
-                                                  AppColors.primaryElement,
+                                                      AppColors.primaryElement,
                                                   border: Border.fromBorderSide(
                                                       Borders.secondaryBorder),
                                                 ),
