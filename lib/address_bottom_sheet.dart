@@ -9,7 +9,7 @@ import 'package:toast/toast.dart';
 import 'constants.dart';
 
 class bottomSheetAddress {
-  Map<String, String> settingModalBottomSheet(context, List category) {
+  Future settingModalBottomSheet(context, List category) {
     TextEditingController _productSubCategoryNameController =
         new TextEditingController();
     String address_id = "";
@@ -60,8 +60,11 @@ class bottomSheetAddress {
           print('success: ' + response.body);
           print('address_id: ' + address_id);
           Toast.show('Done', context);
+          print('Yet to send back Full address: ' + fullAddress.toString());
+//          context.
 
           Navigator.pop(context, fullAddress);
+          //        return fullAddress;
         } else {
           String error = "";
           error = 'Oops! Something went wrong.';
@@ -167,10 +170,10 @@ class bottomSheetAddress {
                 padding: const EdgeInsets.all(12.0),
                 child: loading
                     ? Center(
-                        child: Container(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: CircularProgressIndicator(
+                  child: Container(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
                               backgroundColor: Colors.white,
                             ),
                           ),

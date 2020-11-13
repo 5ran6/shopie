@@ -15,8 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/model/order.dart';
 import 'package:shopie/new_order2_widget/new_order2_widget.dart';
 import 'package:shopie/values/values.dart';
+import 'package:toast/toast.dart';
 
-import '../address_bottom_sheet.dart';
 import '../constants.dart';
 
 class NewOrderWidget extends StatefulWidget {
@@ -56,8 +56,8 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
 
   Map<String, String> fullAddress = {};
 
-  addressGetter(BuildContext context) {
-    fullAddress = bottomSheetAddress().settingModalBottomSheet(context, towns);
+  Future addressGetter(BuildContext context) {
+    getCurrentTowns();
   }
 
   void onIconAwesomeArrowLPressed(BuildContext context) {
@@ -86,20 +86,21 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   void onGroup4Pressed(BuildContext context) => Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => NewOrder2Widget(_nameController.text, phone,
-              volume, address, total, payable, coupon)));
+          builder: (context) => NewOrder2Widget(
+              _nameController.text,
+              phone,
+              //   volume, address, total, payable, coupon)));
+              volume,
+              address,
+              fullAddress['value'].toString(),
+              total,
+              payable,
+              coupon)));
 
   @override
   void initState() {
     super.initState();
-    WidgetsFlutterBinding.ensureInitialized();
-    getCurrentTowns();
     getDetails();
-    getVolumePrice();
-
-    //  WidgetsBinding.instance.addPostFrameCallback((_) {
-    // Do everything you want here...
-//    });
   }
 
   void getDetails() async {
@@ -126,6 +127,8 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
       _nameController.text = full_name;
       _phoneController.text = phone;
       _addressController.text = address;
+
+      getVolumePrice();
 
 //      Toast.show(full_name + " " + phone, context);
 
@@ -181,6 +184,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
   }
 
   void getCurrentTowns() async {
+    towns.clear();
     var jsonData;
     var response = await http.post(Constants.domain + "get_gas_towns.php");
     print('Status Code = ' + response.statusCode.toString());
@@ -188,17 +192,19 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
       jsonData = json.decode(response.body);
       print('success: ' + response.body);
 
-      //parse Category List
-//      Map<String, dynamic> categoriesFromApi = json.decode(response.body);
-
       List cat = json.decode(response.body);
       // var ca = {'name': "Select volume (Kg) of Gas", "value": ""};
 
       for (final i in cat) {
-        var categoryMap = {'name': i.toString(), 'value': i.toString()};
+        var categoryMap = {
+          'name': i.toString() + " town",
+          'value': i.toString()
+        };
         towns.add(categoryMap);
       }
       print('Towns List: ' + towns.toString());
+      settingModalBottomSheet(context, towns);
+      updateInformation(fullAddress);
     } else {
       try {
         // jsonData = json.decode(response.body);
@@ -240,10 +246,20 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
     }
   }
 
+  void updateInformation(Map<String, String> information) {
+    print('Full address: ' + fullAddress.toString());
+    _addressController.text = fullAddress['name'];
+
+    setState(() {
+      _isLoading = true;
+      _isLoading = false;
+    });
+  }
+
   Future getVolumePrice() async {
     var jsonData;
     var response =
-        await http.post(Constants.domain + "user_gas_get_prices.php");
+    await http.post(Constants.domain + "user_gas_get_prices.php");
     print('Status Code = ' + response.statusCode.toString());
     if (response.statusCode == 200 || response.statusCode == 201) {
       jsonData = json.decode(response.body);
@@ -315,28 +331,18 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? Center(
-            child: Scaffold(
-              body: Align(
-                alignment: Alignment.center,
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                ),
-              ),
-            ),
-          )
-        : Scaffold(
-            key: _scaffoldKey,
-            appBar: AppBar(
-              title: Text(
-                "New Order",
-                style: TextStyle(
-                  color: Colors.purple[900],
-                  fontFamily: 'SFNS',
-                ),
-              ),
-              backgroundColor: Colors.white,
+    return !_isLoading
+        ? Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text(
+          "New Order",
+          style: TextStyle(
+            color: Colors.purple[900],
+            fontFamily: 'SFNS',
+          ),
+        ),
+        backgroundColor: Colors.white,
               shadowColor: Colors.grey,
               leading: BackButton(
                 color: Colors.yellow,
@@ -623,14 +629,15 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                   onSaved: (String value) {
                                                     address = value;
                                                   },
+                                                  enabled: false,
                                                   controller:
-                                                      _addressController,
+                                                  _addressController,
                                                   autofocus: true,
                                                   decoration: InputDecoration(
                                                     hintText: "Enter Address",
                                                     contentPadding:
-                                                        EdgeInsets.only(
-                                                            left: 15),
+                                                    EdgeInsets.only(
+                                                        left: 15),
                                                     border: InputBorder.none,
                                                   ),
                                                   style: TextStyle(
@@ -660,17 +667,17 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                     //   Shadows.secondaryShadow,
                                                     // ],
                                                     borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(5)),
+                                                    BorderRadius.all(
+                                                        Radius.circular(5)),
                                                   ),
                                                   child: IconButton(
-                                                    tooltip:
-                                                    "Use google maps to select your location",
-                                                    icon:
-                                                    Icon(Icons.location_on),
-                                                    onPressed:
-                                                    addressGetter(context),
-                                                  ),
+                                                      tooltip:
+                                                      "Use google maps to select your location",
+                                                      icon: Icon(
+                                                          Icons.location_on),
+                                                      onPressed: () {
+                                                        addressGetter(context);
+                                                      }),
                                                 ),
                                               ),
                                             ),
@@ -897,7 +904,25 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                 ],
               ),
             ),
-          );
+    )
+        : Container(
+      color: Colors.white,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height,
+      child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.white,
+            ),
+          )),
+    );
   }
 
   String _validateName(String value) {
@@ -971,5 +996,298 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
     } else {
       setState(() => _showSnackBar('Please, fill all fields'));
     }
+  }
+
+  Future settingModalBottomSheet(context, List category) {
+    TextEditingController _productSubCategoryNameController =
+    new TextEditingController();
+    String address_id = "";
+    String category_id = category[0]['value'];
+    bool loading = false;
+
+    String _validateAddress(String value) {
+      if (value.length > 2) {
+        return null;
+      }
+
+      return 'Please enter a Valid Address';
+    }
+
+    addNewAddress(String city, String address, String long, String lat,
+        BuildContext context) async {
+      Toast.show("Adding....", context);
+      SharedPreferences sharedPreferences =
+      await SharedPreferences.getInstance();
+      String user = await sharedPreferences.get("user");
+      Map data = {
+        'user': user,
+        'city': city,
+        'address': address,
+        'longitude': long,
+        'latitude': lat
+      };
+
+      var jsonData;
+      var response = await http.post(
+        Constants.domain + "add_user_address.php",
+        body: data,
+      );
+
+      print('Status Code = ' + response.statusCode.toString());
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        jsonData = json.decode(response.body);
+
+        address_id =
+        jsonData['address_id']; //to be sent back to parent activity TODO
+
+        Map<String, String> fullAdd = {'name': address, 'value': address_id};
+
+        if (jsonData['status'] == "success") {
+          print('success: ' + response.body);
+          print('address_id: ' + address_id);
+          Toast.show('Done', context);
+          print('Yet to send back Full address: ' + fullAdd.toString());
+//          context.
+          fullAddress = fullAdd;
+          _addressController.text = fullAddress['name'];
+
+          Navigator.pop(context);
+          //        return fullAddress;
+        } else {
+          String error = "";
+          error = 'Oops! Something went wrong.';
+          Toast.show("Oops! $error", context);
+        }
+        // Navigator.of(context).push(MaterialPageRoute(
+        //   builder: (context) => add_product_line(
+        //     token: token,
+        //   ),
+        // ));
+      } else {
+        try {
+          jsonData = json.decode(response.body);
+          print('failed: ' + response.body);
+          if (response.statusCode == 422) {
+            //user not found prompt
+            String error = "";
+            ///////////TODO///////////////////////////////////////////
+            if (jsonData['errors'].toString() != 'null') {
+              error = jsonData['errors']
+                  .toString()
+                  .substring(1, jsonData['errors']
+                  .toString()
+                  .length - 1);
+            } else {
+              error = jsonData['message'].toString();
+            }
+            //////////////////////////////////////////////////////
+            Toast.show("Oops! $error", context);
+          }
+        } on FormatException catch (exception) {
+          print('Exception: ' + exception.toString());
+          print('Error' + response.body);
+          String error = "";
+          error = 'Oops! Something went wrong.';
+          Toast.show("Oops! $error", context);
+        }
+      }
+    }
+
+    getPreviousAddresses(String name, String product_category_id,
+        BuildContext context) async {
+      Toast.show("Adding....", context);
+      Map data = {
+        'name': name.trim(),
+        'product_category_id': product_category_id.trim()
+      };
+      SharedPreferences sharedPreferences =
+      await SharedPreferences.getInstance();
+      String token = await sharedPreferences.get("token");
+
+      var jsonData;
+      var response = await http.post(Constants.domain + "addProductSubCategory",
+          body: data,
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      print('Status Code = ' + response.statusCode.toString());
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        jsonData = json.decode(response.body);
+        print('success: ' + response.body);
+        Toast.show('Done', context);
+        // Navigator.of(context).push(MaterialPageRoute(
+        //   builder: (context) => add_product_line(
+        //     token: token,
+        //   ),
+        // ));
+      } else {
+        try {
+          jsonData = json.decode(response.body);
+          print('failed: ' + response.body);
+          if (response.statusCode == 422) {
+            //user not found prompt
+            String error = "";
+            ///////////TODO///////////////////////////////////////////
+            if (jsonData['errors'].toString() != 'null') {
+              error = jsonData['errors']
+                  .toString()
+                  .substring(1, jsonData['errors']
+                  .toString()
+                  .length - 1);
+            } else {
+              error = jsonData['message'].toString();
+            }
+            //////////////////////////////////////////////////////
+            Toast.show("Oops! $error", context);
+          }
+        } on FormatException catch (exception) {
+          print('Exception: ' + exception.toString());
+          print('Error' + response.body);
+          String error = "";
+          error = 'Oops! Something went wrong.';
+          Toast.show("Oops! $error", context);
+        }
+      }
+    }
+
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (BuildContext bc) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModalState
+                /*You can rename this!*/) {
+              return Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: loading
+                    ? Center(
+                  child: Container(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+                    : Container(
+                  child: new Wrap(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 15,
+                      ),
+                      new Padding(
+                        padding: MediaQuery
+                            .of(context)
+                            .viewPadding,
+                        child: TextFormField(
+                          controller: _productSubCategoryNameController,
+                          onFieldSubmitted: (v) {
+                            FocusScope.of(context)
+                                .requestFocus(FocusNode());
+                          },
+                          keyboardType: TextInputType.text,
+                          validator: _validateAddress,
+                          textInputAction: TextInputAction.done,
+                          autofocus: false,
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                              labelText: 'Full Address',
+                              labelStyle:
+                              TextStyle(color: Colors.black54),
+                              border: OutlineInputBorder()),
+                        ),
+                      ),
+                      new Padding(
+                        padding: MediaQuery
+                            .of(context)
+                            .viewInsets,
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.calendar_today),
+                            labelText: "Select your town",
+                            filled: true,
+                            fillColor: Colors.white,
+                            errorStyle: TextStyle(color: Colors.yellow),
+                          ),
+                          value: category[0]['value'],
+                          items: category.map((map) {
+                            return DropdownMenuItem(
+                              child: Text(map['name']),
+                              value: map['value'],
+                            );
+                          }).toList(),
+                          onChanged: (dynamic value) {
+                            category_id = value;
+                          },
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Row(
+                          children: [
+                            new FlatButton(
+                              onPressed: () {
+                                // addSubCategory(
+                                //     _productSubCategoryNameController.text,
+                                //     category_id,
+                                //     context);
+
+                                setModalState(() {
+                                  loading = true;
+                                });
+                              },
+                              child: Text(
+                                "Previous Addresses",
+                              ),
+                              textColor: Colors.indigoAccent,
+                              color: Colors.white,
+                              splashColor: Colors.blue.withOpacity(0.5),
+                            ),
+                            Spacer(),
+                            new FlatButton(
+                              onPressed: () {
+                                // addSubCategory(
+                                //     _productSubCategoryNameController.text,
+                                //     category_id,
+                                //     context);
+                                setModalState(() {
+                                  loading = true;
+                                });
+
+                                //validator
+                                //call addNewAddress
+                                if (_productSubCategoryNameController
+                                    .text.isNotEmpty)
+                                  addNewAddress(
+                                      category_id,
+                                      _productSubCategoryNameController
+                                          .text,
+                                      "",
+                                      "",
+                                      context);
+                                else
+                                  Toast.show(
+                                      "Please fill in all required fields",
+                                      context);
+                              },
+                              child: Text(
+                                "Add",
+                              ),
+                              textColor: Colors.white,
+                              color: Colors.indigoAccent,
+                              splashColor: Colors.white.withOpacity(0.5),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 }

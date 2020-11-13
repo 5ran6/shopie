@@ -16,6 +16,7 @@ class NewOrder2Widget extends StatefulWidget {
   String phone;
   String volume;
   String address;
+  String address_id;
 
   String amount;
   String paid_amount;
@@ -26,6 +27,7 @@ class NewOrder2Widget extends StatefulWidget {
       @required this.phone,
       @required this.volume,
       @required this.address,
+      @required this.address_id,
       @required this.amount,
       @required this.paid_amount,
       @required this.coupon_code);
@@ -67,6 +69,7 @@ class _NewOrder2WidgetState extends State<NewOrder2Widget> {
                   widget.phone,
                   widget.volume,
                   widget.address,
+                  widget.address_id,
                   selectedTime,
                   widget.amount,
                   widget.paid_amount,

@@ -21,6 +21,7 @@ class ReviewOrderWidget extends StatefulWidget {
   String phone;
   String volume;
   String address;
+  String address_id;
   String selectedTime;
   String amount;
   String paid_amount;
@@ -32,6 +33,7 @@ class ReviewOrderWidget extends StatefulWidget {
       @required this.phone,
       @required this.volume,
       @required this.address,
+      @required this.address_id,
       @required this.selectedTime,
       @required this.amount,
       @required this.paid_amount,
@@ -56,8 +58,7 @@ class _ReviewOrderWidgetState extends State<ReviewOrderWidget> {
           widget.name,
           widget.phone,
           widget.volume,
-          //    widget.address,
-          '1',
+          widget.address_id,
           widget.selectedTime,
           widget.amount,
           widget.paid_amount,
