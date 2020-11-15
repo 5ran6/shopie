@@ -15,6 +15,7 @@ class PayForOrderWidget extends StatefulWidget {
   String phone;
   String volume;
   String address;
+  String address_id;
   String selectedTime;
   String amount;
   String paid_amount;
@@ -25,7 +26,7 @@ class PayForOrderWidget extends StatefulWidget {
       @required this.name,
       @required this.phone,
       @required this.volume,
-      @required this.address,
+      @required this.address_id,
       @required this.selectedTime,
       @required this.amount,
       @required this.paid_amount,
@@ -37,13 +38,51 @@ class PayForOrderWidget extends StatefulWidget {
 }
 
 class _PayForOrderWidgetState extends State<PayForOrderWidget> {
-  void onGroup4Pressed(BuildContext context) => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => AddNewCardWidget()));
+  void onGroup4Pressed(BuildContext context) =>
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AddNewCardWidget()));
 
   void onAddNewPressed(BuildContext context) {}
 
   void onIconAwesomeArrowLPressed(BuildContext context) =>
       Navigator.pop(context);
+
+  void onTimeSelectedPressed(BuildContext context, String option) {
+    //add boarder decoration
+    setState(() {
+      // _isTimeSelected = true;
+      // selectedTime = option;
+      // Toast.show(selectedTime, context);
+      // print(selectedTime);
+    });
+  }
+
+  List cards = [
+    {
+      'card_type': 'Debit Card',
+      'card_number': '345345*****3345345',
+      'card_issuer': 'Master Card'
+    },
+    {
+      'card_type': 'Debit Card',
+      'card_number': '345345*****3345345',
+      'card_issuer': 'Master Card'
+    },
+    {
+      'card_type': 'Debit Card',
+      'card_number': '345345*****3345345',
+      'card_issuer': 'Master Card'
+    },
+    {
+      'card_type': 'Credit Card',
+      'card_number': '345345*****3345345',
+      'card_issuer': 'Visa Card'
+    }
+  ];
+
+  bool _isTimeSelected = false;
+  Color highlight = Color.fromARGB(255, 255, 211, 26);
+  Color noHighlight = Color.fromARGB(255, 50, 50, 50);
 
   @override
   Widget build(BuildContext context) {
@@ -79,37 +118,6 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    height: 57,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            height: 57,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryElement,
-                              boxShadow: [
-                                Shadows.primaryShadow,
-                              ],
-                            ),
-                            child: Container(),
-                          ),
-                        ),
-                        Positioned(
-                          left: 22,
-                          top: 25,
-                          child: Image.asset(
-                            "assets/images/icon-awesome-arrow-left-4.png",
-                            fit: BoxFit.none,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   Align(
                     alignment: Alignment.topCenter,
                     child: Container(
@@ -151,7 +159,7 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
                           child: Container(
                             width: 10,
                             height: 10,
-                            margin: EdgeInsets.only(top: 13, right: 5),
+                            margin: EdgeInsets.only(top: 10, right: 5),
                             child: Image.asset(
                               "assets/images/icon-feather-plus.png",
                               fit: BoxFit.none,
@@ -188,145 +196,73 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
                       ],
                     ),
                   ),
-                  Container(
-                    height: 71,
-                    margin: EdgeInsets.only(left: 16, top: 17, right: 15),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          child: Container(
+
+
+                  ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: cards.length,
+                      itemBuilder: (BuildContext context,
+                          int index) {
+                        return Padding(
+                          padding:
+                          const EdgeInsets.all(4.0),
+                          child: new Container(
                             height: 71,
-                            decoration: BoxDecoration(
-                              color: AppColors.ternaryBackground,
-                              boxShadow: [
-                                Shadows.secondaryShadow,
-                              ],
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(16)),
-                            ),
-                            child: Container(),
-                          ),
-                        ),
-                        Positioned(
-                          left: 25,
-                          top: 18,
-                          right: 22,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  width: 35,
-                                  height: 35,
-                                  child: Image.asset(
-                                    "assets/images/icons8-mastercard-logo-125px.png",
-                                    fit: BoxFit.none,
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  width: 21,
-                                  height: 21,
-                                  margin: EdgeInsets.only(top: 7),
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 239, 239, 239),
-                                    border: Border.all(
-                                      width: 1.5,
-                                      color: Color.fromARGB(255, 66, 9, 99),
+                            margin: EdgeInsets.only(
+                                left: 16, top: 17, right: 15),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Positioned(
+                                  left: 0,
+                                  top: 0,
+                                  right: 0,
+                                  child: Container(
+                                    height: 71,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.ternaryBackground,
+                                      boxShadow: [
+                                        Shadows.secondaryShadow,
+                                      ],
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(16)),
                                     ),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(10.5)),
+                                    child: Container(),
                                   ),
-                                  child: Container(),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 71,
-                    margin: EdgeInsets.only(left: 16, top: 23, right: 15),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            height: 71,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryBackground,
-                              border: Border.all(
-                                width: 2,
-                                color: Color.fromARGB(255, 255, 211, 26),
-                              ),
-                              boxShadow: [
-                                Shadows.secondaryShadow,
+                                Positioned(
+                                  left: 25,
+                                  top: 18,
+                                  right: 22,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .stretch,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Container(
+                                          width: 35,
+                                          height: 35,
+                                          child: Image.asset(
+                                            "assets/images/icons8-mastercard-logo-125px.png",
+                                            fit: BoxFit.none,
+                                          ),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  ),
+                                ),
                               ],
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(16)),
                             ),
-                            child: Container(),
                           ),
-                        ),
-                        Positioned(
-                          left: 22,
-                          top: 15,
-                          right: 22,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  width: 41,
-                                  height: 41,
-                                  child: Image.asset(
-                                    "assets/images/icons8-visa-125px.png",
-                                    fit: BoxFit.none,
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  width: 21,
-                                  height: 21,
-                                  margin: EdgeInsets.only(top: 10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.secondaryElement,
-                                    border: Border.all(
-                                      width: 1.5,
-                                      color: Color.fromARGB(255, 66, 9, 99),
-                                    ),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(10.5)),
-                                  ),
-                                  child: Container(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                        );
+                      }),
+
+
                   Spacer(),
                   Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.bottomCenter,
                     child: Container(
                       width: 324,
                       height: 45,
@@ -353,60 +289,133 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
                 ],
               ),
             ),
-            Positioned(
-              top: 18,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Text(
-                      "Payment",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AppColors.secondaryText,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 160),
-                      child: Text(
-                        "Debit Card\n554 *** *** 2345",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: AppColors.secondaryText,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                          letterSpacing: 0.32,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 60),
-                      child: Text(
-                        "Debit Card\n554 *** *** 2345",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: AppColors.secondaryText,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                          letterSpacing: 0.32,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget unselectedCard() {
+    return Container(
+      height: 71,
+      margin: EdgeInsets.only(left: 16, top: 17, right: 15),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            left: 0,
+            top: 0,
+            right: 0,
+            child: Container(
+              height: 71,
+              decoration: BoxDecoration(
+                color: AppColors.ternaryBackground,
+                boxShadow: [
+                  Shadows.secondaryShadow,
+                ],
+                borderRadius:
+                BorderRadius.all(Radius.circular(16)),
+              ),
+              child: Container(),
+            ),
+          ),
+          Positioned(
+            left: 25,
+            top: 18,
+            right: 22,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    child: Image.asset(
+                      "assets/images/icons8-mastercard-logo-125px.png",
+                      fit: BoxFit.none,
+                    ),
+                  ),
+                ),
+                Spacer(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget selectedCard() {
+    return Container(
+      height: 71,
+      margin: EdgeInsets.only(left: 16, top: 23, right: 15),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            left: 0,
+            top: 0,
+            right: 0,
+            child: Container(
+              height: 71,
+              decoration: BoxDecoration(
+                color: AppColors.primaryBackground,
+                border: Border.all(
+                  width: 2,
+                  color: Color.fromARGB(255, 255, 211, 26),
+                ),
+                boxShadow: [
+                  Shadows.secondaryShadow,
+                ],
+                borderRadius:
+                BorderRadius.all(Radius.circular(16)),
+              ),
+              child: Container(),
+            ),
+          ),
+          Positioned(
+            left: 22,
+            top: 15,
+            right: 22,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    width: 41,
+                    height: 41,
+                    child: Image.asset(
+                      "assets/images/icons8-visa-125px.png",
+                      fit: BoxFit.none,
+                    ),
+                  ),
+                ),
+                Spacer(),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    width: 21,
+                    height: 21,
+                    margin: EdgeInsets.only(top: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondaryElement,
+                      border: Border.all(
+                        width: 1.5,
+                        color: Color.fromARGB(255, 66, 9, 99),
+                      ),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(10.5)),
+                    ),
+                    child: Container(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

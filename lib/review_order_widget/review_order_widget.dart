@@ -72,7 +72,7 @@ class _ReviewOrderWidgetState extends State<ReviewOrderWidget> {
                   widget.name,
                   widget.phone,
                   widget.volume,
-                  widget.address,
+                  widget.address_id,
                   widget.selectedTime,
                   widget.amount,
                   widget.paid_amount,

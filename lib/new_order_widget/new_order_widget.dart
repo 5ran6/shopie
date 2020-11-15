@@ -629,15 +629,18 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                   onSaved: (String value) {
                                                     address = value;
                                                   },
+                                                  onTap: () {
+                                                    addressGetter(context);
+                                                  },
                                                   enabled: false,
                                                   controller:
-                                                  _addressController,
+                                                      _addressController,
                                                   autofocus: true,
                                                   decoration: InputDecoration(
                                                     hintText: "Enter Address",
                                                     contentPadding:
-                                                    EdgeInsets.only(
-                                                        left: 15),
+                                                        EdgeInsets.only(
+                                                            left: 15),
                                                     border: InputBorder.none,
                                                   ),
                                                   style: TextStyle(
@@ -672,7 +675,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
                                                   ),
                                                   child: IconButton(
                                                       tooltip:
-                                                      "Use google maps to select your location",
+                                                      "Select or add a new address",
                                                       icon: Icon(
                                                           Icons.location_on),
                                                       onPressed: () {

@@ -56,10 +56,58 @@ class _TrackingWidgetState extends State<TrackingWidget> {
   void onIconIonicMdMenuPressed(BuildContext context) {}
 
   void onLayer1ThreePressed(BuildContext context) {
-   // address = bottomSheetAddress().settingModalBottomSheet(context, monthList);
+    // address = bottomSheetAddress().settingModalBottomSheet(context, monthList);
   }
 
-  void onLayer1TwoPressed(BuildContext context) {}
+  Widget onLayer1TwoPressed(BuildContext context) {
+    return Container(
+      height: 71,
+      margin: EdgeInsets.only(left: 16, top: 17, right: 15),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            left: 0,
+            top: 0,
+            right: 0,
+            child: Container(
+              height: 71,
+              decoration: BoxDecoration(
+                color: AppColors.ternaryBackground,
+                boxShadow: [
+                  Shadows.secondaryShadow,
+                ],
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              child: Container(),
+            ),
+          ),
+          Positioned(
+            left: 25,
+            top: 18,
+            right: 22,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    child: Image.asset(
+                      "assets/images/icons8-mastercard-logo-125px.png",
+                      fit: BoxFit.none,
+                    ),
+                  ),
+                ),
+                Spacer(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   void onLayer1FourPressed(BuildContext context) {}
 
@@ -211,7 +259,6 @@ class _TrackingWidgetState extends State<TrackingWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     checkOrderState();
   }
