@@ -24,7 +24,21 @@ class AddNewCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      appBar: AppBar(
+        title: Text(
+          "Add New Card",
+          style: TextStyle(
+            color: Colors.purple[900],
+            fontFamily: 'SFNS',
+          ),
+        ),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.grey,
+        leading: BackButton(
+          color: Colors.yellow,
+          onPressed: () => this.onIconAwesomeArrowLPressed(context),
+        ),
+      ), body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 255, 255, 255),
@@ -57,41 +71,6 @@ class AddNewCardWidget extends StatelessWidget {
                               ],
                             ),
                             child: Container(),
-                          ),
-                        ),
-                        Positioned(
-                          left: 22,
-                          top: 25,
-                          child: FlatButton(
-                            onPressed: () =>
-                                this.onIconAwesomeArrowLPressed(context),
-                            color: Color.fromARGB(0, 0, 0, 0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(0)),
-                            ),
-                            textColor: Color.fromARGB(255, 0, 0, 0),
-                            padding: EdgeInsets.all(0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  "assets/images/icon-awesome-arrow-left-3.png",
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
                         ),
                       ],
@@ -313,18 +292,7 @@ class AddNewCardWidget extends StatelessWidget {
                 ],
               ),
             ),
-            Positioned(
-              top: 18,
-              child: Text(
-                "Add new card",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.secondaryText,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                ),
-              ),
-            ),
+
           ],
         ),
       ),
