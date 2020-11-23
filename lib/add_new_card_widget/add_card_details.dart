@@ -44,7 +44,10 @@ class _AddCardDetailsState extends State<AddCardDetails> {
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
-          title: new Text('Add New Card'),
+          title: new Text('Add New Card', style: TextStyle(
+          color: Colors.purple[900],
+            fontFamily: 'SFNS',
+          ),),
           backgroundColor: Colors.white,
           shadowColor: Colors.grey,
           leading: BackButton(
@@ -76,7 +79,7 @@ class _AddCardDetailsState extends State<AddCardDetails> {
                     onSaved: (String value) {
                       _card.name = value;
                     },
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.name,
                     validator: (String value) =>
                         value.isEmpty ? Strings.fieldReq : null,
                   ),
