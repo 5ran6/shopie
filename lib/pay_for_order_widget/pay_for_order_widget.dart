@@ -8,7 +8,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shopie/add_new_card_widget/add_new_card_widget.dart';
+import 'package:shopie/add_new_card_widget/add_card_details.dart';
 import 'package:shopie/values/values.dart';
 import 'package:credit_card_slider/card_background.dart';
 import 'package:credit_card_slider/card_company.dart';
@@ -66,10 +66,10 @@ Random random = new Random();
 
 class _PayForOrderWidgetState extends State<PayForOrderWidget> {
   void onGroup4Pressed(BuildContext context) => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => AddNewCardWidget()));
+      context, MaterialPageRoute(builder: (context) => AddCardDetails()));
 
   void onAddNewPressed(BuildContext context) => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => AddNewCardWidget()));
+      context, MaterialPageRoute(builder: (context) => AddCardDetails()));
 
   void onIconAwesomeArrowLPressed(BuildContext context) =>
       Navigator.pop(context);
@@ -105,29 +105,41 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
   * */
 
   @override
-  Future<void> initState() async {
-    // TODO: implement initState
-    super.initState();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-     fromSharedPref = sharedPreferences.getStringList('saved_cards_list') ?? [];
+  void initState()  {
+     super.initState();
+     initialLoading();
+  }
+bool loaded = false;
+  void initialLoading () async{
+    try{
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      fromSharedPref = sharedPreferences.getStringList('saved_cards_list') ?? [];
+     if(fromSharedPref.isNotEmpty)
+{
+  for (CreditCard se in fromSharedPref) {
+    CreditCard x = CreditCard(
+      cardBackground: backgrounds[random.nextInt(5)],
+      cardNetworkType: se.cardNetworkType,
+      cardHolderName: se.cardHolderName,
+      cardNumber: se.cardNumber,
+      company: se.company,
+      validity: Validity(
+        validThruMonth: se.validity.validThruMonth,
+        validThruYear: se.validity.validThruYear,
+      ),
+    );
+    _creditCards.add(x);
+  }
+}
 
-    for (var se in fromSharedPref) {
-      CreditCard x = CreditCard(
-        cardBackground: backgrounds[random.nextInt(5)],
-        cardNetworkType: se['cardNetworkType'],
-        cardHolderName: se['cardHolderName'],
-        cardNumber: se['cardNumber'],
-        company: CardCompany.yesBank,
-        validity: Validity(
-          validThruMonth: 1,
-          validThruYear: 21,
-          validFromMonth: 1,
-          validFromYear: 16,
-        ),
-      );
 
-      _creditCards.add(x);
+    }catch (e){
+      print (e);
     }
+
+    setState(() {
+      loaded = true;
+    });
   }
 
   var cards = [];
@@ -136,93 +148,100 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
   Color highlight = Color.fromARGB(255, 255, 211, 26);
   Color noHighlight = Color.fromARGB(255, 50, 50, 50);
 
-  var _creditCards = [
-    CreditCard(
-      cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: CardNetworkType.visaBasic,
-      cardHolderName: 'The boring developer',
-      cardNumber: '1234 1234 1234 1234',
-      company: CardCompany.yesBank,
-      validity: Validity(
-        validThruMonth: 1,
-        validThruYear: 21,
-        validFromMonth: 1,
-        validFromYear: 16,
-      ),
-    ),
-    CreditCard(
-      cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: CardNetworkType.mastercard,
-      cardHolderName: 'Gursheesh Singh',
-      cardNumber: '2434 2434 **** ****',
-      company: CardCompany.kotak,
-      validity: Validity(
-        validThruMonth: 1,
-        validThruYear: 21,
-      ),
-    ),
-    CreditCard(
-      cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: CardNetworkType.mastercard,
-      cardHolderName: 'Very Very very boring devloper',
-      cardNumber: '4567',
-      company: CardCompany.sbiCard,
-      validity: Validity(
-        validThruMonth: 2,
-        validThruYear: 2021,
-      ),
-    ),
-    CreditCard(
-      cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: CardNetworkType.mastercard,
-      cardHolderName: 'John Doe',
-      cardNumber: '2434 2434 **** ****',
-      company: CardCompany.virgin,
-      validity: Validity(
-        validThruMonth: 1,
-        validThruYear: 20,
-      ),
-    ),
-    CreditCard(
-      cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: CardNetworkType.mastercard,
-      cardHolderName: 'John Doe',
-      cardNumber: '2434 2434 **** ****',
-      company: CardCompany.virgin,
-      validity: Validity(
-        validThruMonth: 1,
-        validThruYear: 20,
-      ),
-    ),
-    CreditCard(
-      cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: CardNetworkType.rupay,
-      cardHolderName: 'John Doe',
-      cardNumber: '2434 2434 **** ****',
-      company: CardCompany.virgin,
-      validity: Validity(
-        validThruMonth: 1,
-        validThruYear: 20,
-      ),
-    ),
-    CreditCard(
-      cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: CardNetworkType.visaBasic,
-      cardHolderName: 'John Doe',
-      cardNumber: '2434 2434 **** ****',
-      company: CardCompany.virgin,
-      validity: Validity(
-        validThruMonth: 1,
-        validThruYear: 20,
-      ),
-    ),
-    CreditCard(
-      cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: CardNetworkType.rupay,
-      cardHolderName: 'THE BORING DEVELOPER',
-      cardNumber: '2434 2434 **** ****',
-      company: CardCompany.sbi,
-    ),
+  String cardHoldersName = '';
+  String cardHoldersCVV = '';
+  String cardHoldersExpiry = '';
+  String cardHoldersNumber = '';
+  String cardHoldersvalidThruMonth = '';
+  String cardHoldersvalidThruYear = '';
+
+  List <CreditCard> _creditCards = [
+    // CreditCard(
+    //   cardBackground: backgrounds[random.nextInt(5)],
+    //   cardNetworkType: CardNetworkType.visaBasic,
+    //   cardHolderName: 'The boring developer',
+    //   cardNumber: '1234 1234 1234 1234',
+    //   company: CardCompany.yesBank,
+    //   validity: Validity(
+    //     validThruMonth: 1,
+    //     validThruYear: 21,
+    //     validFromMonth: 1,
+    //     validFromYear: 16,
+    //   ),
+    // ),
+    // CreditCard(
+    //   cardBackground: backgrounds[random.nextInt(5)],
+    //   cardNetworkType: CardNetworkType.mastercard,
+    //   cardHolderName: 'Gursheesh Singh',
+    //   cardNumber: '2434 2434 **** ****',
+    //   company: CardCompany.kotak,
+    //   validity: Validity(
+    //     validThruMonth: 1,
+    //     validThruYear: 21,
+    //   ),
+    // ),
+    // CreditCard(
+    //   cardBackground: backgrounds[random.nextInt(5)],
+    //   cardNetworkType: CardNetworkType.mastercard,
+    //   cardHolderName: 'Very Very very boring devloper',
+    //   cardNumber: '4567',
+    //   company: CardCompany.sbiCard,
+    //   validity: Validity(
+    //     validThruMonth: 2,
+    //     validThruYear: 2021,
+    //   ),
+    // ),
+    // CreditCard(
+    //   cardBackground: backgrounds[random.nextInt(5)],
+    //   cardNetworkType: CardNetworkType.mastercard,
+    //   cardHolderName: 'John Doe',
+    //   cardNumber: '2434 2434 **** ****',
+    //   company: CardCompany.virgin,
+    //   validity: Validity(
+    //     validThruMonth: 1,
+    //     validThruYear: 20,
+    //   ),
+    // ),
+    // CreditCard(
+    //   cardBackground: backgrounds[random.nextInt(5)],
+    //   cardNetworkType: CardNetworkType.mastercard,
+    //   cardHolderName: 'John Doe',
+    //   cardNumber: '2434 2434 **** ****',
+    //   company: CardCompany.virgin,
+    //   validity: Validity(
+    //     validThruMonth: 1,
+    //     validThruYear: 20,
+    //   ),
+    // ),
+    // CreditCard(
+    //   cardBackground: backgrounds[random.nextInt(5)],
+    //   cardNetworkType: CardNetworkType.rupay,
+    //   cardHolderName: 'John Doe',
+    //   cardNumber: '2434 2434 **** ****',
+    //   company: CardCompany.virgin,
+    //   validity: Validity(
+    //     validThruMonth: 1,
+    //     validThruYear: 20,
+    //   ),
+    // ),
+    // CreditCard(
+    //   cardBackground: backgrounds[random.nextInt(5)],
+    //   cardNetworkType: CardNetworkType.visaBasic,
+    //   cardHolderName: 'John Doe',
+    //   cardNumber: '2434 2434 **** ****',
+    //   company: CardCompany.virgin,
+    //   validity: Validity(
+    //     validThruMonth: 1,
+    //     validThruYear: 20,
+    //   ),
+    // ),
+    // CreditCard(
+    //   cardBackground: backgrounds[random.nextInt(5)],
+    //   cardNetworkType: CardNetworkType.rupay,
+    //   cardHolderName: 'THE BORING DEVELOPER',
+    //   cardNumber: '2434 2434 **** ****',
+    //   company: CardCompany.sbi,
+    // ),
   ];
 
   @override
@@ -243,7 +262,13 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
           onPressed: () => this.onIconAwesomeArrowLPressed(context),
         ),
       ),
-      body: Container(
+      body: !loaded? Container(
+        child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            )),
+      ):Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 255, 255, 255),
@@ -313,10 +338,12 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
               ),
             ),
             Center(
-              child: CreditCardSlider(
+              child: fromSharedPref.isEmpty?Image.asset("assets/images/no_item.png"):CreditCardSlider(
                 _creditCards,
-                initialCard: 2,
+                initialCard: 1,
                 onCardClicked: (index) {
+//                  _creditCards[index].cardHolderName
+//goto next activity with card details.
                   print('Clicked at index: $index');
                 },
               ),

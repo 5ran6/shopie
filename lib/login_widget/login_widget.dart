@@ -24,7 +24,6 @@ class LoginWidget extends StatefulWidget {
 class _LoginWidgetState extends State<LoginWidget> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     void checkLoginState() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -54,29 +54,6 @@ class AddNewCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    height: 57,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            height: 57,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryElement,
-                              boxShadow: [
-                                Shadows.primaryShadow,
-                              ],
-                            ),
-                            child: Container(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
                     height: 53,
                     margin: EdgeInsets.only(left: 16, top: 58, right: 15),
                     child: Stack(
