@@ -5,6 +5,7 @@
 *  Created by Mountedwings Cyber Tech.
 *  Copyright © 2018 Mountedwings Cyber Tech. All rights reserved.
     */
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -116,23 +117,23 @@ bool loaded = false;
       fromSharedPref = sharedPreferences.getStringList('saved_cards_list') ?? [];
      if(fromSharedPref.isNotEmpty)
 {
-  for (CreditCard se in fromSharedPref) {
+//for each json string, create a card instance
+  for (String se in fromSharedPref) {
+    var json = jsonDecode(se);
     CreditCard x = CreditCard(
       cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: se.cardNetworkType,
-      cardHolderName: se.cardHolderName,
-      cardNumber: se.cardNumber,
-      company: se.company,
+      cardNetworkType: json['networkType'] == "Master" || json['networkType'] == "Master Card" ? CardNetworkType.mastercard: json['networkType'] == "Visa" || json['networkType'] == "Visa Card" ? CardNetworkType.visaBasic : json['networkType'] == "Verve" || json['networkType'] == "Verve Card" ? CardNetworkType.rupay: null,
+      cardHolderName: json['name'],
+      cardNumber: json['number'],
+      company: CardCompany.yesBank,
       validity: Validity(
-        validThruMonth: se.validity.validThruMonth,
-        validThruYear: se.validity.validThruYear,
+        validThruMonth: json['validity']['thruMonth'],
+        validThruYear: json['validity']['thruYear'],
       ),
     );
     _creditCards.add(x);
   }
 }
-
-
     }catch (e){
       print (e);
     }

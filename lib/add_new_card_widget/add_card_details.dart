@@ -11,6 +11,7 @@ import 'package:shopie/model/input_formatters.dart';
 import 'package:shopie/add_new_card_widget/payment_card.dart';
 import 'package:shopie/model/my_strings.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:convert';
 
 class AddCardDetails extends StatefulWidget {
   AddCardDetails({Key key}) : super(key: key);
@@ -44,10 +45,13 @@ class _AddCardDetailsState extends State<AddCardDetails> {
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
-          title: new Text('Add New Card', style: TextStyle(
-          color: Colors.purple[900],
-            fontFamily: 'SFNS',
-          ),),
+          title: new Text(
+            'Add New Card',
+            style: TextStyle(
+              color: Colors.purple[900],
+              fontFamily: 'SFNS',
+            ),
+          ),
           backgroundColor: Colors.white,
           shadowColor: Colors.grey,
           leading: BackButton(
@@ -224,6 +228,7 @@ class _AddCardDetailsState extends State<AddCardDetails> {
             _paymentCard.year);
       else {
         //TODO proceed to payment
+        ProceedToPayment();
       }
     }
   }
@@ -271,61 +276,73 @@ class _AddCardDetailsState extends State<AddCardDetails> {
 
   void saveCardToSharedPref(String name, String number, String networkType,
       int thruMonth, int thruYear) async {
-    var fromSharedPref = [];
-    var toSharedPref = [];
+    List <String> fromSharedPref = [];
+
+    print(name +
+        ' ' +
+        number +
+        ' ' +
+        networkType +
+        ' ' +
+        thruMonth.toString() +
+        ' ' +
+        thruYear.toString());
 
     //save card to sharedPref
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     fromSharedPref = sharedPreferences.getStringList('saved_cards_list') ?? [];
-    for (var se in fromSharedPref) {
-      CreditCard x = CreditCard(
-        cardBackground: null,
-        cardNetworkType: se['cardNetworkType'],
-        cardHolderName: se['cardHolderName'],
-        cardNumber: se['cardNumber'],
-        company: CardCompany.yesBank,
-        validity: Validity(
-          validThruMonth: se['validThruMonth'],
-          validThruYear: se['validThruYear'],
-        ),
-      );
-      toSharedPref.add(x);
+/////////////////////////////////////////////////////////////////////////
+/*
+*      String myJSON = '{"name":{"first":"foo","last":"bar"}, "age":31, "city":"New York"}';
+     var json1 = jsonDecode(myJSON);
+//  var nameJson = json['name'];
+     String nameString = jsonEncode(json1); // jsonEncode != .toString()
+     print(nameString); // outputs {"first":"foo","last":"bar"}
+
+* */
+/////////////////////////////////////////////////////////////////////////
+   //create String
+     String rawCardJson = '{"name":"$name", "number":"$number", "networkType":"$networkType", "validity":{"thruMonth":$thruMonth,"thruYear":$thruYear}}';
+     // encode to json
+     var json = jsonDecode(rawCardJson);
+     String newCardJson = jsonEncode(json); // jsonEncode != .toString()
+     //add to list of strings
+     fromSharedPref.add(newCardJson);
+     //send to sharedpref
+     sharedPreferences.setStringList('saved_cards_list', fromSharedPref);
+      // CreditCard x = CreditCard(
+      //   // enum CardType {
+      //   // Master,
+      //   // Visa,
+      //   // Verve,
+      //   // Discover,
+      //   // AmericanExpress,
+      //   // DinersClub,
+      //   // Jcb,
+      //   // Others,
+      //   // Invalid
+      //   // }
+      //
+      //   cardNetworkType: networkType == 'Master'
+      //       ? CardNetworkType.mastercard
+      //       : networkType == 'Visa'
+      //       ? CardNetworkType.visaBasic
+      //       : networkType == 'Verve'
+      //       ? CardNetworkType.rupay
+      //       : networkType == 'Other'
+      //       ? CardNetworkType.visa
+      //       : CardNetworkType.visa,
+      //   cardHolderName: name,
+      //   cardNumber: number,
+      //   company: CardCompany.yesBank,
+      //   validity: Validity(
+      //     validThruMonth: thruMonth,
+      //     validThruYear: thruYear,
+      //   ),
+      //   cardBackground: null,
+      // );
+
+      print(fromSharedPref);
+      ProceedToPayment();
     }
-
-    CreditCard x = CreditCard(
-      // enum CardType {
-      // Master,
-      // Visa,
-      // Verve,
-      // Discover,
-      // AmericanExpress,
-      // DinersClub,
-      // Jcb,
-      // Others,
-      // Invalid
-      // }
-
-      cardNetworkType: networkType == 'Master'
-          ? CardNetworkType.mastercard
-          : networkType == 'Visa'
-              ? CardNetworkType.visaBasic
-              : networkType == 'Verve'
-                  ? CardNetworkType.rupay
-                  : networkType == 'Other'
-                      ? CardNetworkType.visa
-                      : CardNetworkType.visa,
-      cardHolderName: name,
-      cardNumber: number,
-      company: CardCompany.yesBank,
-      validity: Validity(
-        validThruMonth: thruMonth,
-        validThruYear: thruYear,
-      ),
-      cardBackground: null,
-    );
-
-    toSharedPref.add(x);
-    sharedPreferences.setStringList('saved_cards_list', toSharedPref);
-    ProceedToPayment();
-  }
 }
