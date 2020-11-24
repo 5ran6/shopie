@@ -7,6 +7,7 @@
     */
 import 'dart:convert';
 import 'dart:math';
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/add_new_card_widget/add_card_details.dart';
@@ -66,10 +67,10 @@ var backgrounds = [
 Random random = new Random();
 
 class _PayForOrderWidgetState extends State<PayForOrderWidget> {
-  void onGroup4Pressed(BuildContext context) => Navigator.push(
+  void onGroup4Pressed(BuildContext context) => Navigator.pushReplacement(
       context, MaterialPageRoute(builder: (context) => AddCardDetails()));
 
-  void onAddNewPressed(BuildContext context) => Navigator.push(
+  void onAddNewPressed(BuildContext context) => Navigator.pushReplacement(
       context, MaterialPageRoute(builder: (context) => AddCardDetails()));
 
   void onIconAwesomeArrowLPressed(BuildContext context) =>
@@ -106,45 +107,55 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
   * */
 
   @override
-  void initState()  {
-     super.initState();
-     initialLoading();
+  void initState() {
+    super.initState();
+    initialLoading();
   }
-bool loaded = false;
-  void initialLoading () async{
-    try{
-      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      fromSharedPref = sharedPreferences.getStringList('saved_cards_list') ?? [];
-     if(fromSharedPref.isNotEmpty)
-{
+
+  bool loaded = false;
+
+  void initialLoading() async {
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      fromSharedPref =
+          sharedPreferences.getStringList('saved_cards_list') ?? [];
+      if (fromSharedPref.isNotEmpty) {
 //for each json string, create a card instance
-  for (String se in fromSharedPref) {
-    var json = jsonDecode(se);
-    CreditCard x = CreditCard(
-      cardBackground: backgrounds[random.nextInt(5)],
-      cardNetworkType: json['networkType'] == "Master" || json['networkType'] == "Master Card" ? CardNetworkType.mastercard: json['networkType'] == "Visa" || json['networkType'] == "Visa Card" ? CardNetworkType.visaBasic : json['networkType'] == "Verve" || json['networkType'] == "Verve Card" ? CardNetworkType.rupay: null,
-      cardHolderName: json['name'],
-      cardNumber: json['number'],
-      company: CardCompany.yesBank,
-      validity: Validity(
-        validThruMonth: json['validity']['thruMonth'],
-        validThruYear: json['validity']['thruYear'],
-      ),
-    );
-    _creditCards.add(x);
-  }
-}
-    }catch (e){
-      print (e);
+        for (String se in fromSharedPref) {
+          print('From SharedPref: ' + se);
+          var json = jsonDecode(se);
+          CreditCard x = CreditCard(
+            cardBackground: backgrounds[random.nextInt(5)],
+            cardNetworkType: json['networkType'].toString().contains("Master")                ? CardNetworkType.mastercard
+                : json['networkType'].toString().contains("Visa")                    ? CardNetworkType.visaBasic
+                    : json['networkType'].toString().contains("Verve") ||
+                            json['networkType'].toString().contains("Rupay")
+                        ? CardNetworkType.rupay
+                        : null,
+            cardHolderName: json['name'],
+            cardNumber: StringUtils.addCharAtPosition(json['number'], " ", 4, repeat: true),
+            company: CardCompany.yesBank,
+            validity: Validity(
+              validThruMonth: json['validity']['thruMonth'],
+              validThruYear: json['validity']['thruYear'],
+            ),
+          );
+          _creditCards.add(x);
+          print("Card lent: "+_creditCards.length.toString());
+        }
+      }
+    } catch (e) {
+      print(e);
     }
 
     setState(() {
       loaded = true;
+
     });
   }
 
   var cards = [];
-
   bool _isTimeSelected = false;
   Color highlight = Color.fromARGB(255, 255, 211, 26);
   Color noHighlight = Color.fromARGB(255, 50, 50, 50);
@@ -156,7 +167,7 @@ bool loaded = false;
   String cardHoldersvalidThruMonth = '';
   String cardHoldersvalidThruYear = '';
 
-  List <CreditCard> _creditCards = [
+  List<CreditCard> _creditCards = [
     // CreditCard(
     //   cardBackground: backgrounds[random.nextInt(5)],
     //   cardNetworkType: CardNetworkType.visaBasic,
@@ -263,73 +274,120 @@ bool loaded = false;
           onPressed: () => this.onIconAwesomeArrowLPressed(context),
         ),
       ),
-      body: !loaded? Container(
-        child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
-            )),
-      ):Container(
-        constraints: BoxConstraints.expand(),
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 255, 255, 255),
-        ),
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Container(
-              height: 28,
-              margin: EdgeInsets.only(left: 26, top: 20, right: 24),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: !loaded
+          ? Container(
+              child: Center(
+                  child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              )),
+            )
+          : Container(
+              constraints: BoxConstraints.expand(),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+              child: Stack(
+                alignment: Alignment.topCenter,
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Select a Card",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: AppColors.secondaryText,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                        letterSpacing: -1.19879,
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      margin: EdgeInsets.only(top: 10, right: 5),
-                      child: Image.asset(
-                        "assets/images/icon-feather-plus.png",
-                        fit: BoxFit.none,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Container(
-                      width: 71,
-                      height: 21,
-                      margin: EdgeInsets.only(top: 4),
-                      child: FlatButton(
-                        onPressed: () => this.onAddNewPressed(context),
-                        color: Color.fromARGB(0, 0, 0, 0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                  Container(
+                    height: 28,
+                    margin: EdgeInsets.only(left: 26, top: 20, right: 24),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Select a Card",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: AppColors.secondaryText,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                              letterSpacing: -1.19879,
+                            ),
+                          ),
                         ),
-                        textColor: Color.fromARGB(255, 59, 72, 255),
-                        padding: EdgeInsets.all(0),
-                        child: Text(
-                          "Add new",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 59, 72, 255),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18,
+                        Spacer(),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            width: 10,
+                            height: 10,
+                            margin: EdgeInsets.only(top: 10, right: 5),
+                            child: Image.asset(
+                              "assets/images/icon-feather-plus.png",
+                              fit: BoxFit.none,
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            width: 71,
+                            height: 21,
+                            margin: EdgeInsets.only(top: 4),
+                            child: FlatButton(
+                              onPressed: () => this.onAddNewPressed(context),
+                              color: Color.fromARGB(0, 0, 0, 0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(0)),
+                              ),
+                              textColor: Color.fromARGB(255, 59, 72, 255),
+                              padding: EdgeInsets.all(0),
+                              child: Text(
+                                "Add new",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 59, 72, 255),
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Center(
+                    child: fromSharedPref.isEmpty
+                        ? Image.asset("assets/images/no_item.png")
+                        : CreditCardSlider(
+                            _creditCards,
+                            initialCard: 0,
+                            onCardClicked: (index) {
+//                  _creditCards[index].cardHolderName
+//goto next activity with card details.
+                              print('Clicked at index: $index');
+                            },
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: 324,
+                        height: 45,
+                        child: FlatButton(
+                          onPressed: () => this.onGroup4Pressed(context),
+                          color: AppColors.secondaryElement,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: Radii.k7pxRadius,
+                          ),
+                          textColor: Color.fromARGB(255, 255, 255, 255),
+                          padding: EdgeInsets.all(0),
+                          child: Text(
+                            "Confirm",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -338,48 +396,6 @@ bool loaded = false;
                 ],
               ),
             ),
-            Center(
-              child: fromSharedPref.isEmpty?Image.asset("assets/images/no_item.png"):CreditCardSlider(
-                _creditCards,
-                initialCard: 1,
-                onCardClicked: (index) {
-//                  _creditCards[index].cardHolderName
-//goto next activity with card details.
-                  print('Clicked at index: $index');
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: 324,
-                  height: 45,
-                  child: FlatButton(
-                    onPressed: () => this.onGroup4Pressed(context),
-                    color: AppColors.secondaryElement,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: Radii.k7pxRadius,
-                    ),
-                    textColor: Color.fromARGB(255, 255, 255, 255),
-                    padding: EdgeInsets.all(0),
-                    child: Text(
-                      "Confirm",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
