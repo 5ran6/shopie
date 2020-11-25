@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/model/input_formatters.dart';
 import 'package:shopie/add_new_card_widget/payment_card.dart';
+import 'package:shopie/pay_for_order_widget/flutterwave_payment.dart';
 import 'package:shopie/pay_for_order_widget/pay_for_order_widget.dart';
 import 'package:shopie/model/my_strings.dart';
 import 'package:flutter/cupertino.dart';
@@ -238,7 +239,10 @@ class _AddCardDetailsState extends State<AddCardDetails> {
     }
   }
 
-  void ProceedToPayment() {}
+  void ProceedToPayment() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => FlutterwavePayment(title: 'Payment')));
+  }
 
   Widget _getPayButton() {
     if (Platform.isIOS) {
