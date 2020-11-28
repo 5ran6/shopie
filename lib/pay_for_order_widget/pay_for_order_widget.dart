@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterwave/core/flutterwave.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/add_new_card_widget/add_card_details.dart';
 import 'package:shopie/values/values.dart';
@@ -19,7 +20,10 @@ import 'package:credit_card_slider/credit_card_slider.dart';
 import 'package:credit_card_slider/credit_card_widget.dart';
 import 'package:credit_card_slider/validity.dart';
 
+import 'flutterwave_payment.dart';
+
 class PayForOrderWidget extends StatefulWidget {
+
   String name;
   String phone;
   String volume;
@@ -85,9 +89,11 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
       // print(selectedTime);
     });
   }
+  static const String NGN = "NGN";
+  bool isDebug = true;
 
   var fromSharedPref = [];
-
+String emailAddress = '';
   /*
   * {
   *   we skip cardBackground (random)
@@ -120,6 +126,8 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
           await SharedPreferences.getInstance();
       fromSharedPref =
           sharedPreferences.getStringList('saved_cards_list') ?? [];
+      emailAddress =
+          sharedPreferences.getString('user') ?? "";
       if (fromSharedPref.isNotEmpty) {
 //for each json string, create a card instance
         for (String se in fromSharedPref) {
@@ -361,6 +369,8 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
                             onCardClicked: (index) {
 //                  _creditCards[index].cardHolderName
 //goto next activity with card details.
+
+                              ProceedToPayment();
                               print('Clicked at index: $index');
                             },
                           ),
@@ -396,6 +406,67 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
                 ],
               ),
             ),
+    );
+  }
+  void ProceedToPayment() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => FlutterwavePayment(title: 'Payment')));
+
+
+
+  }
+
+
+  _handlePaymentInitialization() async {
+    final flutterwave = Flutterwave.forUIPayment(
+        amount: widget.paid_amount,
+        currency: NGN,
+        context: this.context,
+        publicKey: Params.public_key,
+        encryptionKey: Params.encryption_key,
+        email: emailAddress,
+        fullName: widget.name,
+        txRef: DateTime.now().toIso8601String(),
+        narration: "Payment for gas on Shopie (No 1 home delivery service provider for cooking gas)",
+        isDebugMode: this.isDebug,
+        phoneNumber: widget.phone,
+        acceptAccountPayment: false,
+        acceptCardPayment: true,
+        acceptUSSDPayment: false,
+//card details
+      cardName:  cardHoldersName,
+      cardNumber:  cardHoldersNumber,
+      cvv:  cardHoldersCVV,
+      expiryMonth:  cardHoldersvalidThruMonth,
+      expiryYear:  cardHoldersvalidThruYear,
+
+
+
+
+
+
+    );
+    final response = await flutterwave.initializeForUiPayments();
+    if (response != null) {
+      this.showLoading(response.data.status);
+    } else {
+      this.showLoading("No Response!");
+    }
+  }
+  Future<void> showLoading(String message) {
+    return showDialog(
+      context: this.context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            margin: EdgeInsets.fromLTRB(30, 20, 30, 20),
+            width: double.infinity,
+            height: 50,
+            child: Text(message),
+          ),
+        );
+      },
     );
   }
 }
