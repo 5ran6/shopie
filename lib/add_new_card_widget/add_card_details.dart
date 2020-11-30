@@ -6,6 +6,7 @@ import 'package:credit_card_slider/credit_card_widget.dart';
 import 'package:credit_card_slider/validity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shopie/flutterwave/core/flutterwave.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/model/input_formatters.dart';
 import 'package:shopie/add_new_card_widget/payment_card.dart';
@@ -15,8 +16,33 @@ import 'package:shopie/model/my_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 
+import 'package:shopie/values/params.dart';
+
 class AddCardDetails extends StatefulWidget {
-  AddCardDetails({Key key}) : super(key: key);
+  String name;
+  String phone;
+  String volume;
+  String address;
+  String address_id;
+  String selectedTime;
+  String amount;
+  String paid_amount;
+  String coupon_code;
+  String paymentMethod;
+  String emailAddress;
+
+  AddCardDetails(
+    @required this.name,
+    @required this.phone,
+    @required this.volume,
+    @required this.address_id,
+    @required this.selectedTime,
+    @required this.amount,
+    @required this.paid_amount,
+    @required this.coupon_code,
+    @required this.paymentMethod,
+    @required this.emailAddress,
+  );
 
 //  final String title = 'Add New Card';
 
@@ -41,6 +67,8 @@ class _AddCardDetailsState extends State<AddCardDetails> {
   }
 
   var checkedValue = false;
+  static const String NGN = "NGN";
+  bool isDebug = true;
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +229,18 @@ class _AddCardDetailsState extends State<AddCardDetails> {
     numberController.removeListener(_getCardTypeFrmNumber);
     numberController.dispose();
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => PayForOrderWidget("Ocholi Francis", "080234923492323", '52 Kg', '1' , '09 am - 10 am', '1600', '1400', '', 'Online Payment')));
+        context,
+        MaterialPageRoute(
+            builder: (context) => PayForOrderWidget(
+                "Ocholi Francis",
+                "080234923492323",
+                '52 Kg',
+                '1',
+                '09 am - 10 am',
+                '1600',
+                '1400',
+                '',
+                'Online Payment')));
 
     super.dispose();
   }
@@ -231,17 +270,67 @@ class _AddCardDetailsState extends State<AddCardDetails> {
             _paymentCard.number,
             _paymentCard.type.toString(),
             _paymentCard.month,
-            _paymentCard.year);
+            _paymentCard.year,
+            _paymentCard.cvv.toString());
       else {
-        //TODO proceed to payment
         ProceedToPayment();
       }
     }
   }
 
-  void ProceedToPayment() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => FlutterwavePayment(title: 'Payment')));
+  void ProceedToPayment()async {
+    // Navigator.push(
+    //     context, MaterialPageRoute(builder: (context) => FlutterwavePayment(title: 'Payment')));
+    _handlePaymentInitialization();
+  }
+
+  _handlePaymentInitialization() async {
+    final flutterwave = Flutterwave.forUIPayment(
+      amount: widget.paid_amount,
+      currency: NGN,
+      context: this.context,
+      publicKey: Params.public_key,
+      encryptionKey: Params.encryption_key,
+      email: widget.emailAddress,
+      fullName: widget.name,
+      txRef: DateTime.now().toIso8601String(),
+      narration:
+          "Payment for gas on Shopie (No 1 home delivery service provider for cooking gas)",
+      isDebugMode: this.isDebug,
+      phoneNumber: widget.phone,
+      acceptAccountPayment: false,
+      acceptCardPayment: true,
+      acceptUSSDPayment: false,
+//card details
+      cardName: _card.name,
+      cardNumber: _paymentCard.number,
+      cvv: _paymentCard.cvv.toString(),
+      expiryMonth: _paymentCard.month.toString(),
+      expiryYear: _paymentCard.year.toString(),
+    );
+    final response = await flutterwave.initializeForUiPayments();
+    if (response != null) {
+      this.showLoading(response.data.status);
+    } else {
+      this.showLoading("No Response!");
+    }
+  }
+
+  Future<void> showLoading(String message) {
+    return showDialog(
+      context: this.context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            margin: EdgeInsets.fromLTRB(30, 20, 30, 20),
+            width: double.infinity,
+            height: 50,
+            child: Text(message),
+          ),
+        );
+      },
+    );
   }
 
   Widget _getPayButton() {
@@ -284,7 +373,7 @@ class _AddCardDetailsState extends State<AddCardDetails> {
   }
 
   void saveCardToSharedPref(String name, String number, String networkType,
-      int thruMonth, int thruYear) async {
+      int thruMonth, int thruYear, String cvv) async {
     List<String> fromSharedPref = [];
 
     //save card to sharedPref
@@ -302,7 +391,7 @@ class _AddCardDetailsState extends State<AddCardDetails> {
 /////////////////////////////////////////////////////////////////////////
     //create String
     String rawCardJson =
-        '{"name":"$name", "number":"$number", "networkType":"$networkType", "validity":{"thruMonth":$thruMonth,"thruYear":$thruYear}}';
+        '{"name":"$name", "number":"$number", "cvv":"$cvv", "networkType":"$networkType", "validity":{"thruMonth":$thruMonth,"thruYear":$thruYear}}';
     // encode to json
     var json = jsonDecode(rawCardJson);
     String newCardJson = jsonEncode(json); // jsonEncode != .toString()

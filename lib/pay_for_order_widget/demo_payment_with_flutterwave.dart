@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwave/flutterwave.dart';
+import 'package:shopie/flutterwave/flutterwave.dart';
 
 
 

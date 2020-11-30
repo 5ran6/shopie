@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterwave/core/flutterwave.dart';
+import 'package:shopie/flutterwave/core/flutterwave.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/add_new_card_widget/add_card_details.dart';
 import 'package:shopie/values/values.dart';
@@ -71,11 +71,27 @@ var backgrounds = [
 Random random = new Random();
 
 class _PayForOrderWidgetState extends State<PayForOrderWidget> {
-  void onGroup4Pressed(BuildContext context) => Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => AddCardDetails()));
+  // void onGroup4Pressed(BuildContext context) => Navigator.pushReplacement(
+  //     context, MaterialPageRoute(builder: (context) => AddCardDetails()));
 
   void onAddNewPressed(BuildContext context) => Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => AddCardDetails()));
+  //     context, MaterialPageRoute(builder: (context) => AddCardDetails(
+  //     widget.name,
+  //     widget.phone,
+  //     widget.volume,
+  //     widget.address_id,
+  //     widget.selectedTime,
+  //     widget.amount,
+  //     widget.paid_amount,
+  //     widget.coupon_code,
+  //     widget.paymentMethod,
+  //   emailAddress
+  //
+  // )));
+      context, MaterialPageRoute(builder: (context) => AddCardDetails(
+      "Ocholi Francis", "080234923492323", '52 Kg', '1' , '09 am - 10 am', '1600', '1400', '', 'Online Payment', "5raan6@gmail.com"
+
+  )));
 
   void onIconAwesomeArrowLPressed(BuildContext context) =>
       Navigator.pop(context);
@@ -144,6 +160,7 @@ String emailAddress = '';
             cardHolderName: json['name'],
             cardNumber: StringUtils.addCharAtPosition(json['number'], " ", 4, repeat: true),
             company: CardCompany.yesBank,
+            cvv: json['cvv'],
             validity: Validity(
               validThruMonth: json['validity']['thruMonth'],
               validThruYear: json['validity']['thruYear'],
@@ -370,54 +387,54 @@ String emailAddress = '';
 //                  _creditCards[index].cardHolderName
 //goto next activity with card details.
 
-                              ProceedToPayment();
+                              ProceedToPayment(index);
                               print('Clicked at index: $index');
                             },
                           ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: 324,
-                        height: 45,
-                        child: FlatButton(
-                          onPressed: () => this.onGroup4Pressed(context),
-                          color: AppColors.secondaryElement,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: Radii.k7pxRadius,
-                          ),
-                          textColor: Color.fromARGB(255, 255, 255, 255),
-                          padding: EdgeInsets.all(0),
-                          child: Text(
-                            "Confirm",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: Align(
+                  //     alignment: Alignment.bottomCenter,
+                  //     child: Container(
+                  //       width: 324,
+                  //       height: 45,
+                  //       child: FlatButton(
+                  //         onPressed: () => this.onGroup4Pressed(context),
+                  //         color: AppColors.secondaryElement,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: Radii.k7pxRadius,
+                  //         ),
+                  //         textColor: Color.fromARGB(255, 255, 255, 255),
+                  //         padding: EdgeInsets.all(0),
+                  //         child: Text(
+                  //           "Confirm",
+                  //           textAlign: TextAlign.center,
+                  //           style: TextStyle(
+                  //             color: Color.fromARGB(255, 255, 255, 255),
+                  //             fontWeight: FontWeight.w400,
+                  //             fontSize: 20,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
     );
   }
-  void ProceedToPayment() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => FlutterwavePayment(title: 'Payment')));
+  void ProceedToPayment(int index) {
+    // Navigator.push(
+    //     context, MaterialPageRoute(builder: (context) => FlutterwavePayment(title: 'Payment')));
 
-
+_handlePaymentInitialization(index);
 
   }
 
 
-  _handlePaymentInitialization() async {
+  _handlePaymentInitialization(int index) async {
     final flutterwave = Flutterwave.forUIPayment(
         amount: widget.paid_amount,
         currency: NGN,
@@ -434,11 +451,11 @@ String emailAddress = '';
         acceptCardPayment: true,
         acceptUSSDPayment: false,
 //card details
-      cardName:  cardHoldersName,
-      cardNumber:  cardHoldersNumber,
-      cvv:  cardHoldersCVV,
-      expiryMonth:  cardHoldersvalidThruMonth,
-      expiryYear:  cardHoldersvalidThruYear,
+      cardName:  _creditCards[index].cardHolderName,
+      cardNumber:  _creditCards[index].cardNumber.replaceAll(' ', ''),
+      cvv:  _creditCards[index].validity.validThruYear.toString(),
+      expiryMonth:  _creditCards[index].validity.validThruMonth.toString(),
+      expiryYear:  _creditCards[index].validity.validThruYear.toString(),
 
 
 

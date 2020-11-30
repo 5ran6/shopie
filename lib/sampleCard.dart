@@ -76,6 +76,7 @@ var _creditCards = [
     cardHolderName: 'The boring developer',
     cardNumber: '1234 1234 1234 1234',
     company: CardCompany.yesBank,
+
     validity: Validity(
       validThruMonth: 1,
       validThruYear: 21,

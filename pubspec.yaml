@@ -31,7 +31,11 @@ dependencies:
   credit_card_slider: ^1.0.1
   credit_card_type_detector: ^1.1.0
   basic_utils: ^2.6.3
-  flutterwave: 0.0.2
+
+  tripledes: ^2.1.0
+  hexcolor: ^1.0.5
+  webview_flutter: ^1.0.1
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,6 +44,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito: 4.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
