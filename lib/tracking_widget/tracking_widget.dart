@@ -38,20 +38,7 @@ class _TrackingWidgetState extends State<TrackingWidget> {
 
   String address_id = '';
   Map<String, String> address = {};
-  List monthList = [
-    {'name': 'January', 'value': 'January'},
-    {'name': 'February', 'value': 'January'},
-    {'name': 'March', 'value': 'January'},
-    {'name': 'April', 'value': 'January'},
-    {'name': 'May', 'value': 'January'},
-    {'name': 'June', 'value': 'January'},
-    {'name': 'July', 'value': 'January'},
-    {'name': 'August', 'value': 'January'},
-    {'name': 'September', 'value': 'January'},
-    {'name': 'October', 'value': 'January'},
-    {'name': 'November', 'value': 'January'},
-    {'name': 'December', 'value': 'January'}
-  ];
+
 
   void onIconIonicMdMenuPressed(BuildContext context) {}
 

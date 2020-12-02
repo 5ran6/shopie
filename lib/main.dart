@@ -58,12 +58,12 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // home: firstTime
-      //     ? Onboarding1Widget()
-      //     : (loggedIn ? TrackingWidget() : StartPageWidget()),
+      home: firstTime
+          ? Onboarding1Widget()
+          : (loggedIn ? TrackingWidget() : StartPageWidget()),
 
-        home: PayForOrderWidget("Ocholi Francis", "080234923492323", '52 Kg', '1' , '09 am - 10 am', '1600', '1400', '', 'Online Payment'),
-     // home: SampleCard(),
+      // home: PayForOrderWidget("Ocholi Francis", "080234923492323", '52 Kg', '1' , '09 am - 10 am', '1600', '1400', '', 'Online Payment'),
+      // home: SampleCard(),
     );
   }
 }

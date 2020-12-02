@@ -312,7 +312,7 @@ class _AddCardDetailsState extends State<AddCardDetails> {
     if (response != null) {
       this.showLoading(response.data.status);
     } else {
-      this.showLoading("No Response!");
+      this.showLoading("Transaction not processed!");
     }
   }
 

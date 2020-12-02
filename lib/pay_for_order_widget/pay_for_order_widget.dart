@@ -75,23 +75,23 @@ class _PayForOrderWidgetState extends State<PayForOrderWidget> {
   //     context, MaterialPageRoute(builder: (context) => AddCardDetails()));
 
   void onAddNewPressed(BuildContext context) => Navigator.pushReplacement(
-  //     context, MaterialPageRoute(builder: (context) => AddCardDetails(
-  //     widget.name,
-  //     widget.phone,
-  //     widget.volume,
-  //     widget.address_id,
-  //     widget.selectedTime,
-  //     widget.amount,
-  //     widget.paid_amount,
-  //     widget.coupon_code,
-  //     widget.paymentMethod,
-  //   emailAddress
-  //
-  // )));
       context, MaterialPageRoute(builder: (context) => AddCardDetails(
-      "Ocholi Francis", "080234923492323", '52 Kg', '1' , '09 am - 10 am', '1600', '1400', '', 'Online Payment', "5raan6@gmail.com"
+      widget.name,
+      widget.phone,
+      widget.volume,
+      widget.address_id,
+      widget.selectedTime,
+      widget.amount,
+      widget.paid_amount,
+      widget.coupon_code,
+      widget.paymentMethod,
+    emailAddress
 
   )));
+  //     context, MaterialPageRoute(builder: (context) => AddCardDetails(
+  //     "Ocholi Francis", "080234923492323", '52 Kg', '1' , '09 am - 10 am', '1600', '1400', '', 'Online Payment', "5raan6@gmail.com"
+  //
+  // )));
 
   void onIconAwesomeArrowLPressed(BuildContext context) =>
       Navigator.pop(context);
