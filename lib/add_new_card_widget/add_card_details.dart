@@ -228,19 +228,20 @@ class _AddCardDetailsState extends State<AddCardDetails> {
     // Clean up the controller when the Widget is removed from the Widget tree
     numberController.removeListener(_getCardTypeFrmNumber);
     numberController.dispose();
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => PayForOrderWidget(
-                "Ocholi Francis",
-                "080234923492323",
-                '52 Kg',
-                '1',
-                '09 am - 10 am',
-                '1600',
-                '1400',
-                '',
-                'Online Payment')));
+
+    // Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(
+    //         builder: (context) => PayForOrderWidget(
+    //             "Ocholi Francis",
+    //             "080234923492323",
+    //             '52 Kg',
+    //             '1',
+    //             '09 am - 10 am',
+    //             '1600',
+    //             '1400',
+    //             '',
+    //             'Online Payment')));
 
     super.dispose();
   }
@@ -278,7 +279,7 @@ class _AddCardDetailsState extends State<AddCardDetails> {
     }
   }
 
-  void ProceedToPayment()async {
+  void ProceedToPayment() async {
     // Navigator.push(
     //     context, MaterialPageRoute(builder: (context) => FlutterwavePayment(title: 'Payment')));
     _handlePaymentInitialization();
@@ -311,6 +312,12 @@ class _AddCardDetailsState extends State<AddCardDetails> {
     final response = await flutterwave.initializeForUiPayments();
     if (response != null) {
       this.showLoading(response.data.status);
+      print('flutterwave: Response: ' + response.data.status);
+      if (response.data.status == "success") {
+        print('flutterwave: Transaction Done Response: ' + response.data.status);
+
+
+      } else {}
     } else {
       this.showLoading("Transaction not processed!");
     }

@@ -15,6 +15,7 @@ class ChargeResponse {
     message = json['message'];
     data = json['data'] != null ? new ChargeResponseData.fromJson(json['data']) : null;
     meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
+    print('flutterwave: Response: ' + status);
   }
 
   Map<String, dynamic> toJson() {

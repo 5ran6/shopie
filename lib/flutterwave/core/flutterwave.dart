@@ -31,6 +31,7 @@ class Flutterwave {
   int duration;
   bool isPermanent;
   String narration;
+
   // card details
   String cardNumber;
   String cvv;
@@ -44,7 +45,6 @@ class Flutterwave {
   // bool acceptBarterPayment;
   // bool acceptSouthAfricaBankPayment;
   // bool acceptBankTransferPayment;
-
 
   /// Flutterwave Constructor
   Flutterwave.forUIPayment({
@@ -77,7 +77,6 @@ class Flutterwave {
     this.cvv,
     this.expiryMonth,
     this.expiryYear,
-
 
     //TODO to be added later when ready on v3
     // this.acceptBankTransferPayment = false,
@@ -165,7 +164,6 @@ class Flutterwave {
       this.acceptUSSDPayment = false;
     }
 
-
     //TODO to be included once UK Account payments and ACH become available on v3
     // if (this.currency == FlutterwaveCurrency.GBP) {
     //   // this.acceptUKAccountPayment = true;
@@ -216,7 +214,6 @@ class Flutterwave {
     }
   }
 
-
   /// Launches payment screen
   /// Returns a future ChargeResponse intance
   /// Nullable
@@ -252,8 +249,7 @@ class Flutterwave {
 
   Future<ChargeResponse> _launchPaymentScreen(
       final FlutterwavePaymentManager paymentManager) async {
-
-    _launchCardPaymentWidget(paymentManager);
+    await _launchCardPaymentWidget(paymentManager);
 
     // return await Navigator.push(
     //   this.context,
@@ -262,29 +258,52 @@ class Flutterwave {
   }
 
 //I added this
-  void _launchCardPaymentWidget(FlutterwavePaymentManager paymentManager) async {
-     final ChargeResponse chargeResponse = await Navigator.push(
+  _launchCardPaymentWidget(FlutterwavePaymentManager paymentManager) async {
+    final ChargeResponse chargeResponse = await Navigator.push(
       this.context,
-      MaterialPageRoute(builder: (context) => CardPayment(paymentManager.getCardPaymentManager(),
-          cardName, cardNumber, cvv, expiryMonth, expiryYear)),);
+      MaterialPageRoute(
+          builder: (context) => CardPayment(
+              paymentManager.getCardPaymentManager(),
+              cardName,
+              cardNumber,
+              cvv,
+              expiryMonth,
+              expiryYear)),
+    );
     String message;
     if (chargeResponse != null) {
       message = chargeResponse.message;
+      print('flutterwave: Response: ' + message);
+      if (message == "Transaction fetched successfully") {
+        //: success routine. Call make payment
+        successRoutine();
+      } else {
+        // failure routine. Call make payment
+        failureRoutine();
+      }
     } else {
       message = "Transaction cancelled";
+      print('flutterwave: Response: ' + message);
+      //: failure routine. Call make payment
+      failureRoutine();
     }
 //    this.showSnackBar(message);
     Navigator.pop(this.context, chargeResponse);
   }
-  // void showSnackBar(String message) {
-  //   SnackBar snackBar = SnackBar(
-  //     content: Text(
-  //       message,
-  //       textAlign: TextAlign.center,
-  //     ),
-  //   );
-  //   this._scaffoldKey.currentState.showSnackBar(snackBar);
-  // }
-  //
+
+  void successRoutine() {}
+
+  void failureRoutine() {}
+
+// void showSnackBar(String message) {
+//   SnackBar snackBar = SnackBar(
+//     content: Text(
+//       message,
+//       textAlign: TextAlign.center,
+//     ),
+//   );
+//   this._scaffoldKey.currentState.showSnackBar(snackBar);
+// }
+//
 
 }
