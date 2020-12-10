@@ -19,6 +19,8 @@ import 'package:credit_card_slider/card_network_type.dart';
 import 'package:credit_card_slider/credit_card_slider.dart';
 import 'package:credit_card_slider/credit_card_widget.dart';
 import 'package:credit_card_slider/validity.dart';
+import 'package:shopie/order_successful_widget/order_successful_widget.dart';
+import 'package:shopie/order_successful_widget/order_not_successful_widget.dart';
 
 import 'flutterwave_payment.dart';
 
@@ -468,7 +470,15 @@ _handlePaymentInitialization(index);
     );
     final response = await flutterwave.initializeForUiPayments();
     if (response != null) {
-      this.showLoading(response.data.status);
+      //this.showLoading(response.data.status);
+      if(response.data.status == "successful")
+        Navigator.pushReplacement(
+               context, MaterialPageRoute(builder: (context) => OrderSuccessfulWidget("")));
+      else
+        Navigator.pushReplacement(
+               context, MaterialPageRoute(builder: (context) => OrderNotSuccessfulWidget("")));
+
+
     } else {
       this.showLoading("No Response!");
     }

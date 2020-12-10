@@ -315,7 +315,7 @@ return chargeResponse;
         };
         final response =
         await http.post(Constants.domain + "submit_gas_order.php", body: data);
-        print('Status Code = ' + response.statusCode.toString());
+        print('Status Code = ' + response.statusCode.toString() + ". Response: " + response.body);
 
         return chargeResponse;
     } else {
