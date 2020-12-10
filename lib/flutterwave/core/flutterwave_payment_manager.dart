@@ -39,6 +39,16 @@ class FlutterwavePaymentManager {
   String country;
 
 
+  String phone;
+  String volume;
+  String address;
+  String receiveTime;
+  String paidAmount;
+  String couponCode;
+  String paymentMethod;
+  String real_amount;
+
+
   /// FlutterwavePaymentManager Constructor
   FlutterwavePaymentManager(
       {@required this.publicKey,
@@ -69,7 +79,16 @@ class FlutterwavePaymentManager {
       this.duration,
       this.isPermanent,
       this.narration,
-      this.network = ""});
+      this.network = "",
+      this.phone,
+
+        this.volume,
+        this.address,
+        this.receiveTime,
+        this.couponCode,
+        this.paymentMethod,
+        this.real_amount
+      });
 
   /// Returns an instance of CardPaymentManager
   CardPaymentManager getCardPaymentManager() {

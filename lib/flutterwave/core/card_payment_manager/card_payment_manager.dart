@@ -85,6 +85,8 @@ class CardPaymentManager {
         headers: {HttpHeaders.authorizationHeader: this.publicKey},
         body: encryptedPayload);
 
+
+
     this._handleResponse(response);
   }
 

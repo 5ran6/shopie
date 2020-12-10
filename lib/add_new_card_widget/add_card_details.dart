@@ -308,6 +308,14 @@ class _AddCardDetailsState extends State<AddCardDetails> {
       cvv: _paymentCard.cvv.toString(),
       expiryMonth: _paymentCard.month.toString(),
       expiryYear: _paymentCard.year.toString(),
+
+      volume: widget.volume,
+      address: widget.address_id,
+      receiveTime: widget.selectedTime,
+      couponCode: widget.coupon_code,
+      paymentMethod: widget.paymentMethod,
+      real_amount: widget.amount,
+
     );
     final response = await flutterwave.initializeForUiPayments();
     if (response != null) {

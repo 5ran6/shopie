@@ -457,9 +457,12 @@ _handlePaymentInitialization(index);
       expiryMonth:  _creditCards[index].validity.validThruMonth.toString(),
       expiryYear:  _creditCards[index].validity.validThruYear.toString(),
 
-
-
-
+      volume: widget.volume,
+      address: widget.address_id,
+      receiveTime: widget.selectedTime,
+      couponCode: widget.coupon_code,
+      paymentMethod: widget.paymentMethod,
+      real_amount: widget.amount,
 
 
     );

@@ -92,7 +92,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
               //   volume, address, total, payable, coupon)));
               volume,
               address,
-              fullAddress['value'].toString(),
+             address_id,
               total,
               payable,
               coupon)));
@@ -1053,6 +1053,7 @@ class _NewOrderWidgetState extends State<NewOrderWidget> {
 //          context.
           fullAddress = fullAdd;
           _addressController.text = fullAddress['name'];
+          this.address_id = fullAddress['value'].toString();
 
           Navigator.pop(context);
           //        return fullAddress;

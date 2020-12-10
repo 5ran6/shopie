@@ -3,6 +3,12 @@ import 'package:shopie/flutterwave/models/responses/charge_response.dart';
 import 'package:shopie/flutterwave/utils/flutterwave_currency.dart';
 import 'package:shopie/flutterwave/widgets/home/flutterwave_payment.dart';
 import 'package:shopie/flutterwave/widgets/card_payment/card_payment.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:http/http.dart' as http;
+import 'package:shopie/order_successful_widget/order_successful_widget.dart';
+import 'package:shopie/order_successful_widget/order_not_successful_widget.dart';
+
+import 'package:shopie/constants.dart';
 
 import 'flutterwave_payment_manager.dart';
 
@@ -39,6 +45,13 @@ class Flutterwave {
   String expiryMonth;
   String cardName;
 
+  String volume;
+  String address;
+  String receiveTime;
+  String couponCode;
+  String paymentMethod;
+  String real_amount;
+
   //todo include these when they become available and stable on v3
   // bool acceptVoucherPayment;
   // bool acceptUKAccountPayment;
@@ -47,44 +60,49 @@ class Flutterwave {
   // bool acceptBankTransferPayment;
 
   /// Flutterwave Constructor
-  Flutterwave.forUIPayment({
-    @required this.context,
-    @required this.publicKey,
-    @required this.encryptionKey,
-    @required this.currency,
-    @required this.amount,
-    @required this.email,
-    @required this.fullName,
-    @required this.txRef,
-    @required this.isDebugMode,
-    @required this.phoneNumber,
-    this.frequency,
-    this.duration = 0,
-    this.isPermanent = false,
-    this.narration = "",
-    this.acceptAccountPayment = false,
-    this.acceptCardPayment = false,
-    this.acceptUSSDPayment = false,
-    this.acceptRwandaMoneyPayment = false,
-    this.acceptMpesaPayment = false,
-    this.acceptZambiaPayment = false,
-    this.acceptGhanaPayment = false,
-    this.acceptUgandaPayment = false,
-    this.acceptFrancophoneMobileMoney = false,
-    //card details
-    this.cardName,
-    this.cardNumber,
-    this.cvv,
-    this.expiryMonth,
-    this.expiryYear,
-
-    //TODO to be added later when ready on v3
-    // this.acceptBankTransferPayment = false,
-    // this.acceptUKAccountPayment = false,
-    // this.acceptVoucherPayment = false,
-    // this.acceptSouthAfricaBankPayment = false,
-    // this.acceptBarterPayment = false,
-  }) {
+  Flutterwave.forUIPayment(
+      {@required this.context,
+      @required this.publicKey,
+      @required this.encryptionKey,
+      @required this.currency,
+      @required this.amount,
+      @required this.email,
+      @required this.fullName,
+      @required this.txRef,
+      @required this.isDebugMode,
+      @required this.phoneNumber,
+      this.frequency,
+      this.duration = 0,
+      this.isPermanent = false,
+      this.narration = "",
+      this.acceptAccountPayment = false,
+      this.acceptCardPayment = false,
+      this.acceptUSSDPayment = false,
+      this.acceptRwandaMoneyPayment = false,
+      this.acceptMpesaPayment = false,
+      this.acceptZambiaPayment = false,
+      this.acceptGhanaPayment = false,
+      this.acceptUgandaPayment = false,
+      this.acceptFrancophoneMobileMoney = false,
+      //card details
+      this.cardName,
+      this.cardNumber,
+      this.cvv,
+      this.expiryMonth,
+      this.expiryYear,
+      this.volume,
+      this.address,
+      this.receiveTime,
+      this.couponCode,
+      this.paymentMethod,
+      this.real_amount
+      //TODO to be added later when ready on v3
+      // this.acceptBankTransferPayment = false,
+      // this.acceptUKAccountPayment = false,
+      // this.acceptVoucherPayment = false,
+      // this.acceptSouthAfricaBankPayment = false,
+      // this.acceptBarterPayment = false,
+      }) {
     this.currency = this.currency.toUpperCase();
 
     if (this.currency == FlutterwaveCurrency.NGN) {
@@ -215,7 +233,7 @@ class Flutterwave {
   }
 
   /// Launches payment screen
-  /// Returns a future ChargeResponse intance
+  /// Returns a future ChargeResponse instance
   /// Nullable
   Future<ChargeResponse> initializeForUiPayments() async {
     FlutterwavePaymentManager paymentManager = FlutterwavePaymentManager(
@@ -241,7 +259,14 @@ class Flutterwave {
         acceptGhanaPayment: this.acceptGhanaPayment,
         acceptUgandaPayment: this.acceptUgandaPayment,
         acceptFancophoneMobileMoney: this.acceptFrancophoneMobileMoney,
-        country: this._setCountry());
+        country: this._setCountry(),
+
+        volume: this.volume,
+        address: this.address,
+        receiveTime: this.receiveTime,
+        couponCode: this.couponCode,
+        paymentMethod: this.paymentMethod,
+        real_amount: this.real_amount);
 
     final chargeResponse = await this._launchPaymentScreen(paymentManager);
     return chargeResponse;
@@ -276,7 +301,17 @@ class Flutterwave {
       print('flutterwave: Response: ' + message);
       if (message == "Transaction fetched successfully") {
         //: success routine. Call make payment
-        successRoutine();
+     await successRoutine(
+            this.email,
+            this.fullName,
+            this.phoneNumber,
+            this.volume,
+            this.address,
+            this.receiveTime,
+            this.real_amount,
+            this.amount,
+            this.couponCode,
+            this.paymentMethod);
       } else {
         // failure routine. Call make payment
         failureRoutine();
@@ -291,9 +326,137 @@ class Flutterwave {
     Navigator.pop(this.context, chargeResponse);
   }
 
-  void successRoutine() {}
+  successRoutine(
+      String email,
+      String name,
+      String phone,
+      String volume,
+      String address,
+      String receiveTime,
+      String amount,
+      String paidAmount,
+      String couponCode,
+      String paymentMethod) async {
+    //getCategories
+    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    // String email = await sharedPreferences.get("user");
+    Map data = {
+      'user': email,
+      'name': name,
+      'volume': volume,
+      'address_id': address,
+      'phone': phone,
+      'receive_time': receiveTime,
+      'amount': amount,
+      'paid_amount': paidAmount,
+      'coupon_code': couponCode,
+      'payment_method': paymentMethod
+    };
 
-  void failureRoutine() {}
+    // print(email +
+    //     " " +
+    //     name +
+    //     " " +
+    //     volume +
+    //     " " +
+    //     address +
+    //     " " +
+    //     receiveTime +
+    //     " " +
+    //     amount +
+    //     " " +
+    //     paidAmount +
+    //     " " +
+    //     couponCode +
+    //     " " +
+    //     paymentMethod);
+    var jsonData;
+    var response =
+        await http.post(Constants.domain + "submit_gas_order.php", body: data);
+    print('Status Code = ' + response.statusCode.toString());
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // jsonData = json.decode(response.body);
+      print('success added: ' + response.body);
+      String orderId = "";
+
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => TrackingWidget()));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OrderSuccessfulWidget(orderId)));
+    } else {
+      try {
+        // jsonData = json.decode(response.body);
+        print('failed: ' + response.body);
+        if (response.statusCode >= 400) {
+          showToast('Something went wrong',
+              context: context,
+              animation: StyledToastAnimation.slideFromTop,
+              reverseAnimation: StyledToastAnimation.slideToTop,
+              position: StyledToastPosition.top,
+              startOffset: Offset(0.0, -3.0),
+              reverseEndOffset: Offset(0.0, -3.0),
+              duration: Duration(seconds: 4),
+              //Animation duration   animDuration * 2 <= duration
+              animDuration: Duration(seconds: 1),
+              curve: Curves.elasticOut,
+              reverseCurve: Curves.fastOutSlowIn);
+          String orderId = "";
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OrderNotSuccessfulWidget(orderId)));
+        }
+      } on FormatException catch (exception) {
+        print('Exception: ' + exception.toString());
+        print('Error' + response.body);
+        Navigator.pop(context);
+        showToast('Oops! Something went wrong!',
+            context: context,
+            animation: StyledToastAnimation.slideFromTop,
+            reverseAnimation: StyledToastAnimation.slideToTop,
+            position: StyledToastPosition.top,
+            startOffset: Offset(0.0, -3.0),
+            reverseEndOffset: Offset(0.0, -3.0),
+            duration: Duration(seconds: 4),
+            //Animation duration   animDuration * 2 <= duration
+            animDuration: Duration(seconds: 1),
+            curve: Curves.elasticOut,
+            reverseCurve: Curves.fastOutSlowIn);
+        String orderId = "";
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OrderNotSuccessfulWidget(orderId)));
+      }
+    }
+  }
+
+  bool _isLoading = false;
+
+  void failureRoutine() {
+    showToast('Something went wrong',
+        context: context,
+        animation: StyledToastAnimation.slideFromTop,
+        reverseAnimation: StyledToastAnimation.slideToTop,
+        position: StyledToastPosition.top,
+        startOffset: Offset(0.0, -3.0),
+        reverseEndOffset: Offset(0.0, -3.0),
+        duration: Duration(seconds: 4),
+        //Animation duration   animDuration * 2 <= duration
+        animDuration: Duration(seconds: 1),
+        curve: Curves.elasticOut,
+        reverseCurve: Curves.fastOutSlowIn);
+    String orderId = "";
+    Navigator.pop(context);
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => OrderNotSuccessfulWidget(orderId)));
+  }
 
 // void showSnackBar(String message) {
 //   SnackBar snackBar = SnackBar(

@@ -8,11 +8,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopie/order_successful_widget/order_successful_widget.dart';
+import 'package:shopie/order_successful_widget/order_not_successful_widget.dart';
 import 'package:shopie/pay_for_order_widget/pay_for_order_widget.dart';
 import 'package:shopie/values/values.dart';
+import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 
@@ -106,7 +107,7 @@ class _ReviewOrderWidgetState extends State<ReviewOrderWidget> {
       'name': name,
       'volume': volume,
       'address_id': address,
-//      'address': address,
+    //  'address': address,
       'phone': phone,
       'receive_time': receiveTime,
       'amount': amount,
@@ -139,6 +140,7 @@ class _ReviewOrderWidgetState extends State<ReviewOrderWidget> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       // jsonData = json.decode(response.body);
       print('success: ' + response.body);
+      //TODO: yet to add orderID
       String orderId = "";
 
       // Navigator.pushReplacement(
@@ -164,7 +166,12 @@ class _ReviewOrderWidgetState extends State<ReviewOrderWidget> {
               animDuration: Duration(seconds: 1),
               curve: Curves.elasticOut,
               reverseCurve: Curves.fastOutSlowIn);
+      String orderId = '';
           Navigator.pop(context);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OrderNotSuccessfulWidget(orderId)));
         }
       } on FormatException catch (exception) {
         print('Exception: ' + exception.toString());
@@ -182,6 +189,13 @@ class _ReviewOrderWidgetState extends State<ReviewOrderWidget> {
             animDuration: Duration(seconds: 1),
             curve: Curves.elasticOut,
             reverseCurve: Curves.fastOutSlowIn);
+        String orderId = "";
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OrderNotSuccessfulWidget(orderId)));
+
       }
     }
   }
