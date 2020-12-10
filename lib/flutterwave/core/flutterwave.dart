@@ -274,8 +274,8 @@ class Flutterwave {
 
   Future<ChargeResponse> _launchPaymentScreen(
       final FlutterwavePaymentManager paymentManager) async {
-    await _launchCardPaymentWidget(paymentManager);
-
+    final chargeResponse =    await _launchCardPaymentWidget(paymentManager);
+return chargeResponse;
     // return await Navigator.push(
     //   this.context,
     //   MaterialPageRoute(builder: (context) => FlutterwaveUI(paymentManager)),
@@ -301,162 +301,156 @@ class Flutterwave {
       print('flutterwave: Response: ' + message);
       if (message == "Transaction fetched successfully") {
         //: success routine. Call make payment
-     await successRoutine(
-            this.email,
-            this.fullName,
-            this.phoneNumber,
-            this.volume,
-            this.address,
-            this.receiveTime,
-            this.real_amount,
-            this.amount,
-            this.couponCode,
-            this.paymentMethod);
-      } else {
-        // failure routine. Call make payment
-        failureRoutine();
-      }
+        Map data = {
+          'user': this.email,
+          'name': this.fullName,
+          'volume': this.volume,
+          'address_id': this.address,
+          'phone': this.phoneNumber,
+          'receive_time': this.receiveTime,
+          'amount': this.real_amount,
+          'paid_amount': this.amount,
+          'coupon_code': this.couponCode,
+          'payment_method': this.paymentMethod
+        };
+        final response =
+        await http.post(Constants.domain + "submit_gas_order.php", body: data);
+        print('Status Code = ' + response.statusCode.toString());
+
+        return chargeResponse;
     } else {
       message = "Transaction cancelled";
       print('flutterwave: Response: ' + message);
       //: failure routine. Call make payment
-      failureRoutine();
+
+//      failureRoutine();
+        return chargeResponse;
     }
 //    this.showSnackBar(message);
     Navigator.pop(this.context, chargeResponse);
   }
-
-  successRoutine(
-      String email,
-      String name,
-      String phone,
-      String volume,
-      String address,
-      String receiveTime,
-      String amount,
-      String paidAmount,
-      String couponCode,
-      String paymentMethod) async {
-    //getCategories
-    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    // String email = await sharedPreferences.get("user");
-    Map data = {
-      'user': email,
-      'name': name,
-      'volume': volume,
-      'address_id': address,
-      'phone': phone,
-      'receive_time': receiveTime,
-      'amount': amount,
-      'paid_amount': paidAmount,
-      'coupon_code': couponCode,
-      'payment_method': paymentMethod
-    };
-
-    // print(email +
-    //     " " +
-    //     name +
-    //     " " +
-    //     volume +
-    //     " " +
-    //     address +
-    //     " " +
-    //     receiveTime +
-    //     " " +
-    //     amount +
-    //     " " +
-    //     paidAmount +
-    //     " " +
-    //     couponCode +
-    //     " " +
-    //     paymentMethod);
-    var jsonData;
-    var response =
-        await http.post(Constants.domain + "submit_gas_order.php", body: data);
-    print('Status Code = ' + response.statusCode.toString());
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // jsonData = json.decode(response.body);
-      print('success added: ' + response.body);
-      String orderId = "";
-
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => TrackingWidget()));
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => OrderSuccessfulWidget(orderId)));
-    } else {
-      try {
-        // jsonData = json.decode(response.body);
-        print('failed: ' + response.body);
-        if (response.statusCode >= 400) {
-          showToast('Something went wrong',
-              context: context,
-              animation: StyledToastAnimation.slideFromTop,
-              reverseAnimation: StyledToastAnimation.slideToTop,
-              position: StyledToastPosition.top,
-              startOffset: Offset(0.0, -3.0),
-              reverseEndOffset: Offset(0.0, -3.0),
-              duration: Duration(seconds: 4),
-              //Animation duration   animDuration * 2 <= duration
-              animDuration: Duration(seconds: 1),
-              curve: Curves.elasticOut,
-              reverseCurve: Curves.fastOutSlowIn);
-          String orderId = "";
-          Navigator.pop(context);
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => OrderNotSuccessfulWidget(orderId)));
-        }
-      } on FormatException catch (exception) {
-        print('Exception: ' + exception.toString());
-        print('Error' + response.body);
-        Navigator.pop(context);
-        showToast('Oops! Something went wrong!',
-            context: context,
-            animation: StyledToastAnimation.slideFromTop,
-            reverseAnimation: StyledToastAnimation.slideToTop,
-            position: StyledToastPosition.top,
-            startOffset: Offset(0.0, -3.0),
-            reverseEndOffset: Offset(0.0, -3.0),
-            duration: Duration(seconds: 4),
-            //Animation duration   animDuration * 2 <= duration
-            animDuration: Duration(seconds: 1),
-            curve: Curves.elasticOut,
-            reverseCurve: Curves.fastOutSlowIn);
-        String orderId = "";
-        Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => OrderNotSuccessfulWidget(orderId)));
-      }
-    }
-  }
-
-  bool _isLoading = false;
-
-  void failureRoutine() {
-    showToast('Something went wrong',
-        context: context,
-        animation: StyledToastAnimation.slideFromTop,
-        reverseAnimation: StyledToastAnimation.slideToTop,
-        position: StyledToastPosition.top,
-        startOffset: Offset(0.0, -3.0),
-        reverseEndOffset: Offset(0.0, -3.0),
-        duration: Duration(seconds: 4),
-        //Animation duration   animDuration * 2 <= duration
-        animDuration: Duration(seconds: 1),
-        curve: Curves.elasticOut,
-        reverseCurve: Curves.fastOutSlowIn);
-    String orderId = "";
-    Navigator.pop(context);
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => OrderNotSuccessfulWidget(orderId)));
-  }
+//
+//   Future<ChargeResponse> successRoutine(
+//       String email,
+//       String name,
+//       String phone,
+//       String volume,
+//       String address,
+//       String receiveTime,
+//       String amount,
+//       String paidAmount,
+//       String couponCode,
+//       String paymentMethod) async {
+//     //getCategories
+//     // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+//     // String email = await sharedPreferences.get("user");
+//
+//     // print(email +
+//     //     " " +
+//     //     name +
+//     //     " " +
+//     //     volume +
+//     //     " " +
+//     //     address +
+//     //     " " +
+//     //     receiveTime +
+//     //     " " +
+//     //     amount +
+//     //     " " +
+//     //     paidAmount +
+//     //     " " +
+//     //     couponCode +
+//     //     " " +
+//     //     paymentMethod);
+// return response;
+//
+//     // if (response.statusCode == 200 || response.statusCode == 201) {
+//     //   // jsonData = json.decode(response.body);
+//     //   print('success added: ' + response.body);
+//     //
+//     //
+//     //   //      String orderId = "";
+//     //
+//     //   // Navigator.pushReplacement(
+//     //   //     context, MaterialPageRoute(builder: (context) => TrackingWidget()));
+//     //   // Navigator.pushReplacement(
+//     //   //     context,
+//     //   //     MaterialPageRoute(
+//     //   //         builder: (context) => OrderSuccessfulWidget(orderId)));
+//     //
+//     //
+//     // } else {
+//     //   // try {
+//       //   // jsonData = json.decode(response.body);
+//       //   print('failed: ' + response.body);
+//       //   if (response.statusCode >= 400) {
+//       //     showToast('Something went wrong',
+//       //         context: context,
+//       //         animation: StyledToastAnimation.slideFromTop,
+//       //         reverseAnimation: StyledToastAnimation.slideToTop,
+//       //         position: StyledToastPosition.top,
+//       //         startOffset: Offset(0.0, -3.0),
+//       //         reverseEndOffset: Offset(0.0, -3.0),
+//       //         duration: Duration(seconds: 4),
+//       //         //Animation duration   animDuration * 2 <= duration
+//       //         animDuration: Duration(seconds: 1),
+//       //         curve: Curves.elasticOut,
+//       //         reverseCurve: Curves.fastOutSlowIn);
+//       //     String orderId = "";
+//       //     Navigator.pop(context);
+//       //     Navigator.pushReplacement(
+//       //         context,
+//       //         MaterialPageRoute(
+//       //             builder: (context) => OrderNotSuccessfulWidget(orderId)));
+//       //   }
+//       // } on FormatException catch (exception) {
+//       //   print('Exception: ' + exception.toString());
+//       //   print('Error' + response.body);
+//       //   Navigator.pop(context);
+//       //   showToast('Oops! Something went wrong!',
+//       //       context: context,
+//       //       animation: StyledToastAnimation.slideFromTop,
+//       //       reverseAnimation: StyledToastAnimation.slideToTop,
+//       //       position: StyledToastPosition.top,
+//       //       startOffset: Offset(0.0, -3.0),
+//       //       reverseEndOffset: Offset(0.0, -3.0),
+//       //       duration: Duration(seconds: 4),
+//       //       //Animation duration   animDuration * 2 <= duration
+//       //       animDuration: Duration(seconds: 1),
+//       //       curve: Curves.elasticOut,
+//       //       reverseCurve: Curves.fastOutSlowIn);
+//       //   String orderId = "";
+//       //   Navigator.pop(context);
+//       //   Navigator.pushReplacement(
+//       //       context,
+//       //       MaterialPageRoute(
+//       //           builder: (context) => OrderNotSuccessfulWidget(orderId)));
+//       // }
+// //    }
+//   }
+//
+//   bool _isLoading = false;
+//
+//   void failureRoutine() {
+//     showToast('Something went wrong',
+//         context: context,
+//         animation: StyledToastAnimation.slideFromTop,
+//         reverseAnimation: StyledToastAnimation.slideToTop,
+//         position: StyledToastPosition.top,
+//         startOffset: Offset(0.0, -3.0),
+//         reverseEndOffset: Offset(0.0, -3.0),
+//         duration: Duration(seconds: 4),
+//         //Animation duration   animDuration * 2 <= duration
+//         animDuration: Duration(seconds: 1),
+//         curve: Curves.elasticOut,
+//         reverseCurve: Curves.fastOutSlowIn);
+//     String orderId = "";
+//     Navigator.pop(context);
+//     Navigator.pushReplacement(
+//         context,
+//         MaterialPageRoute(
+//             builder: (context) => OrderNotSuccessfulWidget(orderId)));
+//   }
 
 // void showSnackBar(String message) {
 //   SnackBar snackBar = SnackBar(
@@ -466,7 +460,7 @@ class Flutterwave {
 //     ),
 //   );
 //   this._scaffoldKey.currentState.showSnackBar(snackBar);
-// }
+ }
 //
 
 }
